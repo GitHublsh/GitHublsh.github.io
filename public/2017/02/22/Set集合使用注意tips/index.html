@@ -93,15 +93,16 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Neil&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/archives/2016/index.html">
+<meta name="description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set集合使用注意tips">
+<meta property="og:url" content="http://yoursite.com/2017/02/22/Set集合使用注意tips/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
+<meta property="og:description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
+<meta property="og:updated_time" content="2017-07-12T11:20:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Neil&#39;s blog">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:title" content="Set集合使用注意tips">
+<meta name="twitter:description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
 
 
 
@@ -129,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2016/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/02/22/Set集合使用注意tips/"/>
 
 
 
 
 
-  <title>归档 | Neil's blog</title>
+  <title>Set集合使用注意tips | Neil's blog</title>
   
 
 
@@ -160,7 +161,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -254,103 +255,190 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 5 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/09/12/Git提交index.lock问题解决/" itemprop="url">
-              
-                <span itemprop="name">Git提交index.lock问题解决</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-09-12T19:07:26+08:00"
-              content="2016-09-12" >
-          09-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-Hello" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/09/01/hello-world/" itemprop="url">
-              
-                <span itemprop="name">Hello World</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-09-01T20:02:08+08:00"
-              content="2016-09-01" >
-          09-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/22/Set集合使用注意tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Set集合使用注意tips</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T19:11:02+08:00">
+                2017-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："><a href="#Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：" class="headerlink" title="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："></a>Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：</h3><p>ConcurrentModificationException</p>
+<pre><code>example:
+    Set&lt;CheckWork&gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();
+    for(CheckWork checkWork : set){
+        if(checkWork.getState()==1){
+            set.remove(checkWork);
+        }
+    }
+</code></pre><h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><ol>
+<li><p>遍历删除List</p>
+<pre><code>List&lt;CheckWork&gt; list = this.getUserDao().getAll();
+Iterator&lt;CheckWork&gt; chk_it = list.iterator();
+while(chk_it.hasNext()){
+    CheckWork checkWork = chk_it.next();
+    if(checkWork.getPlanState()==1){
+        chk_it.remove();
+    }
+}
+</code></pre></li>
+<li><p>遍历删除Set</p>
+<pre><code>Set&lt;CheckWork&gt; set =  this.getUserDao().getAll().get(0).getActionCheckWorks();
+        Iterator&lt;CheckWork&gt; it = set.iterator();
+        while(it.hasNext()){
+            CheckWork checkWork = it.next();
+            if(checkWork.getState()==1){
+                it.remove();
+            }
+        }
+</code></pre></li>
+<li><p>遍历删除Set</p>
+<pre><code>Set&lt;CheckWork&gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks()；
+Set&lt;CheckWork&gt; delSet=new HashSet&lt;&gt;();
+for(CheckWork checkWork : set){
+    if(checkWork.getState()==1){
+        delSet.add(checkWork);
+    }
+}
+set.removeAll(delSet);    
+</code></pre></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/12/Git提交index.lock问题解决/" rel="next" title="Git提交index.lock问题解决">
+                <i class="fa fa-chevron-left"></i> Git提交index.lock问题解决
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/10/hexo-gitpage搭建个人博客/" rel="prev" title="hexo-gitpage搭建个人博客">
+                hexo-gitpage搭建个人博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -358,6 +446,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
 
         </div>
         
@@ -377,8 +471,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -431,6 +534,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："><span class="nav-number">1.</span> <span class="nav-text">Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案："><span class="nav-number">2.</span> <span class="nav-text">解决方案：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -564,11 +683,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
@@ -595,6 +712,10 @@
   
     
 
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2138571"></script>
+      <!-- UY END -->
     
   
 

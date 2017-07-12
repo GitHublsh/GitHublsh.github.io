@@ -1,5 +1,5 @@
 ---
-title: hexo+gitpage
+title: hexo-gitpage搭建个人博客
 date: 2017-07-10 21:02:08
 tags: [hexo,github]
 ---
