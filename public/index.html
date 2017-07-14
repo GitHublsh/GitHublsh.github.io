@@ -616,187 +616,6 @@ setPatchLoadStatusStub(new PatchLoadStatusListener()): 设置patch加载状态�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/10/hexo-gitpage搭建个人博客/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/10/hexo-gitpage搭建个人博客/" itemprop="url">hexo-gitpage搭建个人博客</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-10T21:02:08+08:00">
-                2017-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Hexo-Github搭建个人博客"><a href="#Hexo-Github搭建个人博客" class="headerlink" title="Hexo+Github搭建个人博客"></a>Hexo+Github搭建个人博客</h2><h3 id="一、搭建环境"><a href="#一、搭建环境" class="headerlink" title="一、搭建环境"></a>一、搭建环境</h3><ul>
-<li>Git环境配置</li>
-<li>node.js环境配置</li>
-<li><p>GitHub账号配置</p>
-<ul>
-<li>首先，你得有一个Github账号。没有的话，手动再见~</li>
-<li>创建一个Repository<ul>
-<li>Repository name填写yourname.github.io,其他的地方看心情填写。</li>
-<li>创建之后，开启pages功能，setting–&gt;Github Pages–&gt;Automatic page generator。</li>
-<li>ok</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>hexo环境搭建</p>
-<ul>
-<li>npm install -g hexo</li>
-<li>安装完成后，自己在本地文件夹新建一个本地blog文件夹（例如：\GitBlog）</li>
-<li>命令行进入文件目录，<ul>
-<li>hexo init,然后等新建完成</li>
-<li>npm install,将在文件中安装node_modeules</li>
-<li>hexo s,[info] Hexo is running at <a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a>. Press Ctrl+C to stop. 就可以看到本地的blog了</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="二、基本配置"><a href="#二、基本配置" class="headerlink" title="二、基本配置"></a>二、基本配置</h3><p>本地的blog已经可以看到了，接下来就是配置后部署到Github,然后大家都可以看到写的东西了。</p>
-<hr>
-<ul>
-<li><p>回到本地新建的Gitblog文件夹，配置_config.yml文件</p>
-<pre><code># Deployment
-## Docs: http://hexo.io/docs/deployment.html
-deploy:
-  type:
-</code></pre><p>  修改后：</p>
-<pre><code>deploy:
-  type: git
-  repository: git@github.com:Githublsh/Githublsh.github.io.git
-  branch: master
-</code></pre></li>
-</ul>
-<pre><code>repository为Github新建的代码库的地址，如上。
-</code></pre><ul>
-<li>部署到Github上<ul>
-<li>hexo deploy(如果报GitHub权限的问题，配置下SSH即可)<ul>
-<li>ssh-keygen -t rsa -C “your_email@example.com”创建ssh</li>
-<li>添加SSH key到GitHub，将公钥拷贝到Github–&gt;Setting–&gt;SSH and GPG keys–&gt;new SSH keys.</li>
-</ul>
-</li>
-<li>部署成功后，打开(我的blog)<a href="https://githublsh.github.io/" target="_blank" rel="external">https://githublsh.github.io/</a></li>
-</ul>
-</li>
-</ul>
-<h3 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h3><ul>
-<li><p>部署步骤</p>
-<ol>
-<li>hexo clean</li>
-<li>hexo g</li>
-<li>hexo d</li>
-</ol>
-</li>
-<li><p>修改后，本地预览</p>
-<ol>
-<li>hexo g</li>
-<li>hexo s</li>
-<li>查看页面效果<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a></li>
-</ol>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/22/Set集合使用注意tips/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1199,6 +1018,233 @@ Content-Type: text/plain
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/14/Hexo-Github搭建个人博客（2）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/14/Hexo-Github搭建个人博客（2）/" itemprop="url">Hexo+Github搭建个人博客（2）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-14T14:01:42+08:00">
+                2016-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Hexo-Github搭建个人博客（2）"><a href="#Hexo-Github搭建个人博客（2）" class="headerlink" title="Hexo+Github搭建个人博客（2）"></a>Hexo+Github搭建个人博客（2）</h3><h4 id="开始动手配置diy博客"><a href="#开始动手配置diy博客" class="headerlink" title="开始动手配置diy博客"></a>开始动手配置diy博客</h4><hr>
+<p>##一、hexo站点配置文件</p>
+<p>打开存放整个博客文件下_config.yml：</p>
+<pre><code># Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: Neil&apos;s blog    #网站标题
+subtitle: Let&apos;s start from here  #网站副标题
+description: 优秀不够，你是否无可替代
+author: Neil Liu    #博主的名字
+email: codeneil@163.com        #博主的邮箱
+language: zh-Hans    #网站使用的语言
+timezone:    #网站时区
+
+# URL
+## If your site is put in a subdirectory, set url as &apos;http://yoursite.com/child&apos; and root as &apos;/child/&apos;
+url: http://yoursite.com
+root: /
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+
+# Directory    目录配置
+source_dir: source    #源文件夹，这个文件夹用来存放内容。
+public_dir: public    #公共文件夹，这个文件夹用于存放生成的站点文件。
+tag_dir: tags    #标签文件夹
+archive_dir: archives    #归档文件夹
+category_dir: categories    #分类文件夹
+code_dir: downloads/code
+i18n_dir: :lang    #国际化（i18n）文件夹
+skip_render:    #跳过指定文件的渲染，您可使用 glob 表达式来匹配路径。
+
+# Writing
+new_post_name: :title.md # File name of new posts
+default_layout: post    # 默认布局
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: false
+post_asset_folder: false    #启动 Asset 文件夹
+relative_link: false
+future: true
+highlight:    #代码块的设置 
+  enable: true
+  line_number: true
+  auto_detect: true
+  tab_replace:
+
+# Category &amp; Tag     分类和标签的设置
+default_category: uncategorized     #默认分类
+category_map:    #分类别名
+tag_map:#标签别名
+
+# Archives 默认值为2，这里都修改为1，相应页面就只会列出标题，而非全文
+## 2: Enable pagination
+## 1: Disable pagination
+## 0: Fully Disable
+archive: 1
+category: 1
+tag: 1
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 5
+pagination_dir: page    #分页目录
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next    # hexo主题
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repository: git@github.com:Githublsh/Githublsh.github.io.git
+  branch: master
+</code></pre><h3 id="二、hexo主题配合文件"><a href="#二、hexo主题配合文件" class="headerlink" title="二、hexo主题配合文件"></a>二、hexo主题配合文件</h3><p>打开themes\next下的_config.yml文件</p>
+<ol>
+<li><p>开启打赏功能</p>
+<pre><code>reward_comment: 让我感受一下知识的力量~
+wechatpay: /images/WechatIMG3.jpeg
+alipay: /images/WechatIMG5.jpeg
+</code></pre></li>
+<li><p>开启个人微信二维码</p>
+<pre><code># Wechat Subscriber
+wechat_subscriber:
+  enabled: true
+  qcode: /images/WechatIMG7.jpeg
+  description: 个人微信，欢迎交流
+</code></pre></li>
+</ol>
+<ol>
+<li><p>开启侧边栏社交链接</p>
+<pre><code>social:
+  GitHub: https://github.com/your-user-name
+  Twitter: https://twitter.com/your-user-name
+  微博: http://weibo.com/your-user-name
+  豆瓣: http://douban.com/people/your-user-name
+  知乎: http://www.zhihu.com/people/your-user-name
+  # so on
+</code></pre></li>
+<li><p>选择 Scheme</p>
+<pre><code>#scheme: Muse
+scheme: Mist
+#scheme: Pisces
+</code></pre></li>
+</ol>
+<h4 id="更多自定义配置请参考NexT主题配置"><a href="#更多自定义配置请参考NexT主题配置" class="headerlink" title="更多自定义配置请参考NexT主题配置"></a>更多自定义配置请参考<a href="http://theme-next.iissnan.com/theme-settings.html" target="_blank" rel="external">NexT主题配置</a></h4>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1248,7 +1294,7 @@ Content-Type: text/plain
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1272,6 +1318,17 @@ Content-Type: text/plain
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/GitHublsh" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
           
         </div>
 

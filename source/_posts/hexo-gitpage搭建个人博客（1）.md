@@ -1,10 +1,10 @@
 ---
-title: hexo-gitpage搭建个人博客
-date: 2017-07-10 21:02:08
+title: hexo-gitpage搭建个人博客(1)
+date: 2016-09-10 21:02:08
 tags: [hexo,github]
 ---
 
-## Hexo+Github搭建个人博客
+## Hexo+Github搭建个人博客(1)
 
 ### 一、搭建环境
 
