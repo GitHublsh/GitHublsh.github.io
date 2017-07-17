@@ -23,6 +23,7 @@ tags: [hexo,github]
 	* 命令行进入文件目录，
 		* hexo init,然后等新建完成
 		* npm install,将在文件中安装node_modeules
+		* 安装完成后，hexo g
 		* hexo s,[info] Hexo is running at http://localhost:4000/. Press Ctrl+C to stop. 就可以看到本地的blog了
 
 		
