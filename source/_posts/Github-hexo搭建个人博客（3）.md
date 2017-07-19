@@ -1,5 +1,5 @@
 ---
-title: Github+hexo搭建个人博客（3）
+title: Hexo+Github搭建个人博客（3）
 date: 2016-09-15 17:03:56
 tags: [hexo,github]
 ---
