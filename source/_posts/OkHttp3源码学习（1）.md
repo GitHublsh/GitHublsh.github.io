@@ -4,6 +4,18 @@ date: 2017-07-25 10:19:43
 tags: [OkHttp3]
 ---
 
+背景简介：
+
+尽管Google在大部分安卓版本中推荐使用HttpURLConnection，但是这个类相比HttpClient实在是太难用，太弱爆了。
+OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp实现了。所以我们更有理由相信OkHttp的强大。
+
+OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中自动恢复。如果您的服务器配置了多个IP地址，当第一个IP连接失败的时候，OkHttp会自动尝试下一个IP。OkHttp还处理了代理服务器问题和SSL握手失败问题。
+
+使用 OkHttp 无需重写程序中的网络代码。OkHttp实现了几乎和java.net.HttpURLConnection一样的API。如果你用了 Apache HttpClient，则OkHttp也提供了一个对应的okhttp-apache 模块。
+
+简单来说，其他的太难用了，这个才是最好用的，不用你会后悔的~
+
+
 
 ### 一、基本使用
 
