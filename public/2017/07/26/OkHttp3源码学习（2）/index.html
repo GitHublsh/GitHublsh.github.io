@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
-<meta property="og:updated_time" content="2017-07-26T08:25:32.000Z">
+<meta property="og:updated_time" content="2017-07-26T09:01:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（2）">
 <meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
@@ -396,7 +396,7 @@ public Builder() {
 public interface Call extends Cloneable {
     ···
 }
-</code></pre><p>一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个个，所以不能执行两次。</p>
+</code></pre><p>一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个，所以不能执行两次。</p>
 <pre><code>/**
  * Prepares the {@code request} to be executed at some point in the future.
  */

@@ -95,7 +95,7 @@ Call即是一个实际的访问请求，用户的每一个网络请求都是一�
 		···
 	}
 	
-一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个个，所以不能执行两次。
+一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个，所以不能执行两次。
         
 	  /**
 	   * Prepares the {@code request} to be executed at some point in the future.
