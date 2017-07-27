@@ -114,14 +114,14 @@
 <meta name="description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
 <meta name="keywords" content="OkHttp3">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OkHttp3源码学习（2）">
+<meta property="og:title" content="OkHttp3源码学习（2）-发起请求源码实现">
 <meta property="og:url" content="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
-<meta property="og:updated_time" content="2017-07-27T08:58:24.000Z">
+<meta property="og:updated_time" content="2017-07-27T09:03:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OkHttp3源码学习（2）">
+<meta name="twitter:title" content="OkHttp3源码学习（2）-发起请求源码实现">
 <meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
 <meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
 
@@ -157,7 +157,7 @@
 
 
 
-  <title>OkHttp3源码学习（2） | Neil's blog</title>
+  <title>OkHttp3源码学习（2）-发起请求源码实现 | Neil's blog</title>
   
 
 
@@ -303,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">OkHttp3源码学习（2）</h1>
+          <h1 class="post-title" itemprop="name headline">OkHttp3源码学习（2）-发起请求源码实现</h1>
         
 
         <div class="post-meta">
@@ -700,8 +700,8 @@ public final class RealInterceptorChain implements Interceptor.Chain {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/25/OkHttp3源码学习（1）/" rel="next" title="OkHttp3源码学习（1）">
-                <i class="fa fa-chevron-left"></i> OkHttp3源码学习（1）
+              <a href="/2017/07/25/OkHttp3源码学习（1）/" rel="next" title="OkHttp3源码学习（1）-简单实用教程">
+                <i class="fa fa-chevron-left"></i> OkHttp3源码学习（1）-简单实用教程
               </a>
             
           </div>
@@ -709,6 +709,10 @@ public final class RealInterceptorChain implements Interceptor.Chain {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/27/OkHttp3源码学习（3）/" rel="prev" title="OkHttp3源码解析(3)-拦截器链详解">
+                OkHttp3源码解析(3)-拦截器链详解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -782,7 +786,7 @@ public final class RealInterceptorChain implements Interceptor.Chain {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
