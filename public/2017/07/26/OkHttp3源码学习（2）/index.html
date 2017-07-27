@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
-<meta property="og:updated_time" content="2017-07-27T09:03:16.000Z">
+<meta property="og:updated_time" content="2017-07-27T09:10:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（2）-发起请求源码实现">
 <meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
@@ -547,89 +547,8 @@ AsyncCall.java
 </code></pre><ul>
 <li>创建一系列拦截器，并存放在拦截器数组中。</li>
 <li>然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)</li>
+<li>经过一系列拦截器的处理后，获取Response.</li>
 </ul>
-<p>然后进RealInterceptorChain看看。</p>
-<pre><code>/**
- * A concrete interceptor chain that carries the entire interceptor chain: all application
- * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
- */
-public final class RealInterceptorChain implements Interceptor.Chain {
-  private final List&lt;Interceptor&gt; interceptors;
-  private final StreamAllocation streamAllocation;
-  private final HttpCodec httpCodec;
-  private final RealConnection connection;
-  private final int index;
-  private final Request request;
-  private int calls;
-
-  public RealInterceptorChain(List&lt;Interceptor&gt; interceptors, StreamAllocation streamAllocation,
-      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
-    this.interceptors = interceptors;
-    this.connection = connection;
-    this.streamAllocation = streamAllocation;
-    this.httpCodec = httpCodec;
-    this.index = index;
-    this.request = request;
-  }
-
-  @Override public Connection connection() {
-    return connection;
-  }
-
-  public StreamAllocation streamAllocation() {
-    return streamAllocation;
-  }
-
-  public HttpCodec httpStream() {
-    return httpCodec;
-  }
-
-  @Override public Request request() {
-    return request;
-  }
-
-  @Override public Response proceed(Request request) throws IOException {
-    return proceed(request, streamAllocation, httpCodec, connection);
-  }
-
-  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
-      RealConnection connection) throws IOException {
-    if (index &gt;= interceptors.size()) throw new AssertionError();
-
-    calls++;
-
-    // If we already have a stream, confirm that the incoming request will use it.
-    if (this.httpCodec != null &amp;&amp; !this.connection.supportsUrl(request.url())) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
-          + &quot; must retain the same host and port&quot;);
-    }
-
-    // If we already have a stream, confirm that this is the only call to chain.proceed().
-    if (this.httpCodec != null &amp;&amp; calls &gt; 1) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
-          + &quot; must call proceed() exactly once&quot;);
-    }
-
-
-
-    Interceptor interceptor = interceptors.get(index);
-    Response response = interceptor.intercept(next);
-
-    // Confirm that the next interceptor made its required call to chain.proceed().
-    if (httpCodec != null &amp;&amp; index + 1 &lt; interceptors.size() &amp;&amp; next.calls != 1) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptor
-          + &quot; must call proceed() exactly once&quot;);
-    }
-
-    // Confirm that the intercepted response isn&apos;t null.
-    if (response == null) {
-      throw new NullPointerException(&quot;interceptor &quot; + interceptor + &quot; returned null&quot;);
-    }
-
-    return response;
-  }
-}
-</code></pre><p>可以看到procees方法的逻辑：<br>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。</p>
 <h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>本节主要对请求的整个流程进行相对应的源码实现过程解析。</p>
 <p>下节对几种拦截器进行解析。</p>
 
