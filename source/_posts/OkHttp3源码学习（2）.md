@@ -6,6 +6,8 @@ tags: [OkHttp3]
 
 #### 上一节对OkHttp3做了一个简单的介绍及科普了一下使用。
 
+![“整体流程“](http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png)
+
 那么，从这一节开始，进行源码分析解读···
 
 
@@ -160,4 +162,180 @@ Call即是一个实际的访问请求，用户的每一个网络请求都是一�
 		}
 		}
     
+    
+    AsyncCall.java
+    
+	    final class AsyncCall extends NamedRunnable {
+	    private final Callback responseCallback;
+	
+	    AsyncCall(Callback responseCallback) {
+	      super("OkHttp %s", redactedUrl());
+	      this.responseCallback = responseCallback;
+	    }
+	
+	    String host() {
+	      return originalRequest.url().host();
+	    }
+	
+	    Request request() {
+	      return originalRequest;
+	    }
+	
+	    RealCall get() {
+	      return RealCall.this;
+	    }
+	
+	    @Override protected void execute() {
+	      boolean signalledCallback = false;
+	      try {
+	        Response response = getResponseWithInterceptorChain();
+	        if (retryAndFollowUpInterceptor.isCanceled()) {
+	          signalledCallback = true;
+	          responseCallback.onFailure(RealCall.this, new IOException("Canceled"));
+	        } else {
+	          signalledCallback = true;
+	          responseCallback.onResponse(RealCall.this, response);
+	        }
+	      } catch (IOException e) {
+	        if (signalledCallback) {
+	          // Do not signal the callback twice!
+	          Platform.get().log(INFO, "Callback failure for " + toLoggableString(), e);
+	        } else {
+	          responseCallback.onFailure(RealCall.this, e);
+	        }
+	      } finally {
+	        client.dispatcher().finished(this);
+	      }
+	    }
+	  	}
+	  	
+	  	
+	 RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。
+	 
+
+#### 四、构建拦截器链
+
+还是在RealCall.java中，看源码是如何构建的。
+
+	 Response getResponseWithInterceptorChain() throws IOException {
+	    // Build a full stack of interceptors.
+	    List<Interceptor> interceptors = new ArrayList<>();
+	    interceptors.addAll(client.interceptors());
+	    interceptors.add(retryAndFollowUpInterceptor);
+	    interceptors.add(new BridgeInterceptor(client.cookieJar()));
+	    interceptors.add(new CacheInterceptor(client.internalCache()));
+	    interceptors.add(new ConnectInterceptor(client));
+	    if (!forWebSocket) {
+	      interceptors.addAll(client.networkInterceptors());
+	    }
+	    interceptors.add(new CallServerInterceptor(forWebSocket));
+	
+	    Interceptor.Chain chain = new RealInterceptorChain(
+	        interceptors, null, null, null, 0, originalRequest);
+	    return chain.proceed(originalRequest);
+	  }
+	  
+	  
+	  
+* 创建一系列拦截器，并存放在拦截器数组中。
+* 然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)
+
+然后进RealInterceptorChain看看。
+
+	/**
+	 * A concrete interceptor chain that carries the entire interceptor chain: all application
+	 * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
+	 */
+	public final class RealInterceptorChain implements Interceptor.Chain {
+	  private final List<Interceptor> interceptors;
+	  private final StreamAllocation streamAllocation;
+	  private final HttpCodec httpCodec;
+	  private final RealConnection connection;
+	  private final int index;
+	  private final Request request;
+	  private int calls;
+	
+	  public RealInterceptorChain(List<Interceptor> interceptors, StreamAllocation streamAllocation,
+	      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
+	    this.interceptors = interceptors;
+	    this.connection = connection;
+	    this.streamAllocation = streamAllocation;
+	    this.httpCodec = httpCodec;
+	    this.index = index;
+	    this.request = request;
+	  }
+	
+	  @Override public Connection connection() {
+	    return connection;
+	  }
+	
+	  public StreamAllocation streamAllocation() {
+	    return streamAllocation;
+	  }
+	
+	  public HttpCodec httpStream() {
+	    return httpCodec;
+	  }
+	
+	  @Override public Request request() {
+	    return request;
+	  }
+	
+	  @Override public Response proceed(Request request) throws IOException {
+	    return proceed(request, streamAllocation, httpCodec, connection);
+	  }
+	
+	  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
+	      RealConnection connection) throws IOException {
+	    if (index >= interceptors.size()) throw new AssertionError();
+	
+	    calls++;
+	
+	    // If we already have a stream, confirm that the incoming request will use it.
+	    if (this.httpCodec != null && !this.connection.supportsUrl(request.url())) {
+	      throw new IllegalStateException("network interceptor " + interceptors.get(index - 1)
+	          + " must retain the same host and port");
+	    }
+	
+	    // If we already have a stream, confirm that this is the only call to chain.proceed().
+	    if (this.httpCodec != null && calls > 1) {
+	      throw new IllegalStateException("network interceptor " + interceptors.get(index - 1)
+	          + " must call proceed() exactly once");
+	    }
+	
+	    
+
+	    Interceptor interceptor = interceptors.get(index);
+	    Response response = interceptor.intercept(next);
+	
+	    // Confirm that the next interceptor made its required call to chain.proceed().
+	    if (httpCodec != null && index + 1 < interceptors.size() && next.calls != 1) {
+	      throw new IllegalStateException("network interceptor " + interceptor
+	          + " must call proceed() exactly once");
+	    }
+	
+	    // Confirm that the intercepted response isn't null.
+	    if (response == null) {
+	      throw new NullPointerException("interceptor " + interceptor + " returned null");
+	    }
+	
+	    return response;
+	  }
+	}
+
+
+可以看到procees方法的逻辑：
+创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。
+
+#### 五、小结
+
+本节主要对请求的整个流程进行相对应的源码实现过程解析。
+
+下节对几种拦截器进行解析。
+
+
+
+
+	  
+	  
 

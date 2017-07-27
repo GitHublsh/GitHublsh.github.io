@@ -111,17 +111,19 @@
 
 
 
-<meta name="description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
+<meta name="description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
 <meta name="keywords" content="OkHttp3">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OkHttp3源码学习（2）">
 <meta property="og:url" content="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
-<meta property="og:updated_time" content="2017-07-27T06:53:24.000Z">
+<meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
+<meta property="og:updated_time" content="2017-07-27T08:58:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（2）">
-<meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
+<meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
 
 
 
@@ -353,7 +355,8 @@
       
 
       
-        <h4 id="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><a href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。" class="headerlink" title="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"></a>上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</h4><p>那么，从这一节开始，进行源码分析解读···</p>
+        <h4 id="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><a href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。" class="headerlink" title="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"></a>上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</h4><p><img src="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png" alt="“整体流程“"></p>
+<p>那么，从这一节开始，进行源码分析解读···</p>
 <h4 id="一、创建OkHttpClient对象"><a href="#一、创建OkHttpClient对象" class="headerlink" title="一、创建OkHttpClient对象"></a>一、创建OkHttpClient对象</h4><pre><code>OkHttpClient client = new OkHttpClient();
 </code></pre><p>创建时，做了什么事情？</p>
 <p>直接进OkHttpClient.java </p>
@@ -454,26 +457,182 @@ public interface Call extends Cloneable {
 </code></pre><ul>
 <li>发起异步请求</li>
 </ul>
-<pre><code>  @Override public void enqueue(Callback responseCallback) {
-    synchronized (this) {
-      if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
-      executed = true;
+<pre><code>      @Override public void enqueue(Callback responseCallback) {
+        synchronized (this) {
+          if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
+          executed = true;
+        }
+        captureCallStackTrace();
+        client.dispatcher().enqueue(new AsyncCall(responseCallback));
+      }
+
+
+
+    synchronized void enqueue(AsyncCall call) {
+    if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(call) &lt; maxRequestsPerHost) {
+      runningAsyncCalls.add(call);
+      executorService().execute(call);
+    } else {
+      readyAsyncCalls.add(call);
     }
-    captureCallStackTrace();
-    client.dispatcher().enqueue(new AsyncCall(responseCallback));
+    }
+
+
+AsyncCall.java
+
+    final class AsyncCall extends NamedRunnable {
+    private final Callback responseCallback;
+
+    AsyncCall(Callback responseCallback) {
+      super(&quot;OkHttp %s&quot;, redactedUrl());
+      this.responseCallback = responseCallback;
+    }
+
+    String host() {
+      return originalRequest.url().host();
+    }
+
+    Request request() {
+      return originalRequest;
+    }
+
+    RealCall get() {
+      return RealCall.this;
+    }
+
+    @Override protected void execute() {
+      boolean signalledCallback = false;
+      try {
+        Response response = getResponseWithInterceptorChain();
+        if (retryAndFollowUpInterceptor.isCanceled()) {
+          signalledCallback = true;
+          responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));
+        } else {
+          signalledCallback = true;
+          responseCallback.onResponse(RealCall.this, response);
+        }
+      } catch (IOException e) {
+        if (signalledCallback) {
+          // Do not signal the callback twice!
+          Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);
+        } else {
+          responseCallback.onFailure(RealCall.this, e);
+        }
+      } finally {
+        client.dispatcher().finished(this);
+      }
+    }
+      }
+
+
+ RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。
+</code></pre><h4 id="四、构建拦截器链"><a href="#四、构建拦截器链" class="headerlink" title="四、构建拦截器链"></a>四、构建拦截器链</h4><p>还是在RealCall.java中，看源码是如何构建的。</p>
+<pre><code>Response getResponseWithInterceptorChain() throws IOException {
+   // Build a full stack of interceptors.
+   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
+   interceptors.addAll(client.interceptors());
+   interceptors.add(retryAndFollowUpInterceptor);
+   interceptors.add(new BridgeInterceptor(client.cookieJar()));
+   interceptors.add(new CacheInterceptor(client.internalCache()));
+   interceptors.add(new ConnectInterceptor(client));
+   if (!forWebSocket) {
+     interceptors.addAll(client.networkInterceptors());
+   }
+   interceptors.add(new CallServerInterceptor(forWebSocket));
+
+   Interceptor.Chain chain = new RealInterceptorChain(
+       interceptors, null, null, null, 0, originalRequest);
+   return chain.proceed(originalRequest);
+ }
+</code></pre><ul>
+<li>创建一系列拦截器，并存放在拦截器数组中。</li>
+<li>然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)</li>
+</ul>
+<p>然后进RealInterceptorChain看看。</p>
+<pre><code>/**
+ * A concrete interceptor chain that carries the entire interceptor chain: all application
+ * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
+ */
+public final class RealInterceptorChain implements Interceptor.Chain {
+  private final List&lt;Interceptor&gt; interceptors;
+  private final StreamAllocation streamAllocation;
+  private final HttpCodec httpCodec;
+  private final RealConnection connection;
+  private final int index;
+  private final Request request;
+  private int calls;
+
+  public RealInterceptorChain(List&lt;Interceptor&gt; interceptors, StreamAllocation streamAllocation,
+      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
+    this.interceptors = interceptors;
+    this.connection = connection;
+    this.streamAllocation = streamAllocation;
+    this.httpCodec = httpCodec;
+    this.index = index;
+    this.request = request;
   }
 
+  @Override public Connection connection() {
+    return connection;
+  }
+
+  public StreamAllocation streamAllocation() {
+    return streamAllocation;
+  }
+
+  public HttpCodec httpStream() {
+    return httpCodec;
+  }
+
+  @Override public Request request() {
+    return request;
+  }
+
+  @Override public Response proceed(Request request) throws IOException {
+    return proceed(request, streamAllocation, httpCodec, connection);
+  }
+
+  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
+      RealConnection connection) throws IOException {
+    if (index &gt;= interceptors.size()) throw new AssertionError();
+
+    calls++;
+
+    // If we already have a stream, confirm that the incoming request will use it.
+    if (this.httpCodec != null &amp;&amp; !this.connection.supportsUrl(request.url())) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must retain the same host and port&quot;);
+    }
+
+    // If we already have a stream, confirm that this is the only call to chain.proceed().
+    if (this.httpCodec != null &amp;&amp; calls &gt; 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must call proceed() exactly once&quot;);
+    }
 
 
-synchronized void enqueue(AsyncCall call) {
-if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(call) &lt; maxRequestsPerHost) {
-  runningAsyncCalls.add(call);
-  executorService().execute(call);
-} else {
-  readyAsyncCalls.add(call);
+
+    Interceptor interceptor = interceptors.get(index);
+    Response response = interceptor.intercept(next);
+
+    // Confirm that the next interceptor made its required call to chain.proceed().
+    if (httpCodec != null &amp;&amp; index + 1 &lt; interceptors.size() &amp;&amp; next.calls != 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptor
+          + &quot; must call proceed() exactly once&quot;);
+    }
+
+    // Confirm that the intercepted response isn&apos;t null.
+    if (response == null) {
+      throw new NullPointerException(&quot;interceptor &quot; + interceptor + &quot; returned null&quot;);
+    }
+
+    return response;
+  }
 }
-}
-</code></pre>
+</code></pre><p>可以看到procees方法的逻辑：<br>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。</p>
+<h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>本节主要对请求的整个流程进行相对应的源码实现过程解析。</p>
+<p>下节对几种拦截器进行解析。</p>
+
       
     </div>
 
@@ -682,7 +841,7 @@ if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(cal
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><span class="nav-number">1.</span> <span class="nav-text">上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、创建OkHttpClient对象"><span class="nav-number">2.</span> <span class="nav-text">一、创建OkHttpClient对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、创建网络请求"><span class="nav-number">3.</span> <span class="nav-text">二、创建网络请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、拿到Call对象"><span class="nav-number">4.</span> <span class="nav-text">三、拿到Call对象</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><span class="nav-number">1.</span> <span class="nav-text">上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、创建OkHttpClient对象"><span class="nav-number">2.</span> <span class="nav-text">一、创建OkHttpClient对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、创建网络请求"><span class="nav-number">3.</span> <span class="nav-text">二、创建网络请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、拿到Call对象"><span class="nav-number">4.</span> <span class="nav-text">三、拿到Call对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、构建拦截器链"><span class="nav-number">5.</span> <span class="nav-text">四、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、小结"><span class="nav-number">6.</span> <span class="nav-text">五、小结</span></a></li></ol></div>
             
 
           </div>
