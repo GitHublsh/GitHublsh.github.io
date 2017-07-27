@@ -567,8 +567,8 @@ if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(cal
 <li><p>创建网络请求</p>
 <p>Request request = new Request.Builder().url(url).build();</p>
 </li>
-<li><p>发送请求</p>
-<p>Call call = client.newCall(request).excute();(或者异步)</p>
+<li><p>发送请求,得到返回</p>
+<p>Response response = client.newCall(request).excute();(或者异步)</p>
 </li>
 </ul>
 <ol>

@@ -29,9 +29,9 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 
   Request request = new Request.Builder().url(url).build();
   
-* 发送请求
+* 发送请求,得到返回
 
-  Call call = client.newCall(request).excute();(或者异步)
+  Response response = client.newCall(request).excute();(或者异步)
 	
 	
 
