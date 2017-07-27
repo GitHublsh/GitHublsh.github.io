@@ -127,6 +127,16 @@ Call即是一个实际的访问请求，用户的每一个网络请求都是一�
 		  }
 		  
 		  
+		  
+		   /** Used by {@code Call#execute} to signal it is in-flight. */
+			  synchronized void executed(RealCall call) {
+			    runningSyncCalls.add(call);
+			  }
+			  
+	* 发起同步请求，通过dispatcher.executed()添加到同步队列中执行
+	* 调用getResponseWithInterceptorChain获取服务器返回
+	* 最后通知任务分发器client.dispatcher().finished(this)任务结束
+		  
 * 发起异步请求
 
 
