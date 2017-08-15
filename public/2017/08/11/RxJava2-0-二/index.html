@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="RxJava," />
 
 
 
@@ -111,19 +111,17 @@
 
 
 
-<meta name="description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="已经知道了基本使用，那就继续进阶更高级的操作-线程切换。 以Android为例，一个Activity的所有动作默认都是在主线程中运行的, 比如： @Override protected void onCreate(Bundle savedInstanceState) {     super.onCreate(savedInstanceState);     setContentView(R.lay">
+<meta name="keywords" content="RxJava">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之路（5）代理模式">
-<meta property="og:url" content="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/index.html">
+<meta property="og:title" content="RxJava2.0(二)线程控制">
+<meta property="og:url" content="http://yoursite.com/2017/08/11/RxJava2-0-二/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/proxy.png">
-<meta property="og:updated_time" content="2017-07-24T10:01:24.000Z">
+<meta property="og:description" content="已经知道了基本使用，那就继续进阶更高级的操作-线程切换。 以Android为例，一个Activity的所有动作默认都是在主线程中运行的, 比如： @Override protected void onCreate(Bundle savedInstanceState) {     super.onCreate(savedInstanceState);     setContentView(R.lay">
+<meta property="og:updated_time" content="2017-08-15T12:29:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之路（5）代理模式">
-<meta name="twitter:description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/proxy.png">
+<meta name="twitter:title" content="RxJava2.0(二)线程控制">
+<meta name="twitter:description" content="已经知道了基本使用，那就继续进阶更高级的操作-线程切换。 以Android为例，一个Activity的所有动作默认都是在主线程中运行的, 比如： @Override protected void onCreate(Bundle savedInstanceState) {     super.onCreate(savedInstanceState);     setContentView(R.lay">
 
 
 
@@ -151,13 +149,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/11/RxJava2-0-二/"/>
 
 
 
 
 
-  <title>设计模式之路（5）代理模式 | Neil's blog</title>
+  <title>RxJava2.0(二)线程控制 | Neil's blog</title>
   
 
 
@@ -286,7 +284,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/11/RxJava2-0-二/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -303,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式之路（5）代理模式</h1>
+          <h1 class="post-title" itemprop="name headline">RxJava2.0(二)线程控制</h1>
         
 
         <div class="post-meta">
@@ -315,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T15:06:52+08:00">
-                2017-07-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-11T19:27:52+08:00">
+                2017-08-11
               </time>
             
 
@@ -355,9 +353,90 @@
       
 
       
-        <h3 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h3><p>简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。</p>
-<h3 id="二、代理模式结构图"><a href="#二、代理模式结构图" class="headerlink" title="二、代理模式结构图"></a>二、代理模式结构图</h3><p>借用大话中的结构图，如下：</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/proxy.png" alt="“代理模式”"></p>
+        <p>已经知道了基本使用，那就继续进阶更高级的操作-线程切换。</p>
+<p>以Android为例，一个Activity的所有动作默认都是在主线程中运行的, 比如：</p>
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    Log.d(TAG, Thread.currentThread().getName());
+}
+</code></pre><p>结果：main.</p>
+<p>那么在使用RxJava情况下，在主线程创建Observable发射数据，那么发射源就会在主线程发射数据，在主线程创建Observer接收数据，那么接收源就会在主线程接收数据。<br>比如：</p>
+<pre><code>@Override                                                                                       
+protected void onCreate(Bundle savedInstanceState) {                                            
+    super.onCreate(savedInstanceState);                                                         
+    setContentView(R.layout.activity_main);                                                     
+
+Observable&lt;Integer&gt; observable = Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {   
+    @Override                                                                               
+    public void subscribe(ObservableEmitter&lt;Integer&gt; emitter) throws Exception {            
+        Log.d(TAG, &quot;Observable thread is : &quot; + Thread.currentThread().getName());           
+        Log.d(TAG, &quot;emit on main thread&quot;);                                                               
+        emitter.onNext(1);                                                                  
+    }                                                                                       
+});                                                                                         
+
+Consumer&lt;Integer&gt; consumer = new Consumer&lt;Integer&gt;() {                                      
+    @Override                                                                               
+    public void accept(Integer integer) throws Exception {                                  
+        Log.d(TAG, &quot;Observer thread is :&quot; + Thread.currentThread().getName());              
+        Log.d(TAG, &quot;onNext: &quot; + integer);                                                   
+    }                                                                                       
+};                                                                                          
+
+observable.subscribe(consumer);                                                             
+}
+</code></pre><p>即在主线程中创建Observable和Obsever，通过订阅关联后，打印结果显示：</p>
+<pre><code>D/TAG: Observable thread is : main
+D/TAG: emit on main thread                    
+D/TAG: Observer thread is :main   
+D/TAG: onNext: 1
+</code></pre><p>发射源和接收源都在主线程工作。</p>
+<p>然而，我们工作的实际情况是，耗时的操作我们会在子线程处理，处理完再到主线程更新UI。</p>
+<p>那么，为了达到这样的效果，首先就需要改变上游发送数据的线程，然后下游在主线程接收数据，更新UI。</p>
+<pre><code>@Override                                                                                       
+protected void onCreate(Bundle savedInstanceState) {                                            
+    super.onCreate(savedInstanceState);                                                         
+    setContentView(R.layout.activity_main);                                                     
+
+Observable&lt;Integer&gt; observable = Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {   
+    @Override                                                                               
+    public void subscribe(ObservableEmitter&lt;Integer&gt; emitter) throws Exception {            
+        Log.d(TAG, &quot;Observable thread is : &quot; + Thread.currentThread().getName());           
+        Log.d(TAG, &quot;emit on new Thread&quot;);                                                               
+        emitter.onNext(1);                                                                  
+    }                                                                                       
+});                                                                                         
+
+Consumer&lt;Integer&gt; consumer = new Consumer&lt;Integer&gt;() {                                      
+    @Override                                                                               
+    public void accept(Integer integer) throws Exception {                                  
+        Log.d(TAG, &quot;Observer thread is :&quot; + Thread.currentThread().getName());              
+        Log.d(TAG, &quot;onNext: &quot; + integer);                                                   
+    }                                                                                       
+};                                                                                          
+
+observable.subscribeOn(Schedulers.newThread())                                              
+        .observeOn(AndroidSchedulers.mainThread())                                          
+        .subscribe(consumer);                                                               
+}
+</code></pre><p>结果：</p>
+<pre><code>D/TAG: Observable thread is : RxNewThreadScheduler-2  
+D/TAG: emit on new thread                                         
+D/TAG: Observer thread is :main                       
+D/TAG: onNext: 1
+</code></pre><p>从结果就可以看出，上游发射源是在一个新的子线程进行数据的相关处理的。处理后，下游的接收源在主线程接收数据。实现主线程更新UI，子线程处理耗时操作的场景。</p>
+<p>仔细观察下，在订阅的时候多了两个操作：</p>
+<ul>
+<li>subscribeOn</li>
+<li>observeOn</li>
+</ul>
+<p>下面解释下这两个操作。</p>
+<ul>
+<li>subscribeOn：上游发射源切换发射线程，多次切换的情况仅第一次有效。</li>
+<li>observeOn:下游接收事件线程，可多次指定，没指定一次，就切换一次。</li>
+</ul>
 
       
     </div>
@@ -413,7 +492,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
           
         </div>
       
@@ -426,8 +505,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/20/Android屏幕适配解决方案(1)/" rel="next" title="Android屏幕适配解决方案(1)">
-                <i class="fa fa-chevron-left"></i> Android屏幕适配解决方案(1)
+              <a href="/2017/08/10/RxJava2-0-一/" rel="next" title="RxJava2.0(一)基本使用">
+                <i class="fa fa-chevron-left"></i> RxJava2.0(一)基本使用
               </a>
             
           </div>
@@ -435,10 +514,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/25/OkHttp3源码学习（1）/" rel="prev" title="OkHttp3源码学习（1）-简单实用教程">
-                OkHttp3源码学习（1）-简单实用教程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -487,17 +562,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -561,22 +627,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、基本概念"><span class="nav-number">1.</span> <span class="nav-text">一、基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、代理模式结构图"><span class="nav-number">2.</span> <span class="nav-text">二、代理模式结构图</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
