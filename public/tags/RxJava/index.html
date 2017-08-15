@@ -111,16 +111,15 @@
 
 
 
-<meta name="description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Set集合使用注意tips">
-<meta property="og:url" content="http://yoursite.com/2017/02/22/Set集合使用注意tips/index.html">
+<meta name="description" content="优秀不够，你是否无可替代">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Neil&#39;s blog">
+<meta property="og:url" content="http://yoursite.com/tags/RxJava/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
-<meta property="og:updated_time" content="2017-07-24T09:20:35.000Z">
+<meta property="og:description" content="优秀不够，你是否无可替代">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Set集合使用注意tips">
-<meta name="twitter:description" content="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：ConcurrentModificationException example:     Set&amp;lt;CheckWork&amp;gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();     for(CheckWork checkWork : set){">
+<meta name="twitter:title" content="Neil&#39;s blog">
+<meta name="twitter:description" content="优秀不够，你是否无可替代">
 
 
 
@@ -148,13 +147,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/02/22/Set集合使用注意tips/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/RxJava/"/>
 
 
 
 
 
-  <title>Set集合使用注意tips | Neil's blog</title>
+  <title>标签: RxJava | Neil's blog</title>
   
 
 
@@ -179,7 +178,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -273,216 +272,44 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/22/Set集合使用注意tips/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h1>RxJava<small>标签</small>
+      </h1>
+    </div>
 
     
-      <header class="post-header">
+      
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Set集合使用注意tips</h1>
-        
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+      <h2 class="post-title">
+        
+            <a class="post-title-link" href="/2017/08/15/RxJava2-0-一/" itemprop="url">
               
-                <span class="post-meta-item-text">发表于</span>
+                <span itemprop="name">RxJava2.0(一)</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T19:11:02+08:00">
-                2017-02-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i>
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
-            </span>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h3 id="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："><a href="#Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：" class="headerlink" title="Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："></a>Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：</h3><p>ConcurrentModificationException</p>
-<pre><code>example:
-    Set&lt;CheckWork&gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks();
-    for(CheckWork checkWork : set){
-        if(checkWork.getState()==1){
-            set.remove(checkWork);
-        }
-    }
-</code></pre><h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><ol>
-<li><p>遍历删除List</p>
-<pre><code>List&lt;CheckWork&gt; list = this.getUserDao().getAll();
-Iterator&lt;CheckWork&gt; chk_it = list.iterator();
-while(chk_it.hasNext()){
-    CheckWork checkWork = chk_it.next();
-    if(checkWork.getPlanState()==1){
-        chk_it.remove();
-    }
-}
-</code></pre></li>
-<li><p>遍历删除Set</p>
-<pre><code>Set&lt;CheckWork&gt; set =  this.getUserDao().getAll().get(0).getActionCheckWorks();
-        Iterator&lt;CheckWork&gt; it = set.iterator();
-        while(it.hasNext()){
-            CheckWork checkWork = it.next();
-            if(checkWork.getState()==1){
-                it.remove();
-            }
-        }
-</code></pre></li>
-<li><p>遍历删除Set</p>
-<pre><code>Set&lt;CheckWork&gt; set = this.getUserDao().getAll(qf).get(0).getActionCheckWorks()；
-Set&lt;CheckWork&gt; delSet=new HashSet&lt;&gt;();
-for(CheckWork checkWork : set){
-    if(checkWork.getState()==1){
-        delSet.add(checkWork);
-    }
-}
-set.removeAll(delSet);    
-</code></pre></li>
-</ol>
-
-      
-    </div>
-
-    <div>
-      
+            </a>
         
-<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
-    <img id="wechat_subscriber_qcode" src="/images/WechatIMG7.jpeg" alt="Neil Liu wechat" style="width: 200px; max-width: 100%;"/>
-    <div>个人微信，欢迎交流</div>
-</div>
+      </h2>
 
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-08-15T19:16:59+08:00"
+              content="2017-08-15" >
+          08-15
+        </time>
+      </div>
 
-      
-    </div>
-
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>请我吃包辣条吧~</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-        <div id="wechat" style="display: inline-block">
-          <img id="wechat_qr" src="/images/WechatIMG3.jpeg" alt="Neil Liu WeChat Pay"/>
-          <p>微信打赏</p>
-        </div>
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="/images/WechatIMG5.jpeg" alt="Neil Liu Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
-
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/11/19/HTTP需要知道的知识点-补充/" rel="next" title="HTTP需要知道的知识点-补充">
-                <i class="fa fa-chevron-left"></i> HTTP需要知道的知识点-补充
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/12/Android-MVPB/" rel="prev" title="阿里百川Hotfix 1.4.0 Android接入">
-                阿里百川Hotfix 1.4.0 Android接入 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
+
+  
 
 
           </div>
@@ -490,12 +317,6 @@ set.removeAll(delSet);
 
 
           
-  <div class="comments" id="comments">
-    
-      <div id="uyan_frame"></div>
-    
-  </div>
-
 
         </div>
         
@@ -515,17 +336,8 @@ set.removeAll(delSet);
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -589,22 +401,6 @@ set.removeAll(delSet);
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常："><span class="nav-number">1.</span> <span class="nav-text">Set中的某些元素，当时使用边遍历，边删除的方法，报了以下异常：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案："><span class="nav-number">2.</span> <span class="nav-text">解决方案：</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -738,10 +534,10 @@ set.removeAll(delSet);
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-
+  
 
   
 
@@ -767,10 +563,6 @@ set.removeAll(delSet);
   
     
 
-    
-      <!-- UY BEGIN -->
-      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2138571"></script>
-      <!-- UY END -->
     
   
 
