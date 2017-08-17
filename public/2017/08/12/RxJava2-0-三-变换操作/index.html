@@ -118,10 +118,12 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map@Test public void testMap() throws Exception {     Observable.create(new ObservableOnSubscribe&amp;lt;S">
-<meta property="og:updated_time" content="2017-08-17T13:41:35.000Z">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
+<meta property="og:updated_time" content="2017-08-17T13:44:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
 <meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map@Test public void testMap() throws Exception {     Observable.create(new ObservableOnSubscribe&amp;lt;S">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
 
 
 
@@ -390,14 +392,21 @@ public void testMap() throws Exception {
     });
 }
 </code></pre><p>从上面的例子可以看到，map() 方法将参数中的 String 对象转换成一个 Bitmap 对象后返回，而在经过 map() 方法后，事件的参数类型也由 String 转为了 Bitmap。这种直接变换对象并返回的，是最常见的也最容易理解的变换。</p>
-<h4 id="二、flatmap"><a href="#二、flatmap" class="headerlink" title="二、flatmap"></a>二、flatmap</h4><pre><code>更加高级的变换。如图（来源：官方文档）
-
-![flatmap](http://ot29getcp.bkt.clouddn.com/images/flatMap.png)
-
-* 一个Observable它发射一个数据序列，这些数据本身也可以发射Observable。RxJava的flatMap()函数提供一种铺平序列的方式，然后合并这些Observables发射的数据，最后将合并后的结果作为最终的Observable。
-
-* flatMap()不能够保证在最终生成的Observable中源Observables确切的发射顺序。
-</code></pre><p>For Example：</p>
+<ul>
+<li><p>对上游发送的每一个事件应用一个函数, 使得每一个事件都按照指定的函数去变化</p>
+</li>
+<li><p>map是一对一的， 可以将上游发来的事件转换为任意的类型, 可以是一个Object, 也可以是一个集合</p>
+</li>
+</ul>
+<h4 id="二、flatmap"><a href="#二、flatmap" class="headerlink" title="二、flatmap"></a>二、flatmap</h4><p>更加高级的变换。如图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/flatMap.png" alt="flatmap"></p>
+<ul>
+<li><p>一个Observable它发射一个数据序列，这些数据本身也可以发射Observable。RxJava的flatMap()函数提供一种铺平序列的方式，然后合并这些Observables发射的数据，最后将合并后的结果作为最终的Observable。</p>
+</li>
+<li><p>flatMap()不能够保证在最终生成的Observable中源Observables确切的发射顺序。</p>
+</li>
+</ul>
+<p>For Example：</p>
 <pre><code> @Test
 public void testRxFlatMap() throws Exception {
     Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
