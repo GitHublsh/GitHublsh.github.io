@@ -8,7 +8,8 @@ tags: [RxJava]
 
 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。
 
-* map
+#### 一、map
+
 	
 		@Test
 	    public void testMap() throws Exception {
@@ -47,8 +48,7 @@ RxJava提供对事件序列进行变换操作。就是将事件序列中的对�
 	    
 从上面的例子可以看到，map() 方法将参数中的 String 对象转换成一个 Bitmap 对象后返回，而在经过 map() 方法后，事件的参数类型也由 String 转为了 Bitmap。这种直接变换对象并返回的，是最常见的也最容易理解的变换。
 
-
-* flatmap
+#### 二、flatmap
 
 	更加高级的变换。如图（来源：官方文档）
 	
