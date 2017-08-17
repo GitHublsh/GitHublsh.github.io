@@ -111,19 +111,20 @@
 
 
 
-<meta name="description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map@Test public void testMap() throws Exception {     Observable.create(new ObservableOnSubscribe&amp;lt;S">
+<meta name="description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
 <meta name="keywords" content="RxJava">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava2.0(三)变换操作">
 <meta property="og:url" content="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map@Test public void testMap() throws Exception {     Observable.create(new ObservableOnSubscribe&amp;lt;S">
+<meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
-<meta property="og:updated_time" content="2017-08-17T13:44:37.000Z">
+<meta property="og:updated_time" content="2017-08-17T13:50:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
-<meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map@Test public void testMap() throws Exception {     Observable.create(new ObservableOnSubscribe&amp;lt;S">
-<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
+<meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
 
 
 
@@ -357,7 +358,10 @@
       
         <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
 <p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
-<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><pre><code>@Test
+<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<p>一对一的变换，如下图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
+<pre><code>@Test
 public void testMap() throws Exception {
     Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
         @Override

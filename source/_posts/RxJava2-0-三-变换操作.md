@@ -10,6 +10,12 @@ RxJava提供对事件序列进行变换操作。就是将事件序列中的对�
 
 #### 一、map
 
+
+返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。
+
+一对一的变换，如下图（来源：官方文档）
+
+![map](http://ot29getcp.bkt.clouddn.com/images/map.png)
 	
 		@Test
 	    public void testMap() throws Exception {

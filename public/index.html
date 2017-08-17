@@ -354,7 +354,10 @@
           
             <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
 <p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
-<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><pre><code>@Test
+<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<p>一对一的变换，如下图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
+<pre><code>@Test
 public void testMap() throws Exception {
     Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
         @Override
