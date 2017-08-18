@@ -450,6 +450,53 @@ public void testRxFlatMap() throws Exception {
 <p>三、Zip</p>
 <p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
 <p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
+<p>来看一个简单的例子，加深理解。</p>
+<pre><code>/**
+ * RxJava zip变换
+ * @throws Exception
+ */
+@Test
+public void testZip() throws Exception {
+    Observable&lt;String&gt; observableHello = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;Hello&quot;);
+        }
+    });
+    Observable&lt;String&gt; observableWorld = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;World&quot;);
+        }
+    });
+    Observable.zip(observableHello, observableWorld, new BiFunction&lt;String, String, String&gt;() {
+        @Override
+        public String apply(@NonNull String s, @NonNull String s2) throws Exception {
+            return s+s2;
+        }
+    }).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;Final:&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p> 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，很好理解。</p>
 
           
         

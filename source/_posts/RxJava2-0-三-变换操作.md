@@ -123,3 +123,52 @@ For Example：
 
 zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。
 
+来看一个简单的例子，加深理解。
+
+	/**
+     * RxJava zip变换
+     * @throws Exception
+     */
+    @Test
+    public void testZip() throws Exception {
+        Observable<String> observableHello = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext("Hello");
+            }
+        });
+        Observable<String> observableWorld = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext("World");
+            }
+        });
+        Observable.zip(observableHello, observableWorld, new BiFunction<String, String, String>() {
+            @Override
+            public String apply(@NonNull String s, @NonNull String s2) throws Exception {
+                return s+s2;
+            }
+        }).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                System.out.println("Final:"+s);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+    
+ 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，很好理解。
