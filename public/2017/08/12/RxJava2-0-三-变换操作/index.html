@@ -120,7 +120,7 @@
 <meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
-<meta property="og:updated_time" content="2017-08-17T13:50:43.000Z">
+<meta property="og:updated_time" content="2017-08-18T11:22:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
 <meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
@@ -451,6 +451,9 @@ public void testRxFlatMap() throws Exception {
     });
 }
 </code></pre><p>  从上面的代码很容易看出FlatMap将int变换为String对象，操作简单。一个操作符搞定，这样就方便多了。</p>
+<p>三、Zip</p>
+<p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
 
       
     </div>
