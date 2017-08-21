@@ -122,7 +122,7 @@
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/filter.png">
-<meta property="og:updated_time" content="2017-08-21T16:03:14.000Z">
+<meta property="og:updated_time" content="2017-08-21T16:20:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
 <meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
@@ -458,7 +458,7 @@ public void testRxFlatMap() throws Exception {
 </ul>
 <p>通俗一点，就是和flatmap相比，concatMap是有序的。</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/concatMap.png" alt="concatmap"></p>
-<h4 id="四、Zip"><a href="#四、Zip" class="headerlink" title="四、Zip"></a>四、Zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<h4 id="四、zip"><a href="#四、zip" class="headerlink" title="四、zip"></a>四、zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
 <p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
 <p>来看一个简单的例子，加深理解。</p>
 <pre><code>/**
@@ -756,7 +756,7 @@ public void testFilter() throws Exception {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、Zip"><span class="nav-number">4.</span> <span class="nav-text">四、Zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">5.</span> <span class="nav-text">五、filter</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">4.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">5.</span> <span class="nav-text">五、filter</span></a></li></ol></div>
             
 
           </div>

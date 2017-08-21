@@ -130,7 +130,7 @@ For Example：
 
 
 
-#### 四、Zip
+#### 四、zip
 
 返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。
 

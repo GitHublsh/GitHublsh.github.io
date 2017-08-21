@@ -452,7 +452,7 @@ public void testRxFlatMap() throws Exception {
 </ul>
 <p>通俗一点，就是和flatmap相比，concatMap是有序的。</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/concatMap.png" alt="concatmap"></p>
-<h4 id="四、Zip"><a href="#四、Zip" class="headerlink" title="四、Zip"></a>四、Zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<h4 id="四、zip"><a href="#四、zip" class="headerlink" title="四、zip"></a>四、zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
 <p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
 <p>来看一个简单的例子，加深理解。</p>
 <pre><code>/**
