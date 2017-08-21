@@ -117,7 +117,7 @@ For Example：
   从上面的代码很容易看出FlatMap将int变换为String对象，操作简单。一个操作符搞定，这样就方便多了。
   
  
-三、Zip
+#### 三、Zip
 
 返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。
 
@@ -174,7 +174,7 @@ zip以严格的顺序应用此功能，因此新的ObservableSource发出的第�
  从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。
  
  
- 三、filter
+#### 四、filter
  
  简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.
 

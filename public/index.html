@@ -447,8 +447,7 @@ public void testRxFlatMap() throws Exception {
     });
 }
 </code></pre><p>  从上面的代码很容易看出FlatMap将int变换为String对象，操作简单。一个操作符搞定，这样就方便多了。</p>
-<p>三、Zip</p>
-<p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<h4 id="三、Zip"><a href="#三、Zip" class="headerlink" title="三、Zip"></a>三、Zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
 <p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
 <p>来看一个简单的例子，加深理解。</p>
 <pre><code>/**
@@ -497,8 +496,7 @@ public void testZip() throws Exception {
     });
 }
 </code></pre><p> 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。</p>
-<p> 三、filter</p>
-<p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
+<h4 id="四、filter"><a href="#四、filter" class="headerlink" title="四、filter"></a>四、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
 <p>举一个简单的例子：</p>
 <pre><code>@Test
