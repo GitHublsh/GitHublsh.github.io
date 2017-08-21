@@ -172,3 +172,54 @@ zip以严格的顺序应用此功能，因此新的ObservableSource发出的第�
     }
     
  从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。
+ 
+ 
+ 三、filter
+ 
+ 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.
+
+![filter](http://ot29getcp.bkt.clouddn.com/images/filter.png)
+
+举一个简单的例子：
+
+	@Test
+    public void testFilter() throws Exception {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(666);
+                e.onNext(6);
+                e.onComplete();
+            }
+        }).filter(new Predicate<Integer>() {
+            @Override
+            public boolean test(@NonNull Integer integer) throws Exception {
+                return integer>100;
+            }
+        }).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Integer integer) {
+                System.out.println("result:"+integer);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。
+
+
