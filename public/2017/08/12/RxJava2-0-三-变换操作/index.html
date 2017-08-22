@@ -122,7 +122,8 @@
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/filter.png">
-<meta property="og:updated_time" content="2017-08-21T16:20:57.000Z">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concat.png">
+<meta property="og:updated_time" content="2017-08-22T11:14:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
 <meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
@@ -547,6 +548,11 @@ public void testFilter() throws Exception {
         }
     });
 </code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。</p>
+<h4 id="六、concat"><a href="#六、concat" class="headerlink" title="六、concat"></a>六、concat</h4><p>Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.</p>
+<p>简单来说就是将多个数据源按序发射。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
+<p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
+<p>获取制造商信息</p>
 
       
     </div>
@@ -756,7 +762,7 @@ public void testFilter() throws Exception {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">4.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">5.</span> <span class="nav-text">五、filter</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">4.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">5.</span> <span class="nav-text">五、filter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、concat"><span class="nav-number">6.</span> <span class="nav-text">六、concat</span></a></li></ol></div>
             
 
           </div>

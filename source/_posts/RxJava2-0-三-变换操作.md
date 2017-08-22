@@ -236,3 +236,17 @@ zip以严格的顺序应用此功能，因此新的ObservableSource发出的第�
 从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。
 
 
+#### 六、concat
+
+Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.
+
+简单来说就是将多个数据源按序发射。
+
+![concat](http://ot29getcp.bkt.clouddn.com/images/concat.png)
+
+举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。
+
+获取制造商信息
+
+
+
