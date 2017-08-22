@@ -8,7 +8,13 @@ tags: [RxJava]
 
 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。
 
-#### 一、map
+#### 一、buffer
+
+可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。
+
+![buffer](http://ot29getcp.bkt.clouddn.com/images/buffer.png)
+
+#### 二、map
 
 
 返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。

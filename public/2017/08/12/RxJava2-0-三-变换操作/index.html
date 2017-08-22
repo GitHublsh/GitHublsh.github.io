@@ -111,23 +111,24 @@
 
 
 
-<meta name="description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
+<meta name="description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、map返回一个Observable，它将指定的函数应用于源Observable">
 <meta name="keywords" content="RxJava">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava2.0(三)变换操作">
 <meta property="og:url" content="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
+<meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、map返回一个Observable，它将指定的函数应用于源Observable">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/buffer.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/filter.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concat.png">
-<meta property="og:updated_time" content="2017-08-22T11:14:55.000Z">
+<meta property="og:updated_time" content="2017-08-22T15:10:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
-<meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
-<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
+<meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、map返回一个Observable，它将指定的函数应用于源Observable">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/buffer.png">
 
 
 
@@ -361,7 +362,9 @@
       
         <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
 <p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
-<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
+<h4 id="二、map"><a href="#二、map" class="headerlink" title="二、map"></a>二、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
 <p>一对一的变换，如下图（来源：官方文档）</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
 <pre><code>@Test
@@ -631,6 +634,10 @@ public void testFilter() throws Exception {
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/08/22/RxJava2-0-四-过滤操作/" rel="prev" title="RxJava2.0(四)过滤操作">
+                RxJava2.0(四)过滤操作 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -703,7 +710,7 @@ public void testFilter() throws Exception {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -762,7 +769,7 @@ public void testFilter() throws Exception {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">4.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">5.</span> <span class="nav-text">五、filter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、concat"><span class="nav-number">6.</span> <span class="nav-text">六、concat</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、buffer"><span class="nav-number">1.</span> <span class="nav-text">一、buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、map"><span class="nav-number">2.</span> <span class="nav-text">二、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">3.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">4.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">5.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、filter"><span class="nav-number">6.</span> <span class="nav-text">五、filter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、concat"><span class="nav-number">7.</span> <span class="nav-text">六、concat</span></a></li></ol></div>
             
 
           </div>
