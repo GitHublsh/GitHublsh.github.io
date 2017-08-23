@@ -8,13 +8,7 @@ tags: [RxJava]
 
 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。
 
-#### 一、buffer
-
-可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。
-
-![buffer](http://ot29getcp.bkt.clouddn.com/images/buffer.png)
-
-#### 二、map
+#### 一、map
 
 
 返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。
@@ -191,58 +185,8 @@ zip以严格的顺序应用此功能，因此新的ObservableSource发出的第�
     }
     
  从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。
- 
- 
-#### 五、filter
- 
- 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.
 
-![filter](http://ot29getcp.bkt.clouddn.com/images/filter.png)
-
-举一个简单的例子：
-
-	@Test
-    public void testFilter() throws Exception {
-        Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
-                e.onNext(1);
-                e.onNext(666);
-                e.onNext(6);
-                e.onComplete();
-            }
-        }).filter(new Predicate<Integer>() {
-            @Override
-            public boolean test(@NonNull Integer integer) throws Exception {
-                return integer>100;
-            }
-        }).subscribe(new Observer<Integer>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(@NonNull Integer integer) {
-                System.out.println("result:"+integer);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-
-从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。
-
-
-#### 六、concat
+#### 五、concat
 
 Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.
 
@@ -252,7 +196,9 @@ Concatenates elements of each ObservableSource provided via an Iterable sequence
 
 举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。
 
-获取制造商信息
+获取辣条制造商信息
+
+
 
 
 

@@ -352,7 +352,49 @@
       
         
           
-            
+            <h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
+<h4 id="二、filter"><a href="#二、filter" class="headerlink" title="二、filter"></a>二、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
+<p>举一个简单的例子：</p>
+<pre><code>@Test
+public void testFilter() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(1);
+            e.onNext(666);
+            e.onNext(6);
+            e.onComplete();
+        }
+    }).filter(new Predicate&lt;Integer&gt;() {
+        @Override
+        public boolean test(@NonNull Integer integer) throws Exception {
+            return integer&gt;100;
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer integer) {
+            System.out.println(&quot;result:&quot;+integer);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+</code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。</p>
+
           
         
       
@@ -465,9 +507,7 @@
           
             <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
 <p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
-<h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
-<h4 id="二、map"><a href="#二、map" class="headerlink" title="二、map"></a>二、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
 <p>一对一的变换，如下图（来源：官方文档）</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
 <pre><code>@Test
@@ -614,51 +654,11 @@ public void testZip() throws Exception {
     });
 }
 </code></pre><p> 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。</p>
-<h4 id="五、filter"><a href="#五、filter" class="headerlink" title="五、filter"></a>五、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
-<p>举一个简单的例子：</p>
-<pre><code>@Test
-public void testFilter() throws Exception {
-    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
-        @Override
-        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
-            e.onNext(1);
-            e.onNext(666);
-            e.onNext(6);
-            e.onComplete();
-        }
-    }).filter(new Predicate&lt;Integer&gt;() {
-        @Override
-        public boolean test(@NonNull Integer integer) throws Exception {
-            return integer&gt;100;
-        }
-    }).subscribe(new Observer&lt;Integer&gt;() {
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-
-        }
-
-        @Override
-        public void onNext(@NonNull Integer integer) {
-            System.out.println(&quot;result:&quot;+integer);
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-
-        }
-
-        @Override
-        public void onComplete() {
-
-        }
-    });
-</code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。</p>
-<h4 id="六、concat"><a href="#六、concat" class="headerlink" title="六、concat"></a>六、concat</h4><p>Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.</p>
+<h4 id="五、concat"><a href="#五、concat" class="headerlink" title="五、concat"></a>五、concat</h4><p>Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.</p>
 <p>简单来说就是将多个数据源按序发射。</p>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
 <p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
-<p>获取制造商信息</p>
+<p>获取辣条制造商信息</p>
 
           
         

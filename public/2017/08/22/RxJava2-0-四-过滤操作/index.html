@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="RxJava," />
 
 
 
@@ -111,16 +111,20 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
+<meta name="description" content="一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、filter 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.  举">
+<meta name="keywords" content="RxJava">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava2.0(四)过滤操作">
 <meta property="og:url" content="http://yoursite.com/2017/08/22/RxJava2-0-四-过滤操作/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
-<meta property="og:updated_time" content="2017-08-22T14:33:27.000Z">
+<meta property="og:description" content="一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、filter 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.  举">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/buffer.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/filter.png">
+<meta property="og:updated_time" content="2017-08-23T12:02:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(四)过滤操作">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:description" content="一、buffer可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。  二、filter 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.  举">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/buffer.png">
 
 
 
@@ -352,7 +356,49 @@
       
 
       
-        
+        <h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
+<h4 id="二、filter"><a href="#二、filter" class="headerlink" title="二、filter"></a>二、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
+<p>举一个简单的例子：</p>
+<pre><code>@Test
+public void testFilter() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(1);
+            e.onNext(666);
+            e.onNext(6);
+            e.onComplete();
+        }
+    }).filter(new Predicate&lt;Integer&gt;() {
+        @Override
+        public boolean test(@NonNull Integer integer) throws Exception {
+            return integer&gt;100;
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer integer) {
+            System.out.println(&quot;result:&quot;+integer);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+</code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字。很容易理解。</p>
+
       
     </div>
 
@@ -404,6 +450,12 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
       
 
       
@@ -471,8 +523,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -536,6 +597,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、buffer"><span class="nav-number">1.</span> <span class="nav-text">一、buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、filter"><span class="nav-number">2.</span> <span class="nav-text">二、filter</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
