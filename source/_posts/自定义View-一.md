@@ -56,3 +56,10 @@ tags: [自定义View]
  	* getLeft():view左边相对于父控件距离
  	* getRight():view右边相对于父控件距离
  	
+ 	
+ 	
+3. View绘制流程
+
+![viewhuizhi](http://ot29getcp.bkt.clouddn.com/images/view%E7%BB%98%E5%88%B6.png)
+
+ 
