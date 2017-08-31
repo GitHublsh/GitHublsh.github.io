@@ -1,5 +1,5 @@
 ---
-title: RxJava2.0(三)变换操作
+title: RxJava2.0(三)操作符简介
 date: 2017-08-12 15:58:33
 tags: [RxJava]
 ---
@@ -7,6 +7,8 @@ tags: [RxJava]
 了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方--变换操作。
 
 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。
+
+### 变换操作
 
 #### 一、map
 
@@ -253,6 +255,66 @@ Concatenates elements of each ObservableSource provided via an Iterable sequence
 	result：chili
 	
 就拿到了辣条的所有信息了。
+
+
+
+### 过滤操作
+
+#### 一、buffer
+
+可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。
+
+![buffer](http://ot29getcp.bkt.clouddn.com/images/buffer.png)
+
+
+#### 二、filter
+ 
+ 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.
+
+![filter](http://ot29getcp.bkt.clouddn.com/images/filter.png)
+
+举一个简单的例子：
+
+	@Test
+    public void testFilter() throws Exception {
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(666);
+                e.onNext(6);
+                e.onComplete();
+            }
+        }).filter(new Predicate<Integer>() {
+            @Override
+            public boolean test(@NonNull Integer integer) throws Exception {
+                return integer>100;
+            }
+        }).subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull Integer integer) {
+                System.out.println("result:"+integer);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字，然后输出自己想要得到的数字。很容易理解。
+
 
 
 
