@@ -122,7 +122,7 @@
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concatMap.png">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concat.png">
-<meta property="og:updated_time" content="2017-08-28T15:01:05.000Z">
+<meta property="og:updated_time" content="2017-08-31T07:52:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(三)变换操作">
 <meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test public">
@@ -512,6 +512,58 @@ public void testZip() throws Exception {
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
 <p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
 <p>获取辣条制造商信息</p>
+<pre><code>@Test
+public void testConcat() throws Exception {
+    final Observable&lt;String&gt; factory = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;卫龙&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable&lt;String&gt; price = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;5&quot;);
+            e.onComplete();
+        }
+    });
+    Observable&lt;String&gt; material = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;chili&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable.concat(factory, price,material).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;result&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>结果为：</p>
+<pre><code>result：卫龙
+result：5
+result：chili
+</code></pre><p>就拿到了辣条的所有信息了。</p>
 
       
     </div>

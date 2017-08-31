@@ -818,6 +818,58 @@ public void testZip() throws Exception {
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
 <p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
 <p>获取辣条制造商信息</p>
+<pre><code>@Test
+public void testConcat() throws Exception {
+    final Observable&lt;String&gt; factory = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;卫龙&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable&lt;String&gt; price = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;5&quot;);
+            e.onComplete();
+        }
+    });
+    Observable&lt;String&gt; material = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;chili&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable.concat(factory, price,material).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;result&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>结果为：</p>
+<pre><code>result：卫龙
+result：5
+result：chili
+</code></pre><p>就拿到了辣条的所有信息了。</p>
 
           
         

@@ -198,6 +198,62 @@ Concatenates elements of each ObservableSource provided via an Iterable sequence
 
 获取辣条制造商信息
 
+	@Test
+    public void testConcat() throws Exception {
+        final Observable<String> factory = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext("卫龙");
+                e.onComplete();
+            }
+        });
+
+        Observable<String> price = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext("5");
+                e.onComplete();
+            }
+        });
+        Observable<String> material = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext("chili");
+                e.onComplete();
+            }
+        });
+
+        Observable.concat(factory, price,material).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                System.out.println("result"+s);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+    
+结果为：
+
+	result：卫龙
+	result：5
+	result：chili
+	
+就拿到了辣条的所有信息了。
+
 
 
 
