@@ -541,18 +541,30 @@
 </li>
 <li><p>adb kill-server    关闭服务</p>
 </li>
-<li>adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）</li>
-<li>adb install xxx.apk    将应用安装进设备中</li>
-<li>adb uninstall &lt;包名&gt;    卸载应用</li>
-<li>adb -s &lt;设备名&gt; &lt;命令&gt;    如果有多个设备，指定某一个设备进行操作</li>
-<li>adb pull &lt;手机文件&gt; &lt;电脑文件&gt;    将手机内文件导入到电脑上(文件名均为全称)</li>
-<li>adb push &lt;电脑文件&gt; &lt;手机文件&gt;    将电脑中文件推送到手机上(文件名均为全称)</li>
-<li>adb shell    进入手机命令行终端</li>
-<li>adb logcat  打印 Android 的系统日志</li>
-<li>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</li>
-<li>adb bugreport &gt; d:\bugreport.log  输出比较多，建议重定向到一个文件中</li>
-<li>adb shell pm list package    不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）</li>
-<li>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</li>
+<li><p>adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）</p>
+</li>
+<li><p>adb install xxx.apk    将应用安装进设备中</p>
+</li>
+<li><p>adb uninstall &lt;包名&gt;    卸载应用</p>
+</li>
+<li><p>adb -s &lt;设备名&gt; &lt;命令&gt;    如果有多个设备，指定某一个设备进行操作</p>
+</li>
+<li><p>adb pull &lt;手机文件&gt; &lt;电脑文件&gt;    将手机内文件导入到电脑上(文件名均为全称)</p>
+</li>
+<li><p>adb push &lt;电脑文件&gt; &lt;手机文件&gt;    将电脑中文件推送到手机上(文件名均为全称)</p>
+</li>
+<li><p>adb shell    进入手机命令行终端</p>
+</li>
+<li><p>adb logcat  打印 Android 的系统日志</p>
+</li>
+<li><p>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</p>
+</li>
+<li><p>adb bugreport &gt; d:\bugreport.log  输出比较多，建议重定向到一个文件中</p>
+</li>
+<li><p>adb shell pm list package    不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）</p>
+</li>
+<li><p>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</p>
+</li>
 </ul>
 
           
