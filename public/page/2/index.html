@@ -284,6 +284,314 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/27/OkHttp3源码学习（3）/" itemprop="url">OkHttp3源码学习(3)-拦截器链详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T17:02:28+08:00">
+                2017-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
+   // Build a full stack of interceptors.
+   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
+   interceptors.addAll(client.interceptors());
+   interceptors.add(retryAndFollowUpInterceptor);
+   interceptors.add(new BridgeInterceptor(client.cookieJar()));
+   interceptors.add(new CacheInterceptor(client.internalCache()));
+   interceptors.add(new ConnectInterceptor(client));
+   if (!forWebSocket) {
+     interceptors.addAll(client.networkInterceptors());
+   }
+   interceptors.add(new CallServerInterceptor(forWebSocket));
+
+   Interceptor.Chain chain = new RealInterceptorChain(
+       interceptors, null, null, null, 0, originalRequest);
+   return chain.proceed(originalRequest);
+ }
+</code></pre><h4 id="RealInterceptorChain"><a href="#RealInterceptorChain" class="headerlink" title="RealInterceptorChain"></a>RealInterceptorChain</h4><pre><code>/**
+ * A concrete interceptor chain that carries the entire interceptor chain: all application
+ * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
+ */
+public final class RealInterceptorChain implements Interceptor.Chain {
+  private final List&lt;Interceptor&gt; interceptors;
+  private final StreamAllocation streamAllocation;
+  private final HttpCodec httpCodec;
+  private final RealConnection connection;
+  private final int index;
+  private final Request request;
+  private int calls;
+
+  public RealInterceptorChain(List&lt;Interceptor&gt; interceptors, StreamAllocation streamAllocation,
+      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
+    this.interceptors = interceptors;
+    this.connection = connection;
+    this.streamAllocation = streamAllocation;
+    this.httpCodec = httpCodec;
+    this.index = index;
+    this.request = request;
+  }
+
+  @Override public Connection connection() {
+    return connection;
+  }
+
+  public StreamAllocation streamAllocation() {
+    return streamAllocation;
+  }
+
+  public HttpCodec httpStream() {
+    return httpCodec;
+  }
+
+  @Override public Request request() {
+    return request;
+  }
+
+  @Override public Response proceed(Request request) throws IOException {
+    return proceed(request, streamAllocation, httpCodec, connection);
+  }
+
+  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
+      RealConnection connection) throws IOException {
+    if (index &gt;= interceptors.size()) throw new AssertionError();
+
+    calls++;
+
+    // If we already have a stream, confirm that the incoming request will use it.
+    if (this.httpCodec != null &amp;&amp; !this.connection.supportsUrl(request.url())) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must retain the same host and port&quot;);
+    }
+
+    // If we already have a stream, confirm that this is the only call to chain.proceed().
+    if (this.httpCodec != null &amp;&amp; calls &gt; 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must call proceed() exactly once&quot;);
+    }
+
+
+
+    Interceptor interceptor = interceptors.get(index);
+    Response response = interceptor.intercept(next);
+
+    // Confirm that the next interceptor made its required call to chain.proceed().
+    if (httpCodec != null &amp;&amp; index + 1 &lt; interceptors.size() &amp;&amp; next.calls != 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptor
+          + &quot; must call proceed() exactly once&quot;);
+    }
+
+    // Confirm that the intercepted response isn&apos;t null.
+    if (response == null) {
+      throw new NullPointerException(&quot;interceptor &quot; + interceptor + &quot; returned null&quot;);
+    }
+
+    return response;
+  }
+}
+</code></pre><p>可以看到procees方法的逻辑：<br>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。</p>
+<h4 id="一、RetryAndFollowUpInterceptor"><a href="#一、RetryAndFollowUpInterceptor" class="headerlink" title="一、RetryAndFollowUpInterceptor"></a>一、RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
+    Request request = chain.request();
+
+streamAllocation = new StreamAllocation(
+    client.connectionPool(), createAddress(request.url()), callStackTrace);
+
+int followUpCount = 0;
+Response priorResponse = null;
+while (true) {
+  if (canceled) {
+    streamAllocation.release();
+    throw new IOException(&quot;Canceled&quot;);
+  }
+
+  Response response = null;
+  boolean releaseConnection = true;
+  try {
+    response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
+    releaseConnection = false;
+  } catch (RouteException e) {
+    // The attempt to connect via a route failed. The request will not have been sent.
+    if (!recover(e.getLastConnectException(), false, request)) {
+      throw e.getLastConnectException();
+    }
+    releaseConnection = false;
+    continue;
+  } catch (IOException e) {
+    // An attempt to communicate with a server failed. The request may have been sent.
+    boolean requestSendStarted = !(e instanceof ConnectionShutdownException);
+    if (!recover(e, requestSendStarted, request)) throw e;
+    releaseConnection = false;
+    continue;
+  } finally {
+    // We&apos;re throwing an unchecked exception. Release any resources.
+    if (releaseConnection) {
+      streamAllocation.streamFailed(null);
+      streamAllocation.release();
+    }
+  }
+
+  // Attach the prior response if it exists. Such responses never have a body.
+  if (priorResponse != null) {
+    response = response.newBuilder()
+        .priorResponse(priorResponse.newBuilder()
+                .body(null)
+                .build())
+        .build();
+  }
+
+  Request followUp = followUpRequest(response);
+
+  if (followUp == null) {
+    if (!forWebSocket) {
+      streamAllocation.release();
+    }
+    return response;
+  }
+
+  closeQuietly(response.body());
+
+  if (++followUpCount &gt; MAX_FOLLOW_UPS) {
+    streamAllocation.release();
+    throw new ProtocolException(&quot;Too many follow-up requests: &quot; + followUpCount);
+  }
+
+  if (followUp.body() instanceof UnrepeatableRequestBody) {
+    streamAllocation.release();
+    throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
+  }
+
+  if (!sameConnection(response, followUp.url())) {
+    streamAllocation.release();
+    streamAllocation = new StreamAllocation(
+        client.connectionPool(), createAddress(followUp.url()), callStackTrace);
+  } else if (streamAllocation.codec() != null) {
+    throw new IllegalStateException(&quot;Closing the body of &quot; + response
+        + &quot; didn&apos;t close its backing stream. Bad interceptor?&quot;);
+  }
+
+  request = followUp;
+  priorResponse = response;
+}
+}
+</code></pre><ul>
+<li>发起请求前拦截器对request处理</li>
+<li>然后调用下一个拦截器，获取Response</li>
+</ul>
+<p>调用的关键：</p>
+<pre><code>try {
+        response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
+        releaseConnection = false;
+      }
+</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器</p>
+<pre><code>// Call the next interceptor in the chain.
+   RealInterceptorChain next = new RealInterceptorChain(
+       interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+   Interceptor interceptor = interceptors.get(index);
+   Response response = interceptor.intercept(next);
+</code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1130,147 +1438,6 @@ OkHttpClient client = new OkHttpClient();
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/19/设计模式之路（4）装饰者模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/19/设计模式之路（4）装饰者模式/" itemprop="url">设计模式之路（4）装饰者模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T10:20:23+08:00">
-                2017-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="一、定义"><a href="#一、定义" class="headerlink" title="一、定义"></a>一、定义</h4><p>装饰模式指的是在不必改变原类文件和使用继承的情况下，动态地扩展一个对象的功能。它是通过创建一个包装对象，也就是装饰来包裹真实的对象。</p>
-<h4 id="二、特性"><a href="#二、特性" class="headerlink" title="二、特性"></a>二、特性</h4><ol>
-<li>装饰对象和真实对象有相同的接口。这样客户端对象就能以和真实对象相同的方式和装饰对象交互。</li>
-<li>装饰对象包含一个真实对象的引用（reference）</li>
-<li>装饰对象接受所有来自客户端的请求。它把这些请求转发给真实的对象。</li>
-<li>装饰对象可以在转发这些请求以前或以后增加一些附加功能。这样就确保了在运行时，不用修改给定对象的结构就可以在外部增加附加的功能。在面向对象的设计中，通常是通过继承来实现对给定类的功能扩展。</li>
-</ol>
-<h4 id="三、结构"><a href="#三、结构" class="headerlink" title="三、结构"></a>三、结构</h4><p><img src="http://ot29getcp.bkt.clouddn.com/images/decorator.png" alt="“装饰者”"></p>
-<ol>
-<li>抽象构件（Component）角色：给出一个抽象接口，以规范准备接收附加责任的对象。</li>
-<li>具体构件（Concrete Component）角色：定义一个将要接收附加责任的类。</li>
-<li>装饰（Decorator）角色：持有一个构件（Component）对象的实例，并实现一个与抽象构件接口一致的接口。</li>
-<li>具体装饰（Concrete Decorator）角色：负责给构件对象添加上附加的责任。</li>
-</ol>
-<p>举个栗子：</p>
-<p>(1)在Java设计中</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/javadecorator" alt="“Java装饰者”"></p>
-<p>(2)在Android中</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/androiddecorator" alt="“Android装饰者”"></p>
-<h4 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h4><p>装饰者模式和代理模式有点类似，很多时候需要仔细辨别，容易混淆，倒不是说会把代理模式看成装饰者模式，而是会把装饰者模式看作代理模式。区分一下，装饰者模式的目的是透明地为客户端对象扩展功能，是继承关系的一种替代方案，而代理模式则是给一个对象提供一个代理对象，并由代理对象来控制对原有对象的引用。装饰者模式应该为所装饰的对象增强功能；代理模式对代理的对象施加控制，但不对对象本身的功能进行增强。<br>同时有几个要点需要提一下：</p>
-<ul>
-<li>继承属于扩展形式之一，但不一定是达到弹性设计的最佳方案；</li>
-<li>在我们的设计，应该尽量对修改关闭，对扩展开发，无需修改现有代码；</li>
-<li>组合和委托可用于在运行时动态加上新的行为；</li>
-<li>装饰者可以在被装饰者行为的前后根据实际情况加上自己的行为，必要时也可以将被装饰者行为给替换掉；</li>
-<li>可以用无数个装饰者包装一个组件，也就是说，装饰者 A 包装了被装饰者 B ，装饰者 C 再包装装饰者 A，根据实际情况这种行为可以累加到多层，通俗讲就是套上多层外壳；</li>
-<li>同时，被装饰者也可以存在多个，也就是说 ConcreteComponent 这个角色也可以是多个的。</li>
-<li>装饰者模式的优点就是它的特点：可以在运行时动态，透明的为一个组件扩展功能，比继承更加灵活；</li>
-<li>缺点也很明显：它会导致设计中出现许多小对象，如果过度使用，会让程序变得很复杂。</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1320,7 +1487,7 @@ OkHttpClient client = new OkHttpClient();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1333,7 +1500,7 @@ OkHttpClient client = new OkHttpClient();
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
