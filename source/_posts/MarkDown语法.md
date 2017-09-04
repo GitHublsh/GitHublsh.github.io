@@ -26,3 +26,20 @@ tags: [MarkDown]
 	
 	* 指向本地文件的链接
 		* `[icon.png](./images/icon.png)`
+
+5. 图片
+	
+	* `![GitHub](https://avatars2.githubusercontent.com/u/3265208?v=3&s=100 "GitHub,Social Coding")`
+
+6. 表格
+
+	* 单元格和表头：
+		* 使用 | 来分隔不同的单元格，使用 - 来分隔表头和其他行：
+
+			`  name | age `
+			
+			`	---- | ---`
+			
+			`	LearnShare | 12`
+			
+			`	Mike |  32 `
