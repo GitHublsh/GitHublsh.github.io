@@ -60,6 +60,6 @@ tags: [自定义View]
  	
 3. View绘制流程
 
-![viewhuizhi](http://ot29getcp.bkt.clouddn.com/images/view%E7%BB%98%E5%88%B6.png)
+![viewhuizhi](http://ot29getcp.bkt.clouddn.com/images/customview.jpg)
 
  
