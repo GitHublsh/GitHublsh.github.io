@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/09/02/ADB常用命令备忘录/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
-<meta property="og:updated_time" content="2017-09-02T16:13:48.000Z">
+<meta property="og:updated_time" content="2017-09-07T03:01:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ADB常用命令备忘录">
 <meta name="twitter:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
@@ -382,6 +382,10 @@
 </li>
 <li><p>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</p>
 </li>
+</ul>
+<ul>
+<li>logcat | grep ActivityManager :查看当前运行的Activity</li>
+<li>adb shell dumpsys activity activities ::查看当前运行的Activity</li>
 </ul>
 
       

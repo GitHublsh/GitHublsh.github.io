@@ -31,3 +31,7 @@ tags: [ADB]
 * adb shell pm list package	不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）
 
 * adb shell pm list package -3	列出第三方应用	-s：列出系统应用	命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用
+
+
+* logcat | grep ActivityManager :查看当前运行的Activity
+* adb shell dumpsys activity activities ::查看当前运行的Activity
