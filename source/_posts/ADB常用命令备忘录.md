@@ -24,6 +24,9 @@ tags: [ADB]
 
 * adb logcat  打印 Android 的系统日志
 
+* adb logcat | grep MyApp 匹配字符串过滤
+* adb logcat | grep -i myapp 忽略大小写通过字符串过滤
+
 * adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误
 
 * adb bugreport > d:\bugreport.log  输出比较多，建议重定向到一个文件中

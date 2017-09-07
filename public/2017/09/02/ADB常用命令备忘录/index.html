@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/09/02/ADB常用命令备忘录/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
-<meta property="og:updated_time" content="2017-09-07T03:10:18.000Z">
+<meta property="og:updated_time" content="2017-09-07T03:20:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ADB常用命令备忘录">
 <meta name="twitter:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
@@ -373,6 +373,10 @@
 <li><p>adb shell    进入手机命令行终端</p>
 </li>
 <li><p>adb logcat  打印 Android 的系统日志</p>
+</li>
+<li><p>adb logcat | grep MyApp 匹配字符串过滤</p>
+</li>
+<li><p>adb logcat | grep -i myapp 忽略大小写通过字符串过滤</p>
 </li>
 <li><p>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</p>
 </li>
