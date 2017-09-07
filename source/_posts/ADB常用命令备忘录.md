@@ -34,4 +34,4 @@ tags: [ADB]
 
 
 * logcat | grep ActivityManager :查看当前运行的Activity
-* adb shell dumpsys activity activities ::查看当前运行的Activity
+* adb shell dumpsys activity activities | grep "Run":查看当前运行的Activity 
