@@ -9,8 +9,6 @@ date: 2017-07-10 16:42:29
 
 Name: Neil Liu
 
-QQ: 601545126
-
 Wechat: lsh-323
 
 Email: codeneil@163.com
