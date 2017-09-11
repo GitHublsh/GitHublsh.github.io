@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
+<meta name="description" content="上一节对于基本常用的操作符有了基本的了解。接下来学学BackPressure(背压)。 一、什么是背压在RxJava中会经常遇到一种情况就是被观察者发送消息太快以至于它的操作符或者订阅者不能及时处理相关的消息。那么随之而来的就是如何处理这些未处理的消息。 例如，上节讲到的zip操作符，如果zip将两个无限发送事件的被观察者进行组合，那么其中一个被观察者A发送事件特别快，另外一个被观察者发送事件特别">
 <meta name="keywords" content="RxJava">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxJava2.0(四)Backpressure">
 <meta property="og:url" content="http://yoursite.com/2017/09/11/RxJava2-0-四-Backpressure/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
-<meta property="og:updated_time" content="2017-09-11T15:27:56.000Z">
+<meta property="og:description" content="上一节对于基本常用的操作符有了基本的了解。接下来学学BackPressure(背压)。 一、什么是背压在RxJava中会经常遇到一种情况就是被观察者发送消息太快以至于它的操作符或者订阅者不能及时处理相关的消息。那么随之而来的就是如何处理这些未处理的消息。 例如，上节讲到的zip操作符，如果zip将两个无限发送事件的被观察者进行组合，那么其中一个被观察者A发送事件特别快，另外一个被观察者发送事件特别">
+<meta property="og:updated_time" content="2017-09-11T15:55:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava2.0(四)Backpressure">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:description" content="上一节对于基本常用的操作符有了基本的了解。接下来学学BackPressure(背压)。 一、什么是背压在RxJava中会经常遇到一种情况就是被观察者发送消息太快以至于它的操作符或者订阅者不能及时处理相关的消息。那么随之而来的就是如何处理这些未处理的消息。 例如，上节讲到的zip操作符，如果zip将两个无限发送事件的被观察者进行组合，那么其中一个被观察者A发送事件特别快，另外一个被观察者发送事件特别">
 
 
 
@@ -353,7 +353,12 @@
       
 
       
-        
+        <p>上一节对于基本常用的操作符有了基本的了解。接下来学学BackPressure(背压)。</p>
+<h4 id="一、什么是背压"><a href="#一、什么是背压" class="headerlink" title="一、什么是背压"></a>一、什么是背压</h4><p>在RxJava中会经常遇到一种情况就是被观察者发送消息太快以至于它的操作符或者订阅者不能及时处理相关的消息。那么随之而来的就是如何处理这些未处理的消息。</p>
+<p>例如，上节讲到的zip操作符，如果zip将两个无限发送事件的被观察者进行组合，那么其中一个被观察者A发送事件特别快，另外一个被观察者发送事件特别慢，那么就会有越来越多等待组合的事件。等发送事件慢的被观察者发送事件，等待的发射事件快的再与慢的组合，是不是很笨重+占资源？</p>
+<p>那么这个时候backpressure(背压)出现了，RxJava中多重控制流及背压策略用来应对一个快速发送消息的被观察者遇到一个处理消息缓慢的观察者。下面的解释将会向你展示你应当怎么设计属于你自己的被观察者和操作符去应对流量控制（flow control）。</p>
+<p>简单来说，就是来控制事件流速。</p>
+
       
     </div>
 
@@ -478,8 +483,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -543,6 +557,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、什么是背压"><span class="nav-number">1.</span> <span class="nav-text">一、什么是背压</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
