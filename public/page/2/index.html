@@ -284,6 +284,155 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/ADB常用命令备忘录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/02/ADB常用命令备忘录/" itemprop="url">ADB常用命令备忘录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-02T23:27:48+08:00">
+                2017-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>adb start-server    启动服务</p>
+</li>
+<li><p>adb kill-server    关闭服务</p>
+</li>
+<li><p>adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）</p>
+</li>
+<li><p>adb install xxx.apk    将应用安装进设备中</p>
+</li>
+<li><p>adb uninstall &lt;包名&gt;    卸载应用</p>
+</li>
+<li><p>adb -s &lt;设备名&gt; &lt;命令&gt;    如果有多个设备，指定某一个设备进行操作</p>
+</li>
+<li><p>adb pull &lt;手机文件&gt; &lt;电脑文件&gt;    将手机内文件导入到电脑上(文件名均为全称)</p>
+</li>
+<li><p>adb push &lt;电脑文件&gt; &lt;手机文件&gt;    将电脑中文件推送到手机上(文件名均为全称)</p>
+</li>
+<li><p>adb shell    进入手机命令行终端</p>
+</li>
+<li><p>adb logcat  打印 Android 的系统日志</p>
+</li>
+<li><p>adb logcat | grep MyApp 匹配字符串过滤</p>
+</li>
+<li><p>adb logcat | grep -i myapp 忽略大小写通过字符串过滤</p>
+</li>
+<li><p>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</p>
+</li>
+<li><p>adb bugreport &gt; d:\bugreport.log  输出比较多，建议重定向到一个文件中</p>
+</li>
+<li><p>adb shell pm list package    不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）</p>
+</li>
+<li><p>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</p>
+</li>
+</ul>
+<ul>
+<li>logcat | grep ActivityManager :查看当前运行的Activity</li>
+<li>adb shell dumpsys activity activities | grep “Run”:查看当前运行的Activity </li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/26/自定义View-一/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1208,314 +1357,6 @@ public void testObservable1() throws Exception {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/27/OkHttp3源码学习（3）/" itemprop="url">OkHttp3源码学习(3)-拦截器链详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T17:02:28+08:00">
-                2017-07-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
-   // Build a full stack of interceptors.
-   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
-   interceptors.addAll(client.interceptors());
-   interceptors.add(retryAndFollowUpInterceptor);
-   interceptors.add(new BridgeInterceptor(client.cookieJar()));
-   interceptors.add(new CacheInterceptor(client.internalCache()));
-   interceptors.add(new ConnectInterceptor(client));
-   if (!forWebSocket) {
-     interceptors.addAll(client.networkInterceptors());
-   }
-   interceptors.add(new CallServerInterceptor(forWebSocket));
-
-   Interceptor.Chain chain = new RealInterceptorChain(
-       interceptors, null, null, null, 0, originalRequest);
-   return chain.proceed(originalRequest);
- }
-</code></pre><h4 id="RealInterceptorChain"><a href="#RealInterceptorChain" class="headerlink" title="RealInterceptorChain"></a>RealInterceptorChain</h4><pre><code>/**
- * A concrete interceptor chain that carries the entire interceptor chain: all application
- * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
- */
-public final class RealInterceptorChain implements Interceptor.Chain {
-  private final List&lt;Interceptor&gt; interceptors;
-  private final StreamAllocation streamAllocation;
-  private final HttpCodec httpCodec;
-  private final RealConnection connection;
-  private final int index;
-  private final Request request;
-  private int calls;
-
-  public RealInterceptorChain(List&lt;Interceptor&gt; interceptors, StreamAllocation streamAllocation,
-      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
-    this.interceptors = interceptors;
-    this.connection = connection;
-    this.streamAllocation = streamAllocation;
-    this.httpCodec = httpCodec;
-    this.index = index;
-    this.request = request;
-  }
-
-  @Override public Connection connection() {
-    return connection;
-  }
-
-  public StreamAllocation streamAllocation() {
-    return streamAllocation;
-  }
-
-  public HttpCodec httpStream() {
-    return httpCodec;
-  }
-
-  @Override public Request request() {
-    return request;
-  }
-
-  @Override public Response proceed(Request request) throws IOException {
-    return proceed(request, streamAllocation, httpCodec, connection);
-  }
-
-  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
-      RealConnection connection) throws IOException {
-    if (index &gt;= interceptors.size()) throw new AssertionError();
-
-    calls++;
-
-    // If we already have a stream, confirm that the incoming request will use it.
-    if (this.httpCodec != null &amp;&amp; !this.connection.supportsUrl(request.url())) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
-          + &quot; must retain the same host and port&quot;);
-    }
-
-    // If we already have a stream, confirm that this is the only call to chain.proceed().
-    if (this.httpCodec != null &amp;&amp; calls &gt; 1) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
-          + &quot; must call proceed() exactly once&quot;);
-    }
-
-
-
-    Interceptor interceptor = interceptors.get(index);
-    Response response = interceptor.intercept(next);
-
-    // Confirm that the next interceptor made its required call to chain.proceed().
-    if (httpCodec != null &amp;&amp; index + 1 &lt; interceptors.size() &amp;&amp; next.calls != 1) {
-      throw new IllegalStateException(&quot;network interceptor &quot; + interceptor
-          + &quot; must call proceed() exactly once&quot;);
-    }
-
-    // Confirm that the intercepted response isn&apos;t null.
-    if (response == null) {
-      throw new NullPointerException(&quot;interceptor &quot; + interceptor + &quot; returned null&quot;);
-    }
-
-    return response;
-  }
-}
-</code></pre><p>可以看到procees方法的逻辑：<br>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。</p>
-<h4 id="一、RetryAndFollowUpInterceptor"><a href="#一、RetryAndFollowUpInterceptor" class="headerlink" title="一、RetryAndFollowUpInterceptor"></a>一、RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
-    Request request = chain.request();
-
-streamAllocation = new StreamAllocation(
-    client.connectionPool(), createAddress(request.url()), callStackTrace);
-
-int followUpCount = 0;
-Response priorResponse = null;
-while (true) {
-  if (canceled) {
-    streamAllocation.release();
-    throw new IOException(&quot;Canceled&quot;);
-  }
-
-  Response response = null;
-  boolean releaseConnection = true;
-  try {
-    response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
-    releaseConnection = false;
-  } catch (RouteException e) {
-    // The attempt to connect via a route failed. The request will not have been sent.
-    if (!recover(e.getLastConnectException(), false, request)) {
-      throw e.getLastConnectException();
-    }
-    releaseConnection = false;
-    continue;
-  } catch (IOException e) {
-    // An attempt to communicate with a server failed. The request may have been sent.
-    boolean requestSendStarted = !(e instanceof ConnectionShutdownException);
-    if (!recover(e, requestSendStarted, request)) throw e;
-    releaseConnection = false;
-    continue;
-  } finally {
-    // We&apos;re throwing an unchecked exception. Release any resources.
-    if (releaseConnection) {
-      streamAllocation.streamFailed(null);
-      streamAllocation.release();
-    }
-  }
-
-  // Attach the prior response if it exists. Such responses never have a body.
-  if (priorResponse != null) {
-    response = response.newBuilder()
-        .priorResponse(priorResponse.newBuilder()
-                .body(null)
-                .build())
-        .build();
-  }
-
-  Request followUp = followUpRequest(response);
-
-  if (followUp == null) {
-    if (!forWebSocket) {
-      streamAllocation.release();
-    }
-    return response;
-  }
-
-  closeQuietly(response.body());
-
-  if (++followUpCount &gt; MAX_FOLLOW_UPS) {
-    streamAllocation.release();
-    throw new ProtocolException(&quot;Too many follow-up requests: &quot; + followUpCount);
-  }
-
-  if (followUp.body() instanceof UnrepeatableRequestBody) {
-    streamAllocation.release();
-    throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
-  }
-
-  if (!sameConnection(response, followUp.url())) {
-    streamAllocation.release();
-    streamAllocation = new StreamAllocation(
-        client.connectionPool(), createAddress(followUp.url()), callStackTrace);
-  } else if (streamAllocation.codec() != null) {
-    throw new IllegalStateException(&quot;Closing the body of &quot; + response
-        + &quot; didn&apos;t close its backing stream. Bad interceptor?&quot;);
-  }
-
-  request = followUp;
-  priorResponse = response;
-}
-}
-</code></pre><ul>
-<li>发起请求前拦截器对request处理</li>
-<li>然后调用下一个拦截器，获取Response</li>
-</ul>
-<p>调用的关键：</p>
-<pre><code>try {
-        response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
-        releaseConnection = false;
-      }
-</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器</p>
-<pre><code>// Call the next interceptor in the chain.
-   RealInterceptorChain next = new RealInterceptorChain(
-       interceptors, streamAllocation, httpCodec, connection, index + 1, request);
-   Interceptor interceptor = interceptors.get(index);
-   Response response = interceptor.intercept(next);
-</code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1565,7 +1406,7 @@ while (true) {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-count">30</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
