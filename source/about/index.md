@@ -11,6 +11,6 @@ Name: Neil Liu
 
 Wechat: lsh-323
 
-Email: codeneil@163.com
+Email: 2getsomeair@gmail.com
 
 Github: https://github.com/GitHublsh
