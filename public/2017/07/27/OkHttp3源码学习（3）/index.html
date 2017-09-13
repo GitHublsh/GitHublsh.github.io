@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-09-13T03:37:53.000Z">
+<meta property="og:updated_time" content="2017-09-13T05:57:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习(3)-拦截器链详解">
 <meta name="twitter:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -375,8 +375,9 @@
     }
 </code></pre><ul>
 <li><p>发起请求时：client.newCall(request)。</p>
-<p>  @Override public Call newCall(Request request) {<br>  return new RealCall(this, request, false /<em> for web socket </em>/);</p>
-<pre><code>}
+<pre><code>@Override public Call newCall(Request request) {
+return new RealCall(this, request, false /* for web socket */);
+  }
 </code></pre><p>实际上就是创建一个RealCall的实例。</p>
 </li>
 <li><p>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</p>

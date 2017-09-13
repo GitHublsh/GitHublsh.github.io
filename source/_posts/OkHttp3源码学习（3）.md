@@ -28,9 +28,9 @@ tags: [OkHttp3]
         
 * 发起请求时：client.newCall(request)。
 
-	@Override public Call newCall(Request request) {
-    return new RealCall(this, request, false /* for web socket */);
-  	}
+		@Override public Call newCall(Request request) {
+	    return new RealCall(this, request, false /* for web socket */);
+	  	}
   
   实际上就是创建一个RealCall的实例。
   

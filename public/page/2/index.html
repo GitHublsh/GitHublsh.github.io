@@ -1307,8 +1307,9 @@ public void testObservable1() throws Exception {
     }
 </code></pre><ul>
 <li><p>发起请求时：client.newCall(request)。</p>
-<p>  @Override public Call newCall(Request request) {<br>  return new RealCall(this, request, false /<em> for web socket </em>/);</p>
-<pre><code>}
+<pre><code>@Override public Call newCall(Request request) {
+return new RealCall(this, request, false /* for web socket */);
+  }
 </code></pre><p>实际上就是创建一个RealCall的实例。</p>
 </li>
 <li><p>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</p>
