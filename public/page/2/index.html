@@ -1285,7 +1285,44 @@ public void testObservable1() throws Exception {
       
         
           
-            <h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
+            <h4 id="发起请求"><a href="#发起请求" class="headerlink" title="发起请求"></a>发起请求</h4><pre><code>OkHttpClient client = new OkHttpClient();
+    Request request = new Request.Builder()
+            .url(&quot;&quot;)
+            .build();
+    Call call = client.newCall(request);
+    try {
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(&quot;OkHttp&quot;, &quot;Call Failed:&quot; + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(&quot;OkHttp&quot;, &quot;Call succeeded:&quot; + response.message());
+            }
+        });
+    } catch (Exception e) {
+        Log.e(&quot;OkHttp&quot;,e.getMessage());
+    }
+</code></pre><ul>
+<li><p>发起请求时：client.newCall(request)。</p>
+<p>  @Override public Call newCall(Request request) {<br>  return new RealCall(this, request, false /<em> for web socket </em>/);</p>
+<pre><code>}
+</code></pre><p>实际上就是创建一个RealCall的实例。</p>
+</li>
+<li><p>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</p>
+<pre><code>@Override public void enqueue(Callback responseCallback) {
+synchronized (this) {
+  if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
+  executed = true;
+}
+captureCallStackTrace();
+client.dispatcher().enqueue(new AsyncCall(responseCallback));
+  }
+</code></pre></li>
+</ul>
+<h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
    // Build a full stack of interceptors.
    List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
    interceptors.addAll(client.interceptors());

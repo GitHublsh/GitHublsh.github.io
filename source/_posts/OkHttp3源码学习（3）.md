@@ -3,7 +3,49 @@ title: OkHttp3源码学习(3)-拦截器链详解
 date: 2017-07-27 17:02:28
 tags: [OkHttp3]
 ---
+#### 发起请求
 
+	OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("")
+                .build();
+        Call call = client.newCall(request);
+        try {
+            call.enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("OkHttp", "Call Failed:" + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Log.d("OkHttp", "Call succeeded:" + response.message());
+                }
+            });
+        } catch (Exception e) {
+            Log.e("OkHttp",e.getMessage());
+        }
+        
+* 发起请求时：client.newCall(request)。
+
+	@Override public Call newCall(Request request) {
+    return new RealCall(this, request, false /* for web socket */);
+  	}
+  
+  实际上就是创建一个RealCall的实例。
+  
+*  然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。
+
+		@Override public void enqueue(Callback responseCallback) {
+	    synchronized (this) {
+	      if (executed) throw new IllegalStateException("Already Executed");
+	      executed = true;
+	    }
+	    captureCallStackTrace();
+	    client.dispatcher().enqueue(new AsyncCall(responseCallback));
+	  	}
+  
+        
 #### 构建拦截器链
 
 	 Response getResponseWithInterceptorChain() throws IOException {
@@ -23,6 +65,8 @@ tags: [OkHttp3]
 	        interceptors, null, null, null, 0, originalRequest);
 	    return chain.proceed(originalRequest);
 	  }
+
+
 
 
 #### RealInterceptorChain
