@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-09-13T05:57:52.000Z">
+<meta property="og:updated_time" content="2017-09-13T06:27:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习(3)-拦截器链详解">
 <meta name="twitter:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -391,6 +391,39 @@ client.dispatcher().enqueue(new AsyncCall(responseCallback));
   }
 </code></pre></li>
 </ul>
+<h4 id="AsyncCall"><a href="#AsyncCall" class="headerlink" title="AsyncCall"></a>AsyncCall</h4><pre><code> @Override protected void execute() {
+  boolean signalledCallback = false;
+  try {
+    Response response = getResponseWithInterceptorChain();
+    if (retryAndFollowUpInterceptor.isCanceled()) {
+      signalledCallback = true;
+      responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));
+    } else {
+      signalledCallback = true;
+      responseCallback.onResponse(RealCall.this, response);
+    }
+  } catch (IOException e) {
+    if (signalledCallback) {
+      // Do not signal the callback twice!
+      Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);
+    } else {
+      responseCallback.onFailure(RealCall.this, e);
+    }
+  } finally {
+    client.dispatcher().finished(this);
+  }
+}
+</code></pre><p>  AsyncCall会执行execute方法。execute方法逻辑很简单：</p>
+<ul>
+<li><p>通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功</p>
+<pre><code>Response response = getResponseWithInterceptorChain();
+</code></pre></li>
+</ul>
+<ul>
+<li><p>通知任务分发器该任务结束</p>
+<pre><code>client.dispatcher().finished(this);
+</code></pre></li>
+</ul>
 <h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
    // Build a full stack of interceptors.
    List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
@@ -408,7 +441,13 @@ client.dispatcher().enqueue(new AsyncCall(responseCallback));
        interceptors, null, null, null, 0, originalRequest);
    return chain.proceed(originalRequest);
  }
-</code></pre><h4 id="RealInterceptorChain"><a href="#RealInterceptorChain" class="headerlink" title="RealInterceptorChain"></a>RealInterceptorChain</h4><pre><code>/**
+</code></pre><p>从源码来看，基本逻辑就是：</p>
+<ul>
+<li>创建一系列拦截器，加到拦截器数组中。</li>
+<li>创建拦截器链RealInterceptorChain</li>
+<li>执行拦截器链中的proceed方法</li>
+</ul>
+<h4 id="RealInterceptorChain"><a href="#RealInterceptorChain" class="headerlink" title="RealInterceptorChain"></a>RealInterceptorChain</h4><pre><code>/**
  * A concrete interceptor chain that carries the entire interceptor chain: all application
  * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
  */
@@ -488,8 +527,18 @@ public final class RealInterceptorChain implements Interceptor.Chain {
     return response;
   }
 }
-</code></pre><p>可以看到procees方法的逻辑：<br>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。</p>
-<h4 id="一、RetryAndFollowUpInterceptor"><a href="#一、RetryAndFollowUpInterceptor" class="headerlink" title="一、RetryAndFollowUpInterceptor"></a>一、RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
+</code></pre><p>可以看到procees方法的逻辑：</p>
+<ul>
+<li><p>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。</p>
+<p>  // Call the next interceptor in the chain.<br>  RealInterceptorChain next = new RealInterceptorChain(</p>
+<pre><code>interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+</code></pre></li>
+<li><p>获取索引为index的interceptor,执行索引为index的intercept方法。</p>
+<pre><code>Interceptor interceptor = interceptors.get(index);
+Response response = interceptor.intercept(next);
+</code></pre></li>
+</ul>
+<h4 id="RetryAndFollowUpInterceptor"><a href="#RetryAndFollowUpInterceptor" class="headerlink" title="RetryAndFollowUpInterceptor"></a>RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
 
 streamAllocation = new StreamAllocation(
@@ -801,7 +850,7 @@ while (true) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#发起请求"><span class="nav-number">1.</span> <span class="nav-text">发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建拦截器链"><span class="nav-number">2.</span> <span class="nav-text">构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">3.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、RetryAndFollowUpInterceptor"><span class="nav-number">4.</span> <span class="nav-text">一、RetryAndFollowUpInterceptor</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#发起请求"><span class="nav-number">1.</span> <span class="nav-text">发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RetryAndFollowUpInterceptor"><span class="nav-number">5.</span> <span class="nav-text">RetryAndFollowUpInterceptor</span></a></li></ol></div>
             
 
           </div>

@@ -44,7 +44,46 @@ tags: [OkHttp3]
 	    captureCallStackTrace();
 	    client.dispatcher().enqueue(new AsyncCall(responseCallback));
 	  	}
+
+#### AsyncCall
+
+	 @Override protected void execute() {
+      boolean signalledCallback = false;
+      try {
+        Response response = getResponseWithInterceptorChain();
+        if (retryAndFollowUpInterceptor.isCanceled()) {
+          signalledCallback = true;
+          responseCallback.onFailure(RealCall.this, new IOException("Canceled"));
+        } else {
+          signalledCallback = true;
+          responseCallback.onResponse(RealCall.this, response);
+        }
+      } catch (IOException e) {
+        if (signalledCallback) {
+          // Do not signal the callback twice!
+          Platform.get().log(INFO, "Callback failure for " + toLoggableString(), e);
+        } else {
+          responseCallback.onFailure(RealCall.this, e);
+        }
+      } finally {
+        client.dispatcher().finished(this);
+      }
+    }
   
+  
+  AsyncCall会执行execute方法。execute方法逻辑很简单：
+  
+
+* 通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功
+
+		Response response = getResponseWithInterceptorChain();
+  
+
+* 通知任务分发器该任务结束
+
+  		client.dispatcher().finished(this);
+
+
         
 #### 构建拦截器链
 
@@ -66,6 +105,12 @@ tags: [OkHttp3]
 	    return chain.proceed(originalRequest);
 	  }
 
+
+从源码来看，基本逻辑就是：
+
+* 创建一系列拦截器，加到拦截器数组中。
+* 创建拦截器链RealInterceptorChain
+* 执行拦截器链中的proceed方法
 
 
 
@@ -154,9 +199,19 @@ tags: [OkHttp3]
 
 
 可以看到procees方法的逻辑：
-创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链从下一个拦截器访问。
+* 创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
 
-#### 一、RetryAndFollowUpInterceptor
+	// Call the next interceptor in the chain.
+    RealInterceptorChain next = new RealInterceptorChain(
+        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+        
+* 获取索引为index的interceptor,执行索引为index的intercept方法。
+	
+		Interceptor interceptor = interceptors.get(index);
+    	Response response = interceptor.intercept(next);
+
+
+#### RetryAndFollowUpInterceptor
 
 
 	
