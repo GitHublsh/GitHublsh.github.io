@@ -1569,6 +1569,7 @@ while (true) {
    Interceptor interceptor = interceptors.get(index);
    Response response = interceptor.intercept(next);
 </code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 
           
         

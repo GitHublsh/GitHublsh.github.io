@@ -323,6 +323,8 @@ tags: [OkHttp3]
 		    
 整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。
 
+![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
+
 
 
 
