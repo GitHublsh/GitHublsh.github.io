@@ -1285,7 +1285,7 @@ public void testObservable1() throws Exception {
       
         
           
-            <h4 id="发起请求"><a href="#发起请求" class="headerlink" title="发起请求"></a>发起请求</h4><pre><code>OkHttpClient client = new OkHttpClient();
+            <h4 id="一、发起请求"><a href="#一、发起请求" class="headerlink" title="一、发起请求"></a>一、发起请求</h4><pre><code>OkHttpClient client = new OkHttpClient();
     Request request = new Request.Builder()
             .url(&quot;&quot;)
             .build();
@@ -1323,7 +1323,7 @@ client.dispatcher().enqueue(new AsyncCall(responseCallback));
   }
 </code></pre></li>
 </ul>
-<h4 id="AsyncCall"><a href="#AsyncCall" class="headerlink" title="AsyncCall"></a>AsyncCall</h4><pre><code> @Override protected void execute() {
+<h4 id="二、AsyncCall"><a href="#二、AsyncCall" class="headerlink" title="二、AsyncCall"></a>二、AsyncCall</h4><pre><code> @Override protected void execute() {
   boolean signalledCallback = false;
   try {
     Response response = getResponseWithInterceptorChain();
@@ -1356,7 +1356,7 @@ client.dispatcher().enqueue(new AsyncCall(responseCallback));
 <pre><code>client.dispatcher().finished(this);
 </code></pre></li>
 </ul>
-<h4 id="构建拦截器链"><a href="#构建拦截器链" class="headerlink" title="构建拦截器链"></a>构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
+<h4 id="三、构建拦截器链"><a href="#三、构建拦截器链" class="headerlink" title="三、构建拦截器链"></a>三、构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
    // Build a full stack of interceptors.
    List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
    interceptors.addAll(client.interceptors());
@@ -1379,7 +1379,7 @@ client.dispatcher().enqueue(new AsyncCall(responseCallback));
 <li>创建拦截器链RealInterceptorChain</li>
 <li>执行拦截器链中的proceed方法</li>
 </ul>
-<h4 id="RealInterceptorChain"><a href="#RealInterceptorChain" class="headerlink" title="RealInterceptorChain"></a>RealInterceptorChain</h4><pre><code>/**
+<h4 id="四、RealInterceptorChain"><a href="#四、RealInterceptorChain" class="headerlink" title="四、RealInterceptorChain"></a>四、RealInterceptorChain</h4><pre><code>/**
  * A concrete interceptor chain that carries the entire interceptor chain: all application
  * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
  */
@@ -1470,7 +1470,7 @@ public final class RealInterceptorChain implements Interceptor.Chain {
 Response response = interceptor.intercept(next);
 </code></pre></li>
 </ul>
-<h4 id="1-RetryAndFollowUpInterceptor"><a href="#1-RetryAndFollowUpInterceptor" class="headerlink" title="1.RetryAndFollowUpInterceptor"></a>1.RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
+<h4 id="五、拦截器链"><a href="#五、拦截器链" class="headerlink" title="五、拦截器链"></a>五、拦截器链</h4><h5 id="1-RetryAndFollowUpInterceptor"><a href="#1-RetryAndFollowUpInterceptor" class="headerlink" title="1.RetryAndFollowUpInterceptor"></a>1.RetryAndFollowUpInterceptor</h5><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
 
 streamAllocation = new StreamAllocation(
@@ -1570,7 +1570,7 @@ while (true) {
    Response response = interceptor.intercept(next);
 </code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
 <p>下面就来对几种拦截器一一介绍。</p>
-<h4 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h4><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
+<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 
           
         

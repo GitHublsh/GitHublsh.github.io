@@ -3,7 +3,7 @@ title: OkHttp3源码学习(3)-拦截器链详解
 date: 2017-07-27 17:02:28
 tags: [OkHttp3]
 ---
-#### 发起请求
+#### 一、发起请求
 
 	OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -45,7 +45,7 @@ tags: [OkHttp3]
 	    client.dispatcher().enqueue(new AsyncCall(responseCallback));
 	  	}
 
-#### AsyncCall
+#### 二、AsyncCall
 
 	 @Override protected void execute() {
       boolean signalledCallback = false;
@@ -85,7 +85,7 @@ tags: [OkHttp3]
 
 
         
-#### 构建拦截器链
+#### 三、构建拦截器链
 
 	 Response getResponseWithInterceptorChain() throws IOException {
 	    // Build a full stack of interceptors.
@@ -114,7 +114,7 @@ tags: [OkHttp3]
 
 
 
-#### RealInterceptorChain
+#### 四、RealInterceptorChain
 
 	/**
 	 * A concrete interceptor chain that carries the entire interceptor chain: all application
@@ -211,7 +211,9 @@ tags: [OkHttp3]
     	Response response = interceptor.intercept(next);
 
 
-#### 1.RetryAndFollowUpInterceptor
+#### 五、拦截器链
+
+##### 1.RetryAndFollowUpInterceptor
 
 
 	
@@ -325,7 +327,7 @@ tags: [OkHttp3]
 
 下面就来对几种拦截器一一介绍。
 
-#### 2.BidgeInterceptor
+##### 2.BidgeInterceptor
 
 
 
