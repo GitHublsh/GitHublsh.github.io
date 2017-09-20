@@ -1236,7 +1236,7 @@ public void testObservable1() throws Exception {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/27/OkHttp3源码学习（3）/" itemprop="url">OkHttp3源码学习(3)-拦截器链详解</a></h1>
+                <a class="post-title-link" href="/2017/07/27/OkHttp3源码学习（3）/" itemprop="url">OkHttp3源码学习（3）-拦截器链详解</a></h1>
         
 
         <div class="post-meta">
@@ -1562,15 +1562,15 @@ while (true) {
         response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
         releaseConnection = false;
       }
-</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器</p>
+</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.</p>
+<p>下面就来对几种拦截器一一介绍。</p>
+<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
    Interceptor interceptor = interceptors.get(index);
    Response response = interceptor.intercept(next);
 </code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
-<p>下面就来对几种拦截器一一介绍。</p>
-<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 
           
         

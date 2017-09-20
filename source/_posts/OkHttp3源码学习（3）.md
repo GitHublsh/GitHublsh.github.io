@@ -1,5 +1,5 @@
 ---
-title: OkHttp3源码学习(3)-拦截器链详解
+title: OkHttp3源码学习（3）-拦截器链详解
 date: 2017-07-27 17:02:28
 tags: [OkHttp3]
 ---
@@ -313,7 +313,19 @@ tags: [OkHttp3]
 	        releaseConnection = false;
 	      }
 
-那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器
+那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.
+
+
+
+
+
+下面就来对几种拦截器一一介绍。
+
+##### 2.BidgeInterceptor
+
+
+
+![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 
 
 		 // Call the next interceptor in the chain.
@@ -324,15 +336,6 @@ tags: [OkHttp3]
 		    
 		    
 整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。
-
-下面就来对几种拦截器一一介绍。
-
-##### 2.BidgeInterceptor
-
-
-
-![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
-
 
 
 
