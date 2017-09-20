@@ -211,7 +211,7 @@ tags: [OkHttp3]
     	Response response = interceptor.intercept(next);
 
 
-#### RetryAndFollowUpInterceptor
+#### 1.RetryAndFollowUpInterceptor
 
 
 	
@@ -284,7 +284,7 @@ tags: [OkHttp3]
         streamAllocation.release();
         throw new HttpRetryException("Cannot retry streamed HTTP body", response.code());
       }
-	
+	//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行relase销毁掉，再新建一个StreamAllocation连接,进行重试。
       if (!sameConnection(response, followUp.url())) {
         streamAllocation.release();
         streamAllocation = new StreamAllocation(
@@ -322,6 +322,12 @@ tags: [OkHttp3]
 		    
 		    
 整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。
+
+下面就来对几种拦截器一一介绍。
+
+#### 2.BidgeInterceptor
+
+
 
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 

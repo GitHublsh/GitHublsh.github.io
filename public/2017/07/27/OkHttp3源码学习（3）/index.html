@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png">
-<meta property="og:updated_time" content="2017-09-18T15:42:47.000Z">
+<meta property="og:updated_time" content="2017-09-20T03:01:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习(3)-拦截器链详解">
 <meta name="twitter:description" content="发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -540,7 +540,7 @@ public final class RealInterceptorChain implements Interceptor.Chain {
 Response response = interceptor.intercept(next);
 </code></pre></li>
 </ul>
-<h4 id="RetryAndFollowUpInterceptor"><a href="#RetryAndFollowUpInterceptor" class="headerlink" title="RetryAndFollowUpInterceptor"></a>RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
+<h4 id="1-RetryAndFollowUpInterceptor"><a href="#1-RetryAndFollowUpInterceptor" class="headerlink" title="1.RetryAndFollowUpInterceptor"></a>1.RetryAndFollowUpInterceptor</h4><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
     Request request = chain.request();
 
 streamAllocation = new StreamAllocation(
@@ -609,7 +609,7 @@ while (true) {
     streamAllocation.release();
     throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
   }
-
+//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行relase销毁掉，再新建一个StreamAllocation连接,进行重试。
   if (!sameConnection(response, followUp.url())) {
     streamAllocation.release();
     streamAllocation = new StreamAllocation(
@@ -639,7 +639,8 @@ while (true) {
    Interceptor interceptor = interceptors.get(index);
    Response response = interceptor.intercept(next);
 </code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
+<p>下面就来对几种拦截器一一介绍。</p>
+<h4 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h4><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 
       
     </div>
@@ -853,7 +854,7 @@ while (true) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#发起请求"><span class="nav-number">1.</span> <span class="nav-text">发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RetryAndFollowUpInterceptor"><span class="nav-number">5.</span> <span class="nav-text">RetryAndFollowUpInterceptor</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#发起请求"><span class="nav-number">1.</span> <span class="nav-text">发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-RetryAndFollowUpInterceptor"><span class="nav-number">5.</span> <span class="nav-text">1.RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-BidgeInterceptor"><span class="nav-number">6.</span> <span class="nav-text">2.BidgeInterceptor</span></a></li></ol></div>
             
 
           </div>
