@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png">
-<meta property="og:updated_time" content="2017-09-20T07:59:05.000Z">
+<meta property="og:updated_time" content="2017-09-21T10:20:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -634,7 +634,83 @@ while (true) {
       }
 </code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.</p>
 <p>下面就来对几种拦截器一一介绍。</p>
-<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
+<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p>官方注释解释：从应用程序代码到网络代码的桥梁，首先从用户的请求构建一个网络请求，然后执行访问网络，最后返回Response.</p>
+<p>整个过程就是：首先将客户端构建的Request对象信息构建成真正的网络请求;然后发起网络请求，最后就是将服务器返回的消息封装成一个Response对象。</p>
+<p>下面就看一下核心方法intercept()</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+//拿到用户的请求
+Request userRequest = chain.request();
+Request.Builder requestBuilder = userRequest.newBuilder();
+//拿到用户请求body
+RequestBody body = userRequest.body();
+if (body != null) {
+  MediaType contentType = body.contentType();
+  if (contentType != null) {
+    requestBuilder.header(&quot;Content-Type&quot;, contentType.toString());
+  }
+
+  long contentLength = body.contentLength();
+  if (contentLength != -1) {
+    requestBuilder.header(&quot;Content-Length&quot;, Long.toString(contentLength));
+    requestBuilder.removeHeader(&quot;Transfer-Encoding&quot;);
+  } else {
+    requestBuilder.header(&quot;Transfer-Encoding&quot;, &quot;chunked&quot;);
+    requestBuilder.removeHeader(&quot;Content-Length&quot;);
+  }
+}
+
+if (userRequest.header(&quot;Host&quot;) == null) {
+  requestBuilder.header(&quot;Host&quot;, hostHeader(userRequest.url(), false));
+}
+
+if (userRequest.header(&quot;Connection&quot;) == null) {
+  requestBuilder.header(&quot;Connection&quot;, &quot;Keep-Alive&quot;);
+}
+
+// If we add an &quot;Accept-Encoding: gzip&quot; header field we&apos;re responsible for also decompressing
+// the transfer stream.
+boolean transparentGzip = false;
+if (userRequest.header(&quot;Accept-Encoding&quot;) == null &amp;&amp; userRequest.header(&quot;Range&quot;) == null) {
+  transparentGzip = true;
+  requestBuilder.header(&quot;Accept-Encoding&quot;, &quot;gzip&quot;);
+}
+
+List&lt;Cookie&gt; cookies = cookieJar.loadForRequest(userRequest.url());
+if (!cookies.isEmpty()) {
+  requestBuilder.header(&quot;Cookie&quot;, cookieHeader(cookies));
+}
+
+if (userRequest.header(&quot;User-Agent&quot;) == null) {
+  requestBuilder.header(&quot;User-Agent&quot;, Version.userAgent());
+}
+//继续执行下一个拦截器的方法
+Response networkResponse = chain.proceed(requestBuilder.build());
+
+HttpHeaders.receiveHeaders(cookieJar, userRequest.url(), networkResponse.headers());
+
+Response.Builder responseBuilder = networkResponse.newBuilder()
+    .request(userRequest);
+
+if (transparentGzip
+    &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
+    &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+  GzipSource responseBody = new GzipSource(networkResponse.body().source());
+  Headers strippedHeaders = networkResponse.headers().newBuilder()
+      .removeAll(&quot;Content-Encoding&quot;)
+      .removeAll(&quot;Content-Length&quot;)
+      .build();
+  responseBuilder.headers(strippedHeaders);
+  responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
+}
+
+return responseBuilder.build();
+  }
+</code></pre><p>BridgeInterceptor主要流程逻辑：</p>
+<ol>
+<li>拿到用户的请求</li>
+<li></li>
+</ol>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
        interceptors, streamAllocation, httpCodec, connection, index + 1, request);

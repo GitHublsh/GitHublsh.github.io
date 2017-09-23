@@ -323,8 +323,90 @@ tags: [OkHttp3]
 
 ##### 2.BidgeInterceptor
 
+官方注释解释：从应用程序代码到网络代码的桥梁，首先从用户的请求构建一个网络请求，然后执行访问网络，最后返回Response.
+
+整个过程就是：首先将客户端构建的Request对象信息构建成真正的网络请求;然后发起网络请求，最后就是将服务器返回的消息封装成一个Response对象。
+
+下面就看一下核心方法intercept()
+
+	@Override public Response intercept(Chain chain) throws IOException {
+	//拿到用户的请求
+    Request userRequest = chain.request();
+    Request.Builder requestBuilder = userRequest.newBuilder();
+	//拿到用户请求body
+    RequestBody body = userRequest.body();
+    if (body != null) {
+      MediaType contentType = body.contentType();
+      if (contentType != null) {
+        requestBuilder.header("Content-Type", contentType.toString());
+      }
+
+      long contentLength = body.contentLength();
+      if (contentLength != -1) {
+        requestBuilder.header("Content-Length", Long.toString(contentLength));
+        requestBuilder.removeHeader("Transfer-Encoding");
+      } else {
+        requestBuilder.header("Transfer-Encoding", "chunked");
+        requestBuilder.removeHeader("Content-Length");
+      }
+    }
+
+    if (userRequest.header("Host") == null) {
+      requestBuilder.header("Host", hostHeader(userRequest.url(), false));
+    }
+
+    if (userRequest.header("Connection") == null) {
+      requestBuilder.header("Connection", "Keep-Alive");
+    }
+
+    // If we add an "Accept-Encoding: gzip" header field we're responsible for also decompressing
+    // the transfer stream.
+    boolean transparentGzip = false;
+    if (userRequest.header("Accept-Encoding") == null && userRequest.header("Range") == null) {
+      transparentGzip = true;
+      requestBuilder.header("Accept-Encoding", "gzip");
+    }
+
+    List<Cookie> cookies = cookieJar.loadForRequest(userRequest.url());
+    if (!cookies.isEmpty()) {
+      requestBuilder.header("Cookie", cookieHeader(cookies));
+    }
+
+    if (userRequest.header("User-Agent") == null) {
+      requestBuilder.header("User-Agent", Version.userAgent());
+    }
+	//继续执行下一个拦截器的方法
+    Response networkResponse = chain.proceed(requestBuilder.build());
+
+    HttpHeaders.receiveHeaders(cookieJar, userRequest.url(), networkResponse.headers());
+
+    Response.Builder responseBuilder = networkResponse.newBuilder()
+        .request(userRequest);
+
+    if (transparentGzip
+        && "gzip".equalsIgnoreCase(networkResponse.header("Content-Encoding"))
+        && HttpHeaders.hasBody(networkResponse)) {
+      GzipSource responseBody = new GzipSource(networkResponse.body().source());
+      Headers strippedHeaders = networkResponse.headers().newBuilder()
+          .removeAll("Content-Encoding")
+          .removeAll("Content-Length")
+          .build();
+      responseBuilder.headers(strippedHeaders);
+      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
+    }
+
+    return responseBuilder.build();
+  	}
 
 
+BridgeInterceptor主要流程逻辑：
+	
+1. 拿到用户的请求
+2. 
+	
+	
+	
+	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 
 
