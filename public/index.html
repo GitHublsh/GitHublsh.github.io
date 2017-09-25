@@ -382,9 +382,14 @@
 </li>
 <li><p>3.ColorFilter</p>
 <p>  ColorFilter主要用来处理颜色.它有三个子类：ColorMatrixColorFilter、LightingColorFilter、PorterDuffColorFilter。下面一一进行解释。</p>
+<ol>
+<li><p>ColorMatrixColorFilter</p>
 <ul>
-<li>ColorMatrixColorFilter,在Android中，图片是以一个个 RGBA 的像素点的形式加载到内存中的，所以如果需要改变图片的颜色，就需要针对这一个个像素点的RGBA的值进行修改。修改图片的RGBA值，需要ColorMatrix类支持.    </li>
+<li>ColorMatrixColorFilter在Android中，图片是以一个个 RGBA 的像素点的形式加载到内存中的，所以如果需要改变图片的颜色，就需要针对这一个个像素点的RGBA的值进行修改。修改图片的RGBA值，需要ColorMatrix类支持.</li>
+<li>通过4x5颜色矩阵转换颜色的滤色镜。 该滤镜可用于改变像素的饱和度，从YUV转换为RGB等。</li>
 </ul>
+</li>
+</ol>
 </li>
 </ul>
 </li>
