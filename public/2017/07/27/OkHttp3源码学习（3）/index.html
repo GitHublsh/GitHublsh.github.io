@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png">
-<meta property="og:updated_time" content="2017-09-21T10:20:05.000Z">
+<meta property="og:updated_time" content="2017-09-26T14:38:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -643,6 +643,7 @@ Request userRequest = chain.request();
 Request.Builder requestBuilder = userRequest.newBuilder();
 //拿到用户请求body
 RequestBody body = userRequest.body();
+//对请求头的补充
 if (body != null) {
   MediaType contentType = body.contentType();
   if (contentType != null) {
@@ -662,11 +663,12 @@ if (body != null) {
 if (userRequest.header(&quot;Host&quot;) == null) {
   requestBuilder.header(&quot;Host&quot;, hostHeader(userRequest.url(), false));
 }
-
+//默认是保持连接的（Keep-Alive）
 if (userRequest.header(&quot;Connection&quot;) == null) {
   requestBuilder.header(&quot;Connection&quot;, &quot;Keep-Alive&quot;);
 }
-
+//默认GZIP压缩
+//Accept-Encoding就是告诉服务器客户端能接收的数据编码类型
 // If we add an &quot;Accept-Encoding: gzip&quot; header field we&apos;re responsible for also decompressing
 // the transfer stream.
 boolean transparentGzip = false;
@@ -674,7 +676,7 @@ if (userRequest.header(&quot;Accept-Encoding&quot;) == null &amp;&amp; userReque
   transparentGzip = true;
   requestBuilder.header(&quot;Accept-Encoding&quot;, &quot;gzip&quot;);
 }
-
+//添加cookie头
 List&lt;Cookie&gt; cookies = cookieJar.loadForRequest(userRequest.url());
 if (!cookies.isEmpty()) {
   requestBuilder.header(&quot;Cookie&quot;, cookieHeader(cookies));
@@ -685,7 +687,7 @@ if (userRequest.header(&quot;User-Agent&quot;) == null) {
 }
 //继续执行下一个拦截器的方法
 Response networkResponse = chain.proceed(requestBuilder.build());
-
+//接收服务器返回的cookie
 HttpHeaders.receiveHeaders(cookieJar, userRequest.url(), networkResponse.headers());
 
 Response.Builder responseBuilder = networkResponse.newBuilder()
@@ -694,6 +696,7 @@ Response.Builder responseBuilder = networkResponse.newBuilder()
 if (transparentGzip
     &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
     &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+  //当服务器返回的数据是GZIP压缩的，那么客户端就进行GZIP解压操作
   GzipSource responseBody = new GzipSource(networkResponse.body().source());
   Headers strippedHeaders = networkResponse.headers().newBuilder()
       .removeAll(&quot;Content-Encoding&quot;)
@@ -702,13 +705,14 @@ if (transparentGzip
   responseBuilder.headers(strippedHeaders);
   responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
 }
-
+//构建一个Response
 return responseBuilder.build();
   }
 </code></pre><p>BridgeInterceptor主要流程逻辑：</p>
 <ol>
-<li>拿到用户的请求</li>
-<li></li>
+<li>拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求</li>
+<li>将这个符合网络请求的Request进行网络请求</li>
+<li>将网络请求返回的Response转化为用户可用的Response</li>
 </ol>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.

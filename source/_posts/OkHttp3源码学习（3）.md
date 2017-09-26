@@ -335,6 +335,7 @@ tags: [OkHttp3]
     Request.Builder requestBuilder = userRequest.newBuilder();
 	//拿到用户请求body
     RequestBody body = userRequest.body();
+    //对请求头的补充
     if (body != null) {
       MediaType contentType = body.contentType();
       if (contentType != null) {
@@ -354,11 +355,12 @@ tags: [OkHttp3]
     if (userRequest.header("Host") == null) {
       requestBuilder.header("Host", hostHeader(userRequest.url(), false));
     }
-
+	//默认是保持连接的（Keep-Alive）
     if (userRequest.header("Connection") == null) {
       requestBuilder.header("Connection", "Keep-Alive");
     }
-
+	//默认GZIP压缩
+	//Accept-Encoding就是告诉服务器客户端能接收的数据编码类型
     // If we add an "Accept-Encoding: gzip" header field we're responsible for also decompressing
     // the transfer stream.
     boolean transparentGzip = false;
@@ -366,7 +368,7 @@ tags: [OkHttp3]
       transparentGzip = true;
       requestBuilder.header("Accept-Encoding", "gzip");
     }
-
+	//添加cookie头
     List<Cookie> cookies = cookieJar.loadForRequest(userRequest.url());
     if (!cookies.isEmpty()) {
       requestBuilder.header("Cookie", cookieHeader(cookies));
@@ -377,7 +379,7 @@ tags: [OkHttp3]
     }
 	//继续执行下一个拦截器的方法
     Response networkResponse = chain.proceed(requestBuilder.build());
-
+	//接收服务器返回的cookie
     HttpHeaders.receiveHeaders(cookieJar, userRequest.url(), networkResponse.headers());
 
     Response.Builder responseBuilder = networkResponse.newBuilder()
@@ -386,6 +388,7 @@ tags: [OkHttp3]
     if (transparentGzip
         && "gzip".equalsIgnoreCase(networkResponse.header("Content-Encoding"))
         && HttpHeaders.hasBody(networkResponse)) {
+      //当服务器返回的数据是GZIP压缩的，那么客户端就进行GZIP解压操作
       GzipSource responseBody = new GzipSource(networkResponse.body().source());
       Headers strippedHeaders = networkResponse.headers().newBuilder()
           .removeAll("Content-Encoding")
@@ -394,15 +397,16 @@ tags: [OkHttp3]
       responseBuilder.headers(strippedHeaders);
       responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
     }
-
+	//构建一个Response
     return responseBuilder.build();
   	}
 
 
 BridgeInterceptor主要流程逻辑：
-	
-1. 拿到用户的请求
-2. 
+
+1. 拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求
+2. 将这个符合网络请求的Request进行网络请求
+3. 将网络请求返回的Response转化为用户可用的Response
 	
 	
 	
