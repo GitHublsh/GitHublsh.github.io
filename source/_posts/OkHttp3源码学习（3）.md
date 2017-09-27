@@ -409,6 +409,22 @@ BridgeInterceptor主要流程逻辑：
 3. 将网络请求返回的Response转化为用户可用的Response
 	
 	
+代码中构建网络Request添加的请求头信息：
+
+协议头字段名 |说明| 示例 | 状态
+---- | --- | --- | ---
+Content-Type | 请求体的 多媒体类型 （用于POST和PUT请求中）|Content-Type: application/x-www-form-urlencoded|常设
+Content-Length |  以 八位字节数组 （8位的字节）表示的请求体的长度|Content-Length: 348|常设
+Transfer-Encoding|用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity|Transfer-Encoding: chunked|常设
+Host|服务器的域名(用于虚拟主机 )，以及服务器所监听的传输控制协议端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本1.1（HTTP/1.1）开始便是必需字段。| Host: en.wikipedia.org:80 Host: en.wikipedia.org|常设
+Connection|该浏览器想要优先使用的连接类型|Connection: keep-alive  	，Connection: Upgrade|常设
+Accept-Encoding|能够接受的编码方式列表|Accept-Encoding: gzip, deflate|常设
+Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109|Cookie: $Version=1; Skin=new;|常设: 标准
+
+
+
+
+	
 	
 	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)

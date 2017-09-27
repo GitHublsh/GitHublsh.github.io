@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png">
-<meta property="og:updated_time" content="2017-09-26T14:38:45.000Z">
+<meta property="og:updated_time" content="2017-09-27T09:23:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -714,6 +714,61 @@ return responseBuilder.build();
 <li>将这个符合网络请求的Request进行网络请求</li>
 <li>将网络请求返回的Response转化为用户可用的Response</li>
 </ol>
+<p>代码中构建网络Request添加的请求头信息：</p>
+<table>
+<thead>
+<tr>
+<th>协议头字段名</th>
+<th>说明</th>
+<th>示例</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>请求体的 多媒体类型 （用于POST和PUT请求中）</td>
+<td>Content-Type: application/x-www-form-urlencoded</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Content-Length</td>
+<td>以 八位字节数组 （8位的字节）表示的请求体的长度</td>
+<td>Content-Length: 348</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Transfer-Encoding</td>
+<td>用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity</td>
+<td>Transfer-Encoding: chunked</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>服务器的域名(用于虚拟主机 )，以及服务器所监听的传输控制协议端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本1.1（HTTP/1.1）开始便是必需字段。</td>
+<td>Host: en.wikipedia.org:80 Host: en.wikipedia.org</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>该浏览器想要优先使用的连接类型</td>
+<td>Connection: keep-alive      ，Connection: Upgrade</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Accept-Encoding</td>
+<td>能够接受的编码方式列表</td>
+<td>Accept-Encoding: gzip, deflate</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Cookie</td>
+<td>之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109</td>
+<td>Cookie: $Version=1; Skin=new;</td>
+<td>常设: 标准</td>
+</tr>
+</tbody>
+</table>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
