@@ -411,6 +411,8 @@ BridgeInterceptor主要流程逻辑：
 	
 代码中构建网络Request添加的请求头信息：
 
+* 简单了解一下先，头信息
+
 协议头字段名 |说明| 示例 | 状态
 ---- | --- | --- | ---
 Content-Type | 请求体的 多媒体类型 （用于POST和PUT请求中）|Content-Type: application/x-www-form-urlencoded|常设
@@ -422,10 +424,26 @@ Accept-Encoding|能够接受的编码方式列表|Accept-Encoding: gzip, deflate
 Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109|Cookie: $Version=1; Skin=new;|常设: 标准
 
 
+* 构建完头信息后，进行网络请求
 
+		Response networkResponse = chain.proceed(requestBuilder.build());
+		
+* 获取到返回的Response,转化为客户端可用的Response
+	
+		 Response.Builder responseBuilder = networkResponse.newBuilder()
+	        .request(userRequest);
+	
+	    if (transparentGzip
+	        && "gzip".equalsIgnoreCase(networkResponse.header("Content-Encoding"))
+	        && HttpHeaders.hasBody(networkResponse)) {
+	      GzipSource responseBody = new GzipSource(networkResponse.body().source());
+	      Headers strippedHeaders = networkResponse.headers().newBuilder()
+	          .removeAll("Content-Encoding")
+	          .removeAll("Content-Length")
+	          .build();
+	      responseBuilder.headers(strippedHeaders);
+	      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
 
-	
-	
 	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 

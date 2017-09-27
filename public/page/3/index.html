@@ -712,6 +712,9 @@ return responseBuilder.build();
 <li>将网络请求返回的Response转化为用户可用的Response</li>
 </ol>
 <p>代码中构建网络Request添加的请求头信息：</p>
+<ul>
+<li>简单了解一下先，头信息</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -766,6 +769,26 @@ return responseBuilder.build();
 </tr>
 </tbody>
 </table>
+<ul>
+<li><p>构建完头信息后，进行网络请求</p>
+<pre><code>Response networkResponse = chain.proceed(requestBuilder.build());
+</code></pre></li>
+<li><p>获取到返回的Response,转化为客户端可用的Response</p>
+<pre><code> Response.Builder responseBuilder = networkResponse.newBuilder()
+    .request(userRequest);
+
+if (transparentGzip
+    &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
+    &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+  GzipSource responseBody = new GzipSource(networkResponse.body().source());
+  Headers strippedHeaders = networkResponse.headers().newBuilder()
+      .removeAll(&quot;Content-Encoding&quot;)
+      .removeAll(&quot;Content-Length&quot;)
+      .build();
+  responseBuilder.headers(strippedHeaders);
+  responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
+</code></pre></li>
+</ul>
 <p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
