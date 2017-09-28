@@ -423,6 +423,7 @@ Connection|该浏览器想要优先使用的连接类型|Connection: keep-alive 
 Accept-Encoding|能够接受的编码方式列表|Accept-Encoding: gzip, deflate|常设
 Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109|Cookie: $Version=1; Skin=new;|常设: 标准
 
+###### 小结：
 
 * 构建完头信息后，进行网络请求
 
@@ -444,6 +445,127 @@ Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 �
 	      responseBuilder.headers(strippedHeaders);
 	      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
 
+	
+	
+
+##### 3.CacheIntetceptor
+
+CacheIntetceptor的职责就是负责Cache的管理
+
+看一下核心方法：
+
+	 @Override public Response intercept(Chain chain) throws IOException {
+	 //1.读取候选的缓存
+    Response cacheCandidate = cache != null
+        ? cache.get(chain.request())
+        : null;
+
+    long now = System.currentTimeMillis();
+	//2.首先创建缓存策略，networkRequest为网络请求，cacheResponse为缓存
+    CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
+    Request networkRequest = strategy.networkRequest;
+    Response cacheResponse = strategy.cacheResponse;
+
+    if (cache != null) {
+      cache.trackResponse(strategy);
+    }
+
+    if (cacheCandidate != null && cacheResponse == null) {
+      closeQuietly(cacheCandidate.body()); // The cache candidate wasn't applicable. Close it.
+    }
+
+    // If we're forbidden from using the network and the cache is insufficient, fail.
+    //3.如果禁止网络访问并且本地cache缓存也不完整，那么请求失败
+    if (networkRequest == null && cacheResponse == null) {
+      return new Response.Builder()
+          .request(chain.request())
+          .protocol(Protocol.HTTP_1_1)
+          .code(504)
+          .message("Unsatisfiable Request (only-if-cached)")
+          .body(Util.EMPTY_RESPONSE)
+          .sentRequestAtMillis(-1L)
+          .receivedResponseAtMillis(System.currentTimeMillis())
+          .build();
+    }
+
+    // If we don't need the network, we're done.
+    //4.不需要访问网络的情况下，取本地缓存作为结果返回。
+    if (networkRequest == null) {
+      return cacheResponse.newBuilder()
+          .cacheResponse(stripBody(cacheResponse))
+          .build();
+    }
+
+    Response networkResponse = null;
+    try {
+    //5.当以上情况都没有结果返回，就读取网络结果（继续执行下一个拦截器）
+      networkResponse = chain.proceed(networkRequest);
+    } finally {
+      // If we're crashing on I/O or otherwise, don't leak the cache body.
+      if (networkResponse == null && cacheCandidate != null) {
+        closeQuietly(cacheCandidate.body());
+      }
+    }
+
+    // If we have a cache response too, then we're doing a conditional get.
+    //6.接收到网络结果返回，如果我们也有缓存，那么就会进行条件对比组合
+    if (cacheResponse != null) {
+      if (networkResponse.code() == HTTP_NOT_MODIFIED) {
+        Response response = cacheResponse.newBuilder()
+            .headers(combine(cacheResponse.headers(), networkResponse.headers()))//7.将缓存返回与网络返回的头信息进行组合
+            .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
+            .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
+            .cacheResponse(stripBody(cacheResponse))
+            .networkResponse(stripBody(networkResponse))
+            .build();
+        networkResponse.body().close();
+		//8.组合头后，但在剥离Content-Encoding头（由initContentStream（）执行）之前更新缓存。
+        // Update the cache after combining headers but before stripping the
+        // Content-Encoding header (as performed by initContentStream()).
+        cache.trackConditionalCacheHit();
+        cache.update(cacheResponse, response);
+        return response;
+      } else {
+        closeQuietly(cacheResponse.body());
+      }
+    }
+	//9.读取网络请求
+    Response response = networkResponse.newBuilder()
+        .cacheResponse(stripBody(cacheResponse))
+        .networkResponse(stripBody(networkResponse))
+        .build();
+	//10.对数据进行缓存
+    if (cache != null) {
+      if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
+        // Offer this request to the cache.
+        CacheRequest cacheRequest = cache.put(response);
+        return cacheWritingResponse(cacheRequest, response);
+      }
+
+      if (HttpMethod.invalidatesCache(networkRequest.method())) {
+        try {
+          cache.remove(networkRequest);
+        } catch (IOException ignored) {
+          // The cache cannot be written.
+        }
+      }
+    }
+	//11.返回网络请求的结果
+    return response;
+  	}
+	
+	
+####### 小结：
+
+CacheInterceptor主要就是负责Cache的管理
+
+   * 当网络被禁止访问，缓存不完整，那么返回失败（504）
+   * 缓存可用，返回缓存结果
+   * 当网络访问，返回（304），更新本地缓存
+   * 当Cache失效，删除缓存
+
+  
+  
 	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 
