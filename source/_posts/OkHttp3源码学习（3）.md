@@ -583,6 +583,8 @@ CacheInterceptor主要就是负责Cache的管理
 	    return realChain.proceed(request, streamAllocation, httpCodec, connection);
 	  	}
 	
+	
+	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 
 
