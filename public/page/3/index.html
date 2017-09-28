@@ -898,7 +898,20 @@ return response;
 <li>当网络访问，返回（304），更新本地缓存</li>
 <li>当Cache失效，删除缓存</li>
 </ul>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
+<h5 id="4-ConnectInterceptor"><a href="#4-ConnectInterceptor" class="headerlink" title="4.ConnectInterceptor"></a>4.ConnectInterceptor</h5><p>代码不多，但包含的内容很多。</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+   RealInterceptorChain realChain = (RealInterceptorChain) chain;
+   Request request = realChain.request();
+   StreamAllocation streamAllocation = realChain.streamAllocation();
+
+   // We need the network to satisfy this request. Possibly for validating a conditional GET.
+   boolean doExtensiveHealthChecks = !request.method().equals(&quot;GET&quot;);
+   HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+   RealConnection connection = streamAllocation.connection();
+
+   return realChain.proceed(request, streamAllocation, httpCodec, connection);
+     }
+</code></pre><p><img src="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png" alt="拦截器链"></p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
        interceptors, streamAllocation, httpCodec, connection, index + 1, request);

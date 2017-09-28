@@ -565,7 +565,23 @@ CacheInterceptor主要就是负责Cache的管理
    * 当Cache失效，删除缓存
 
   
-  
+##### 4.ConnectInterceptor
+
+代码不多，但包含的内容很多。
+
+
+	 @Override public Response intercept(Chain chain) throws IOException {
+	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
+	    Request request = realChain.request();
+	    StreamAllocation streamAllocation = realChain.streamAllocation();
+	
+	    // We need the network to satisfy this request. Possibly for validating a conditional GET.
+	    boolean doExtensiveHealthChecks = !request.method().equals("GET");
+	    HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+	    RealConnection connection = streamAllocation.connection();
+	
+	    return realChain.proceed(request, streamAllocation, httpCodec, connection);
+	  	}
 	
 ![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
 
