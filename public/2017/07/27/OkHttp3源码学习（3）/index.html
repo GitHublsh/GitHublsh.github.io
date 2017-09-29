@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png">
-<meta property="og:updated_time" content="2017-09-28T09:02:48.000Z">
+<meta property="og:updated_time" content="2017-09-29T02:32:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -893,7 +893,7 @@ if (cache != null) {
 //11.返回网络请求的结果
 return response;
   }
-</code></pre><p>####### 小结：</p>
+</code></pre><p>####### 整个过程大致：</p>
 <p>CacheInterceptor主要就是负责Cache的管理</p>
 <ul>
 <li>当网络被禁止访问，缓存不完整，那么返回失败（504）</li>

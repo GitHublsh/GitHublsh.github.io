@@ -555,7 +555,7 @@ CacheIntetceptor的职责就是负责Cache的管理
   	}
 	
 	
-####### 小结：
+####### 整个过程大致：
 
 CacheInterceptor主要就是负责Cache的管理
 
