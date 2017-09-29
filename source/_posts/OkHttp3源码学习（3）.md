@@ -573,6 +573,7 @@ CacheInterceptor主要就是负责Cache的管理
 	 @Override public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
 	    Request request = realChain.request();
+	    //拿到StreamAllocation对象。
 	    StreamAllocation streamAllocation = realChain.streamAllocation();
 	
 	    // We need the network to satisfy this request. Possibly for validating a conditional GET.
@@ -584,8 +585,156 @@ CacheInterceptor主要就是负责Cache的管理
 	  	}
 	
 	
+从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化
+
+	    streamAllocation = new StreamAllocation(
+        client.connectionPool(), createAddress(request.url()), callStackTrace);
+        
+三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用
+
+看一下StreamAllocation的构造方法
+
+	public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {
+    this.connectionPool = connectionPool;
+    this.address = address;
+    this.routeSelector = new RouteSelector(address, routeDatabase());
+    this.callStackTrace = callStackTrace;
+  	}
+在把这个三个参数保存为内部变量的同时也创建了一个线路选择器
+
+接下来继续看StreamAllocation中的newSream()方法
+
+	public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
+	//获取连接超时时间
+    int connectTimeout = client.connectTimeoutMillis();
+    //获取读写超时时间
+    int readTimeout = client.readTimeoutMillis();
+    int writeTimeout = client.writeTimeoutMillis();
+    boolean connectionRetryEnabled = client.retryOnConnectionFailure();
+
+    try {
+    //找到一个健康的连接
+      RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
+          writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
+      //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化
+      HttpCodec resultCodec = resultConnection.newCodec(client, this);
+
+      synchronized (connectionPool) {
+        codec = resultCodec;
+        return resultCodec;
+      }
+    } catch (IOException e) {
+      throw new RouteException(e);
+    }
+  	}
+  	
+ 下面就再看一下它是如何找到一个健康的连接的
+		
+	  private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
+	      int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
+	      throws IOException {
+	    while (true) {
+	    //找到健康的连接
+	      RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
+	          connectionRetryEnabled);
 	
-![拦截器链](http://ot29getcp.bkt.clouddn.com/images/lanjieqilian.png)
+	      // If this is a brand new connection, we can skip the extensive health checks.
+	      synchronized (connectionPool) {
+	        if (candidate.successCount == 0) {
+	          return candidate;
+	        }
+	      }
+	
+	      // Do a (potentially slow) check to confirm that the pooled connection is still good. If it
+	      // isn't, take it out of the pool and start again.
+	      if (!candidate.isHealthy(doExtensiveHealthChecks)) {
+	        noNewStreams();
+	        continue;
+	      }
+	
+	      return candidate;
+	    }
+	  }
+	  
+从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。
+
+那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout, readTimeout, writeTimeout,
+	          connectionRetryEnabled)方法
+	          
+	          
+	private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
+	      boolean connectionRetryEnabled) throws IOException {
+	    Route selectedRoute;
+	    synchronized (connectionPool) {
+	      if (released) throw new IllegalStateException("released");
+	      if (codec != null) throw new IllegalStateException("codec != null");
+	      if (canceled) throw new IOException("Canceled");
+	
+	      // Attempt to use an already-allocated connection.
+	      RealConnection allocatedConnection = this.connection;
+	      if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
+	        return allocatedConnection;
+	      }
+	
+	      // Attempt to get a connection from the pool.
+	      Internal.instance.get(connectionPool, address, this, null);
+	      if (connection != null) {
+	        return connection;
+	      }
+	
+	      selectedRoute = route;
+	    }
+	
+	    // If we need a route, make one. This is a blocking operation.
+	    if (selectedRoute == null) {
+	      selectedRoute = routeSelector.next();
+	    }
+	
+	    RealConnection result;
+	    synchronized (connectionPool) {
+	      if (canceled) throw new IOException("Canceled");
+	
+	      // Now that we have an IP address, make another attempt at getting a connection from the pool.
+	      // This could match due to connection coalescing.
+	      Internal.instance.get(connectionPool, address, this, selectedRoute);
+	      if (connection != null) {
+	        route = selectedRoute;
+	        return connection;
+	      }
+	
+	      // Create a connection and assign it to this allocation immediately. This makes it possible
+	      // for an asynchronous cancel() to interrupt the handshake we're about to do.
+	      route = selectedRoute;
+	      refusedStreamCount = 0;
+	      result = new RealConnection(connectionPool, selectedRoute);
+	      acquire(result);
+	    }
+	
+	    // Do TCP + TLS handshakes. This is a blocking operation.
+	    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
+	    routeDatabase().connected(result.route());
+	
+	    Socket socket = null;
+	    synchronized (connectionPool) {
+	      // Pool the connection.
+	      Internal.instance.put(connectionPool, result);
+	
+	      // If another multiplexed connection to the same address was created concurrently, then
+	      // release this connection and acquire that one.
+	      if (result.isMultiplexed()) {
+	        socket = Internal.instance.deduplicate(connectionPool, address, this);
+	        result = connection;
+	      }
+	    }
+	    closeQuietly(socket);
+	
+	    return result;
+	  }
+
+这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
+
+
+
 
 
 		 // Call the next interceptor in the chain.
