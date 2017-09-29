@@ -658,24 +658,25 @@ CacheInterceptor主要就是负责Cache的管理
 	  
 从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。
 
-那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout, readTimeout, writeTimeout,
-	          connectionRetryEnabled)方法
+那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法
 	          
 	          
 	private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
 	      boolean connectionRetryEnabled) throws IOException {
 	    Route selectedRoute;
+	    //同步线程池
 	    synchronized (connectionPool) {
 	      if (released) throw new IllegalStateException("released");
 	      if (codec != null) throw new IllegalStateException("codec != null");
 	      if (canceled) throw new IOException("Canceled");
 	
+			//尝试使用现有连接，判断是否可用
 	      // Attempt to use an already-allocated connection.
 	      RealConnection allocatedConnection = this.connection;
 	      if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
 	        return allocatedConnection;
 	      }
-	
+			//尝试在连接池中获取一个连接，
 	      // Attempt to get a connection from the pool.
 	      Internal.instance.get(connectionPool, address, this, null);
 	      if (connection != null) {
@@ -732,9 +733,6 @@ CacheInterceptor主要就是负责Cache的管理
 	  }
 
 这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
-
-
-
 
 
 		 // Call the next interceptor in the chain.

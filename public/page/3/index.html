@@ -975,21 +975,23 @@ try {
   }
 }
 </code></pre><p>从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。</p>
-<p>那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout, readTimeout, writeTimeout,<br>              connectionRetryEnabled)方法</p>
+<p>那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法</p>
 <pre><code>private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
       boolean connectionRetryEnabled) throws IOException {
     Route selectedRoute;
+    //同步线程池
     synchronized (connectionPool) {
       if (released) throw new IllegalStateException(&quot;released&quot;);
       if (codec != null) throw new IllegalStateException(&quot;codec != null&quot;);
       if (canceled) throw new IOException(&quot;Canceled&quot;);
 
+        //尝试使用现有连接，判断是否可用
       // Attempt to use an already-allocated connection.
       RealConnection allocatedConnection = this.connection;
       if (allocatedConnection != null &amp;&amp; !allocatedConnection.noNewStreams) {
         return allocatedConnection;
       }
-
+        //尝试在连接池中获取一个连接，
       // Attempt to get a connection from the pool.
       Internal.instance.get(connectionPool, address, this, null);
       if (connection != null) {
