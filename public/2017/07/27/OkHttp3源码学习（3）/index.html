@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-09-30T14:27:29.000Z">
+<meta property="og:updated_time" content="2017-10-09T07:48:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -1047,7 +1047,7 @@ try {
 
     return result;
   }
-</code></pre><p>这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接</p>
+</code></pre><p>这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。</p>
 <pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
        interceptors, streamAllocation, httpCodec, connection, index + 1, request);

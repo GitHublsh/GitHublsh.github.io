@@ -732,7 +732,7 @@ CacheInterceptor主要就是负责Cache的管理
 	    return result;
 	  }
 
-这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接
+这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
 
 
 		 // Call the next interceptor in the chain.
