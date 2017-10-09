@@ -734,6 +734,104 @@ CacheInterceptor主要就是负责Cache的管理
 
 这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
 
+那么回到ConnectInterceptor,它的作用就是为当前请求找到合适的连接，可能复用已有连接也可能是重新创建的连接，返回的连接由连接池负责决定。
+
+##### 5.CallServerInterceptor
+
+整个拦截器链中的最后一个拦截器，看一下源码。
+
+关键方法intercept,如下：
+
+	 @Override public Response intercept(Chain chain) throws IOException {
+	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
+	    HttpCodec httpCodec = realChain.httpStream();
+	    StreamAllocation streamAllocation = realChain.streamAllocation();
+	    RealConnection connection = (RealConnection) realChain.connection();
+	    Request request = realChain.request();
+		
+	    long sentRequestMillis = System.currentTimeMillis();
+		 //1.首先写请求头
+	    realChain.eventListener().requestHeadersStart(realChain.call());
+	    httpCodec.writeRequestHeaders(request);
+	    realChain.eventListener().requestHeadersEnd(realChain.call(), request);
+	
+	    Response.Builder responseBuilder = null;
+	    if (HttpMethod.permitsRequestBody(request.method()) && request.body() != null) {
+	      // If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100
+	      // Continue" response before transmitting the request body. If we don't get that, return
+	      // what we did get (such as a 4xx response) without ever transmitting the request body.
+	      if ("100-continue".equalsIgnoreCase(request.header("Expect"))) {
+	        httpCodec.flushRequest();
+	        realChain.eventListener().responseHeadersStart(realChain.call());
+	        responseBuilder = httpCodec.readResponseHeaders(true);
+	      }
+		   //2.然后写请求体
+	      if (responseBuilder == null) {
+	        // Write the request body if the "Expect: 100-continue" expectation was met.
+	        realChain.eventListener().requestBodyStart(realChain.call());
+	        long contentLength = request.body().contentLength();
+	        CountingSink requestBodyOut =
+	            new CountingSink(httpCodec.createRequestBody(request, contentLength));
+	        BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+	
+	        request.body().writeTo(bufferedRequestBody);
+	        bufferedRequestBody.close();
+	        realChain.eventListener()
+	            .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
+	      } else if (!connection.isMultiplexed()) {
+	        // If the "Expect: 100-continue" expectation wasn't met, prevent the HTTP/1 connection
+	        // from being reused. Otherwise we're still obligated to transmit the request body to
+	        // leave the connection in a consistent state.
+	        streamAllocation.noNewStreams();
+	      }
+	    }
+	
+	    httpCodec.finishRequest();
+		 //读取响应头
+	    if (responseBuilder == null) {
+	      realChain.eventListener().responseHeadersStart(realChain.call());
+	      responseBuilder = httpCodec.readResponseHeaders(false);
+	    }
+	
+	    Response response = responseBuilder
+	        .request(request)
+	        .handshake(streamAllocation.connection().handshake())
+	        .sentRequestAtMillis(sentRequestMillis)
+	        .receivedResponseAtMillis(System.currentTimeMillis())
+	        .build();
+	
+	    realChain.eventListener()
+	        .responseHeadersEnd(realChain.call(), response);
+	    //判断响应码，读取响应体
+	    int code = response.code();
+	    if (forWebSocket && code == 101) {
+	      // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+	      response = response.newBuilder()
+	          .body(Util.EMPTY_RESPONSE)
+	          .build();
+	    } else {
+	      response = response.newBuilder()
+	          .body(httpCodec.openResponseBody(response))
+	          .build();
+	    }
+	
+	    if ("close".equalsIgnoreCase(response.request().header("Connection"))
+	        || "close".equalsIgnoreCase(response.header("Connection"))) {
+	      streamAllocation.noNewStreams();
+	    }
+	
+	    if ((code == 204 || code == 205) && response.body().contentLength() > 0) {
+	      throw new ProtocolException(
+	          "HTTP " + code + " had non-zero Content-Length: " + response.body().contentLength());
+	    }
+	
+	    return response;
+	  }
+
+真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。
+
+
+##### 最后
 
 		 // Call the next interceptor in the chain.
 		    RealInterceptorChain next = new RealInterceptorChain(

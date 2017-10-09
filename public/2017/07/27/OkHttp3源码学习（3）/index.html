@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-10-09T07:48:52.000Z">
+<meta property="og:updated_time" content="2017-10-09T08:16:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -1048,7 +1048,96 @@ try {
     return result;
   }
 </code></pre><p>这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。</p>
-<pre><code>// Call the next interceptor in the chain.
+<p>那么回到ConnectInterceptor,它的作用就是为当前请求找到合适的连接，可能复用已有连接也可能是重新创建的连接，返回的连接由连接池负责决定。</p>
+<h5 id="5-CallServerInterceptor"><a href="#5-CallServerInterceptor" class="headerlink" title="5.CallServerInterceptor"></a>5.CallServerInterceptor</h5><p>整个拦截器链中的最后一个拦截器，看一下源码。</p>
+<p>关键方法intercept,如下：</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+   RealInterceptorChain realChain = (RealInterceptorChain) chain;
+   HttpCodec httpCodec = realChain.httpStream();
+   StreamAllocation streamAllocation = realChain.streamAllocation();
+   RealConnection connection = (RealConnection) realChain.connection();
+   Request request = realChain.request();
+
+   long sentRequestMillis = System.currentTimeMillis();
+    //1.首先写请求头
+   realChain.eventListener().requestHeadersStart(realChain.call());
+   httpCodec.writeRequestHeaders(request);
+   realChain.eventListener().requestHeadersEnd(realChain.call(), request);
+
+   Response.Builder responseBuilder = null;
+   if (HttpMethod.permitsRequestBody(request.method()) &amp;&amp; request.body() != null) {
+     // If there&apos;s a &quot;Expect: 100-continue&quot; header on the request, wait for a &quot;HTTP/1.1 100
+     // Continue&quot; response before transmitting the request body. If we don&apos;t get that, return
+     // what we did get (such as a 4xx response) without ever transmitting the request body.
+     if (&quot;100-continue&quot;.equalsIgnoreCase(request.header(&quot;Expect&quot;))) {
+       httpCodec.flushRequest();
+       realChain.eventListener().responseHeadersStart(realChain.call());
+       responseBuilder = httpCodec.readResponseHeaders(true);
+     }
+      //2.然后写请求体
+     if (responseBuilder == null) {
+       // Write the request body if the &quot;Expect: 100-continue&quot; expectation was met.
+       realChain.eventListener().requestBodyStart(realChain.call());
+       long contentLength = request.body().contentLength();
+       CountingSink requestBodyOut =
+           new CountingSink(httpCodec.createRequestBody(request, contentLength));
+       BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+
+       request.body().writeTo(bufferedRequestBody);
+       bufferedRequestBody.close();
+       realChain.eventListener()
+           .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
+     } else if (!connection.isMultiplexed()) {
+       // If the &quot;Expect: 100-continue&quot; expectation wasn&apos;t met, prevent the HTTP/1 connection
+       // from being reused. Otherwise we&apos;re still obligated to transmit the request body to
+       // leave the connection in a consistent state.
+       streamAllocation.noNewStreams();
+     }
+   }
+
+   httpCodec.finishRequest();
+    //读取响应头
+   if (responseBuilder == null) {
+     realChain.eventListener().responseHeadersStart(realChain.call());
+     responseBuilder = httpCodec.readResponseHeaders(false);
+   }
+
+   Response response = responseBuilder
+       .request(request)
+       .handshake(streamAllocation.connection().handshake())
+       .sentRequestAtMillis(sentRequestMillis)
+       .receivedResponseAtMillis(System.currentTimeMillis())
+       .build();
+
+   realChain.eventListener()
+       .responseHeadersEnd(realChain.call(), response);
+   //判断响应码，读取响应体
+   int code = response.code();
+   if (forWebSocket &amp;&amp; code == 101) {
+     // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+     response = response.newBuilder()
+         .body(Util.EMPTY_RESPONSE)
+         .build();
+   } else {
+     response = response.newBuilder()
+         .body(httpCodec.openResponseBody(response))
+         .build();
+   }
+
+   if (&quot;close&quot;.equalsIgnoreCase(response.request().header(&quot;Connection&quot;))
+       || &quot;close&quot;.equalsIgnoreCase(response.header(&quot;Connection&quot;))) {
+     streamAllocation.noNewStreams();
+   }
+
+   if ((code == 204 || code == 205) &amp;&amp; response.body().contentLength() &gt; 0) {
+     throw new ProtocolException(
+         &quot;HTTP &quot; + code + &quot; had non-zero Content-Length: &quot; + response.body().contentLength());
+   }
+
+   return response;
+ }
+</code></pre><p>真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。</p>
+<h5 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h5><pre><code>// Call the next interceptor in the chain.
    RealInterceptorChain next = new RealInterceptorChain(
        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
    Interceptor interceptor = interceptors.get(index);
@@ -1267,7 +1356,7 @@ try {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、发起请求"><span class="nav-number">1.</span> <span class="nav-text">一、发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">二、AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">三、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">四、RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、拦截器链"><span class="nav-number">5.</span> <span class="nav-text">五、拦截器链</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-RetryAndFollowUpInterceptor"><span class="nav-number">5.1.</span> <span class="nav-text">1.RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-BidgeInterceptor"><span class="nav-number">5.2.</span> <span class="nav-text">2.BidgeInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#小结："><span class="nav-number">5.2.1.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-CacheIntetceptor"><span class="nav-number">5.3.</span> <span class="nav-text">3.CacheIntetceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-ConnectInterceptor"><span class="nav-number">5.4.</span> <span class="nav-text">4.ConnectInterceptor</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、发起请求"><span class="nav-number">1.</span> <span class="nav-text">一、发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">二、AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">三、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">四、RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、拦截器链"><span class="nav-number">5.</span> <span class="nav-text">五、拦截器链</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-RetryAndFollowUpInterceptor"><span class="nav-number">5.1.</span> <span class="nav-text">1.RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-BidgeInterceptor"><span class="nav-number">5.2.</span> <span class="nav-text">2.BidgeInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#小结："><span class="nav-number">5.2.1.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-CacheIntetceptor"><span class="nav-number">5.3.</span> <span class="nav-text">3.CacheIntetceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-ConnectInterceptor"><span class="nav-number">5.4.</span> <span class="nav-text">4.ConnectInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-CallServerInterceptor"><span class="nav-number">5.5.</span> <span class="nav-text">5.CallServerInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最后"><span class="nav-number">5.6.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
             
 
           </div>
