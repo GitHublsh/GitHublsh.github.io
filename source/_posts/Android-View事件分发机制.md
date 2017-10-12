@@ -29,6 +29,13 @@ tags: [View事件分发机制]
 		* ACTION_DOWN--手指刚接触屏幕
 		* ACTION_MOVE--手指在屏幕上滑动
 		* ACTION_UP--手指离开屏幕
+
+		
+2. 点击事件的分发中最重要的三个方法
+
+	* dispatchTouchEvent(MotionEvent event)
+	* onInterceptTouchEvent(MotionEvent event)
+	* onTouchEvent(MotionEvent event) 
      
    
    
