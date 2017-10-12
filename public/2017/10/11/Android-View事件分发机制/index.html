@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="一、什么是Viewview是Android中的所有控件的基类。">
+<meta name="description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
 <meta name="keywords" content="View事件分发机制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android View事件分发机制">
 <meta property="og:url" content="http://yoursite.com/2017/10/11/Android-View事件分发机制/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="一、什么是Viewview是Android中的所有控件的基类。">
-<meta property="og:updated_time" content="2017-10-12T09:24:31.000Z">
+<meta property="og:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
+<meta property="og:updated_time" content="2017-10-12T09:42:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View事件分发机制">
-<meta name="twitter:description" content="一、什么是Viewview是Android中的所有控件的基类。">
+<meta name="twitter:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
 
 
 
@@ -353,8 +353,30 @@
       
 
       
-        <h3 id="一、什么是View"><a href="#一、什么是View" class="headerlink" title="一、什么是View"></a>一、什么是View</h3><p>view是Android中的所有控件的基类。</p>
+        <h3 id="一、点击事件的传递规则"><a href="#一、点击事件的传递规则" class="headerlink" title="一、点击事件的传递规则"></a>一、点击事件的传递规则</h3><p>   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。</p>
+<ol>
+<li><p>MotionEvent</p>
+<p>常见的动作：</p>
+<p>常见的动作常量：</p>
+<ul>
+<li><p>public static final int ACTION_DOWN = 0;单点触摸动作</p>
+</li>
+<li><p>public static final int ACTION_UP = 1;单点触摸离开动作</p>
+</li>
+<li>public static final int ACTION_MOVE = 2;触摸点移动动作</li>
+<li>public static final int ACTION_CANCEL = 3;触摸动作取消</li>
+<li>public static final int ACTION_OUTSIDE = 4;触摸动作超出边界</li>
+<li>public static final int ACTION_POINTER_DOWN = 5;多点触摸动作</li>
+<li>public static final int ACTION_POINTER_UP       = 6;多点离开动作</li>
+</ul>
+</li>
+</ol>
+<pre><code>主要就是：
 
+* ACTION_DOWN--手指刚接触屏幕
+* ACTION_MOVE--手指在屏幕上滑动
+* ACTION_UP--手指离开屏幕
+</code></pre>
       
     </div>
 
@@ -563,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、什么是View"><span class="nav-number">1.</span> <span class="nav-text">一、什么是View</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、点击事件的传递规则"><span class="nav-number">1.</span> <span class="nav-text">一、点击事件的传递规则</span></a></li></ol></div>
             
 
           </div>
