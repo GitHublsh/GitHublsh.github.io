@@ -33,9 +33,11 @@ tags: [View事件分发机制]
 		
 2. 点击事件的分发中最重要的三个方法
 
-	* dispatchTouchEvent(MotionEvent event)
-	* onInterceptTouchEvent(MotionEvent event)
-	* onTouchEvent(MotionEvent event) 
+	* dispatchTouchEvent(MotionEvent event)--事件分发
+	* onInterceptTouchEvent(MotionEvent event)--事件拦截
+	* onTouchEvent(MotionEvent event)--事件消费
+
+3. 
      
    
    

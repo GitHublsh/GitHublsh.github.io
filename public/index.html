@@ -284,6 +284,145 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/PackageManager使用姿势/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/25/PackageManager使用姿势/" itemprop="url">PackageManager使用姿势</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:04:03+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>首先看一下AndroidManifest.xml文件结构。</p>
+<p>例如：</p>
+<pre><code>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    package=&quot;com.example.test&quot;&gt;
+
+&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
+
+&lt;application
+    android:allowBackup=&quot;true&quot;
+    android:icon=&quot;@mipmap/ic_launcher&quot;
+    android:label=&quot;@string/app_name&quot;
+    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;
+    android:supportsRtl=&quot;true&quot;
+    android:theme=&quot;@style/AppTheme&quot;&gt;
+    &lt;activity android:name=&quot;.TestActivity&quot;&gt;
+        &lt;intent-filter&gt;
+            &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+
+            &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+        &lt;/intent-filter&gt;
+    &lt;/activity&gt;
+&lt;/application&gt;
+
+&lt;/manifest&gt;
+</code></pre><ul>
+<li>通过包名判断APP是否安装</li>
+<li>通过遍历获取AndroidManifest.xml文件信息</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/Android-View事件分发机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -378,11 +517,12 @@
 </code></pre><ol>
 <li><p>点击事件的分发中最重要的三个方法</p>
 <ul>
-<li>dispatchTouchEvent(MotionEvent event)</li>
-<li>onInterceptTouchEvent(MotionEvent event)</li>
-<li>onTouchEvent(MotionEvent event) </li>
+<li>dispatchTouchEvent(MotionEvent event)–事件分发</li>
+<li>onInterceptTouchEvent(MotionEvent event)–事件拦截</li>
+<li>onTouchEvent(MotionEvent event)–事件消费</li>
 </ul>
 </li>
+<li></li>
 </ol>
 
           
@@ -1046,131 +1186,6 @@ animal.drink();
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/10/设计模式之路（6）依赖倒转原则/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/10/设计模式之路（6）依赖倒转原则/" itemprop="url">设计模式之路（6）依赖倒转原则</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T22:55:38+08:00">
-                2017-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="依赖倒置原则"><a href="#依赖倒置原则" class="headerlink" title="依赖倒置原则"></a>依赖倒置原则</h3><p>–</p>
-<h4 id="概述：依赖倒置原则（Dependence-Inversion-Principle）是程序要依赖于抽象接口，不要依赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这样就降低了客户与实现模块间的耦合。"><a href="#概述：依赖倒置原则（Dependence-Inversion-Principle）是程序要依赖于抽象接口，不要依赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这样就降低了客户与实现模块间的耦合。" class="headerlink" title="概述：依赖倒置原则（Dependence Inversion Principle）是程序要依赖于抽象接口，不要依赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这样就降低了客户与实现模块间的耦合。"></a>概述：依赖倒置原则（Dependence Inversion Principle）是程序要依赖于抽象接口，不要依赖于具体实现。简单的说就是要求对抽象进行编程，不要对实现进行编程，这样就降低了客户与实现模块间的耦合。</h4><p>–</p>
-<ul>
-<li><p>要针对接口编程，不要针对实现编程。</p>
-<ul>
-<li><p>针对接口编程的意思就是说，应当使用Java接口和抽象Java类进行变量的类型声明、参量的类型声明、方法的返回类型声明，以及数据类型的转换等。</p>
-</li>
-<li><p>不要针对实现编程的意思就是说，不应当使用具体Java类进行变量的类型声明、参量的类型声明、方法的返回类型声明，以及数据类型的转换等。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="一、依赖倒置原则："><a href="#一、依赖倒置原则：" class="headerlink" title="一、依赖倒置原则："></a>一、依赖倒置原则：</h3><h4 id="A-高层模块不应该依赖低层模块。两个都应该依赖抽象。"><a href="#A-高层模块不应该依赖低层模块。两个都应该依赖抽象。" class="headerlink" title="A.高层模块不应该依赖低层模块。两个都应该依赖抽象。"></a>A.高层模块不应该依赖低层模块。两个都应该依赖抽象。</h4><h4 id="B-抽象不应该依赖细节。细节应该依赖抽象。"><a href="#B-抽象不应该依赖细节。细节应该依赖抽象。" class="headerlink" title="B.抽象不应该依赖细节。细节应该依赖抽象。"></a>B.抽象不应该依赖细节。细节应该依赖抽象。</h4><h3 id="二、为什么要依赖倒置"><a href="#二、为什么要依赖倒置" class="headerlink" title="二、为什么要依赖倒置"></a>二、为什么要依赖倒置</h3><p>传统的过程性系统的设计方法倾向于使高层次的模块依赖于低层次的模块，抽象层次依赖于具体层次。倒置原则就是要把这个错误的依赖关系倒转过来。</p>
-<h3 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h3><p>一个应用中的重要策略决定及业务模型正是在这些高层的模块中。也正是这些模型包含着应用的特性。但是，当这些模块依赖于低层模块时，低层模块的修改将会直接影响到它们，迫使它们也去改变。这种境况是荒谬的。应该是处于高层的模块去迫使那些低层的模块发生改变。应该是处于高层的模块优先于低层的模块。无论如何高层的模块也不应依赖于低层的模块。而且，我们想能够复用的是高层的模块。通过子程序库的形式，我们已经可以很好地复用低层的模块了。当高层的模块依赖于低层的模块时，这些高层模块就很难在不同的环境中复用。但是，当那些高层模块独立于低层模块时，它们就能很简单地被复用了。这正是位于框架设计的最核心之处的原则。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1220,7 +1235,7 @@ animal.drink();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1233,7 +1248,7 @@ animal.drink();
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

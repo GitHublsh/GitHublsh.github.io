@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/11/Android-View事件分发机制/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
-<meta property="og:updated_time" content="2017-10-12T09:50:23.000Z">
+<meta property="og:updated_time" content="2017-10-19T06:22:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View事件分发机制">
 <meta name="twitter:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
@@ -379,11 +379,12 @@
 </code></pre><ol>
 <li><p>点击事件的分发中最重要的三个方法</p>
 <ul>
-<li>dispatchTouchEvent(MotionEvent event)</li>
-<li>onInterceptTouchEvent(MotionEvent event)</li>
-<li>onTouchEvent(MotionEvent event) </li>
+<li>dispatchTouchEvent(MotionEvent event)–事件分发</li>
+<li>onInterceptTouchEvent(MotionEvent event)–事件拦截</li>
+<li>onTouchEvent(MotionEvent event)–事件消费</li>
 </ul>
 </li>
+<li></li>
 </ol>
 
       
@@ -463,6 +464,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/10/25/PackageManager使用姿势/" rel="prev" title="PackageManager使用姿势">
+                PackageManager使用姿势 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -535,7 +540,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -548,7 +553,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
