@@ -373,9 +373,17 @@
             &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
         &lt;/intent-filter&gt;
     &lt;/activity&gt;
+    &lt;service
+        android:name=&quot;testservice&quot;
+        android:enable=&quot;true&quot;
+        android:exproted=&quot;true&quot;&gt;
+        &lt;/service&gt;
 &lt;/application&gt;
 
 &lt;/manifest&gt;
+</code></pre><p>根据AndroidManifest的各个节点可以看出来其中的对应关系：</p>
+<pre><code>* 一个Package对应一个Application
+* 一个Application对应n个Activity、Service等等
 </code></pre><ul>
 <li>通过包名判断APP是否安装</li>
 <li>通过遍历获取AndroidManifest.xml文件信息</li>

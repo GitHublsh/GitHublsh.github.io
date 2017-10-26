@@ -27,12 +27,22 @@ tags: [PackageManager]
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+        	android:name="testservice"
+        	android:enable="true"
+        	android:exproted="true">
+        	</service>
     </application>
 
 	</manifest>
 	
 	
 	
+	
+根据AndroidManifest的各个节点可以看出来其中的对应关系：
+	
+	* 一个Package对应一个Application
+	* 一个Application对应n个Activity、Service等等
 
 * 通过包名判断APP是否安装
 * 通过遍历获取AndroidManifest.xml文件信息

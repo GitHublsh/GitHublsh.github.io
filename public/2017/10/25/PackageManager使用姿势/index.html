@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/25/PackageManager使用姿势/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="首先看一下AndroidManifest.xml文件结构。 例如： &amp;lt;manifest xmlns:android=&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;     package=&amp;quot;com.example.test&amp;quot;&amp;gt;  &amp;lt;uses-permission android:name=&amp;quot">
-<meta property="og:updated_time" content="2017-10-25T12:10:09.000Z">
+<meta property="og:updated_time" content="2017-10-26T05:54:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManager使用姿势">
 <meta name="twitter:description" content="首先看一下AndroidManifest.xml文件结构。 例如： &amp;lt;manifest xmlns:android=&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;     package=&amp;quot;com.example.test&amp;quot;&amp;gt;  &amp;lt;uses-permission android:name=&amp;quot">
@@ -374,9 +374,17 @@
             &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
         &lt;/intent-filter&gt;
     &lt;/activity&gt;
+    &lt;service
+        android:name=&quot;testservice&quot;
+        android:enable=&quot;true&quot;
+        android:exproted=&quot;true&quot;&gt;
+        &lt;/service&gt;
 &lt;/application&gt;
 
 &lt;/manifest&gt;
+</code></pre><p>根据AndroidManifest的各个节点可以看出来其中的对应关系：</p>
+<pre><code>* 一个Package对应一个Application
+* 一个Application对应n个Activity、Service等等
 </code></pre><ul>
 <li>通过包名判断APP是否安装</li>
 <li>通过遍历获取AndroidManifest.xml文件信息</li>
