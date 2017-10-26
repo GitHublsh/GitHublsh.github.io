@@ -199,11 +199,12 @@ tags: [OkHttp3]
 
 
 可以看到procees方法的逻辑：
+
 * 创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
 
-	// Call the next interceptor in the chain.
-    RealInterceptorChain next = new RealInterceptorChain(
-        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+		// Call the next interceptor in the chain.
+		RealInterceptorChain next = new RealInterceptorChain(
+			        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
         
 * 获取索引为index的interceptor,执行索引为index的intercept方法。
 	

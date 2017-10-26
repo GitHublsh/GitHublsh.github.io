@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-10-26T08:47:56.000Z">
+<meta property="og:updated_time" content="2017-10-26T11:33:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -530,8 +530,9 @@ public final class RealInterceptorChain implements Interceptor.Chain {
 </code></pre><p>可以看到procees方法的逻辑：</p>
 <ul>
 <li><p>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。</p>
-<p>  // Call the next interceptor in the chain.<br>  RealInterceptorChain next = new RealInterceptorChain(</p>
-<pre><code>interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+<pre><code>// Call the next interceptor in the chain.
+RealInterceptorChain next = new RealInterceptorChain(
+            interceptors, streamAllocation, httpCodec, connection, index + 1, request);
 </code></pre></li>
 <li><p>获取索引为index的interceptor,执行索引为index的intercept方法。</p>
 <pre><code>Interceptor interceptor = interceptors.get(index);
