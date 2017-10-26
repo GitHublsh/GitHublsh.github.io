@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-10-09T08:16:38.000Z">
+<meta property="og:updated_time" content="2017-10-26T08:47:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -607,8 +607,10 @@ while (true) {
     streamAllocation.release();
     throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
   }
-//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行relase销毁掉，再新建一个StreamAllocation连接,进行重试。
-  if (!sameConnection(response, followUp.url())) {
+//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，
+请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行release销
+毁掉,再新建一个StreamAllocation连接,进行重试。
+  if (!sameConnection(response, followUp.url(s))) {
     streamAllocation.release();
     streamAllocation = new StreamAllocation(
         client.connectionPool(), createAddress(followUp.url()), callStackTrace);

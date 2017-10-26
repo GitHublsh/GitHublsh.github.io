@@ -1380,8 +1380,10 @@ while (true) {
     streamAllocation.release();
     throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
   }
-//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行relase销毁掉，再新建一个StreamAllocation连接,进行重试。
-  if (!sameConnection(response, followUp.url())) {
+//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，
+请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行release销
+毁掉,再新建一个StreamAllocation连接,进行重试。
+  if (!sameConnection(response, followUp.url(s))) {
     streamAllocation.release();
     streamAllocation = new StreamAllocation(
         client.connectionPool(), createAddress(followUp.url()), callStackTrace);
