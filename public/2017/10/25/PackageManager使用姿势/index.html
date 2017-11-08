@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="首先看一下AndroidManifest.xml文件结构。 例如： &amp;lt;manifest xmlns:android=&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;     package=&amp;quot;com.example.test&amp;quot;&amp;gt;  &amp;lt;uses-permission android:name=&amp;quot">
+<meta name="description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
 <meta name="keywords" content="PackageManager">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PackageManager使用姿势">
 <meta property="og:url" content="http://yoursite.com/2017/10/25/PackageManager使用姿势/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="首先看一下AndroidManifest.xml文件结构。 例如： &amp;lt;manifest xmlns:android=&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;     package=&amp;quot;com.example.test&amp;quot;&amp;gt;  &amp;lt;uses-permission android:name=&amp;quot">
-<meta property="og:updated_time" content="2017-10-26T05:54:38.000Z">
+<meta property="og:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
+<meta property="og:updated_time" content="2017-11-08T13:18:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManager使用姿势">
-<meta name="twitter:description" content="首先看一下AndroidManifest.xml文件结构。 例如： &amp;lt;manifest xmlns:android=&amp;quot;http://schemas.android.com/apk/res/android&amp;quot;     package=&amp;quot;com.example.test&amp;quot;&amp;gt;  &amp;lt;uses-permission android:name=&amp;quot">
+<meta name="twitter:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
 
 
 
@@ -353,7 +353,27 @@
       
 
       
-        <p>首先看一下AndroidManifest.xml文件结构。</p>
+        <p>PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。</p>
+<h4 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h4><ol>
+<li>安装、卸载应用</li>
+<li>查询权限</li>
+<li>查询Application相关信息</li>
+</ol>
+<h4 id="二、常用方法"><a href="#二、常用方法" class="headerlink" title="二、常用方法"></a>二、常用方法</h4><p>1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageInfo，注意，此处的flags标签：<br> GET_ACTIVITIES<br>GET_GIDS<br>GET_CONFIGURATIONS<br>GET_INSTRUMENTATION<br>GET_PERMISSIONS<br>GET_PROVIDERS<br>GET_RECEIVERS<br>GET_SERVICES<br>GET_SIGNATURES<br>GET_UNINSTALLED_PACKAGES<br>（2）、public abstract int[] getPackageGids(String packageName)，根据包名获取group-ids</p>
+<p>（3）、public abstract PermissionInfo getPermissionInfo(String name, int flags)，根据包名和指定的flags获取指定的授权信息</p>
+<p>（4）、public abstract List<permissiongroupinfo> getAllPermissionGroups(int flags);获取所以PermissGroup集合</permissiongroupinfo></p>
+<p>（5）、public abstract PermissionGroupInfo getPermissionGroupInfo(String name,<br>    int flags)根据指定的Group名称获取PermissionGroupInfo对象。</p>
+<p>（6）、public abstract ApplicationInfo getApplicationInfo(String packageName,<br>            int flags)，根据指定的包名获取ApplicationInfo信息。</p>
+<p>（7）、public abstract ActivityInfo getActivityInfo(ComponentName component,<br>            int flags)，根据指定的组件，获取ActivityInfo信息</p>
+<p>（8）、public abstract ServiceInfo getServiceInfo(ComponentName component,<br>            int flags)，根据指定组件获取ServiceInfo</p>
+<p>（9）、public abstract ProviderInfo getProviderInfo(ComponentName component,<br>            int flags)，根据指定组件名称获取ProviderInfo信息</p>
+<p>（10）、public abstract List<packageinfo> getInstalledPackages(int flags);获取所有安装的PackagInfo信息</packageinfo></p>
+<p>（11）、public abstract List<packageinfo> getPackagesHoldingPermissions(<br>            String[] permissions, int flags);获取具有特定权限的PackagInfo</packageinfo></p>
+<p>（12）、public abstract List<applicationinfo> getInstalledApplications(int flags);获取安装的ApplicationInfo信息</applicationinfo></p>
+<p>（13）、public abstract boolean addPermission(PermissionInfo info);添加权限</p>
+<p>（14）、public abstract void removePermission(String name);移除权限</p>
+<p>2、PackageInfo用于描述mainfest中所有描述信息。<br>常见字段：<br>（1）、public String packageName;包名<br>（2）、public String[] splitNames;<br>（3）、public int versionCode;版本号　　　　　<br>（4）、public String versionName;版本名称<br>（5）、public ApplicationInfo applicationInfo;<br>（6）、public long firstInstallTime;第一次安装时间<br>（7）、public long lastUpdateTime;上次更新时间<br>（8）、public ActivityInfo[] activities;所有的Activity信息<br>（9）、public ActivityInfo[] receivers; 所有的广播接收者<br>（10）、public ServiceInfo[] services;所有的服务信息<br>（11）、public ProviderInfo[] providers;获取ContentProvide<br>（12）、public PermissionInfo[] permissions;所有的权限信息</p>
+<h4 id="三、AndroidManifest文件结构"><a href="#三、AndroidManifest文件结构" class="headerlink" title="三、AndroidManifest文件结构"></a>三、AndroidManifest文件结构</h4><p>首先看一下AndroidManifest.xml文件结构。</p>
 <p>例如：</p>
 <pre><code>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
     package=&quot;com.example.test&quot;&gt;
@@ -514,8 +534,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -579,6 +608,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、主要功能"><span class="nav-number">1.</span> <span class="nav-text">一、主要功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、常用方法"><span class="nav-number">2.</span> <span class="nav-text">二、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、AndroidManifest文件结构"><span class="nav-number">3.</span> <span class="nav-text">三、AndroidManifest文件结构</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

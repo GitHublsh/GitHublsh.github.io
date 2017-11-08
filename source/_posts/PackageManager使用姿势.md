@@ -4,6 +4,77 @@ date: 2017-10-25 20:04:03
 tags: [PackageManager]
 ---
 
+PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。
+
+#### 一、主要功能
+
+1. 安装、卸载应用
+2. 查询权限
+3. 查询Application相关信息
+
+#### 二、常用方法
+
+1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageInfo，注意，此处的flags标签：
+ GET_ACTIVITIES
+GET_GIDS
+GET_CONFIGURATIONS
+GET_INSTRUMENTATION
+GET_PERMISSIONS
+GET_PROVIDERS
+GET_RECEIVERS
+GET_SERVICES
+GET_SIGNATURES
+GET_UNINSTALLED_PACKAGES
+（2）、public abstract int[] getPackageGids(String packageName)，根据包名获取group-ids
+
+（3）、public abstract PermissionInfo getPermissionInfo(String name, int flags)，根据包名和指定的flags获取指定的授权信息
+
+（4）、public abstract List<PermissionGroupInfo> getAllPermissionGroups(int flags);获取所以PermissGroup集合
+
+（5）、public abstract PermissionGroupInfo getPermissionGroupInfo(String name,
+    int flags)根据指定的Group名称获取PermissionGroupInfo对象。
+
+（6）、public abstract ApplicationInfo getApplicationInfo(String packageName,
+            int flags)，根据指定的包名获取ApplicationInfo信息。
+
+（7）、public abstract ActivityInfo getActivityInfo(ComponentName component,
+            int flags)，根据指定的组件，获取ActivityInfo信息
+
+（8）、public abstract ServiceInfo getServiceInfo(ComponentName component,
+            int flags)，根据指定组件获取ServiceInfo
+
+（9）、public abstract ProviderInfo getProviderInfo(ComponentName component,
+            int flags)，根据指定组件名称获取ProviderInfo信息
+
+（10）、public abstract List<PackageInfo> getInstalledPackages(int flags);获取所有安装的PackagInfo信息
+
+（11）、public abstract List<PackageInfo> getPackagesHoldingPermissions(
+            String[] permissions, int flags);获取具有特定权限的PackagInfo
+
+（12）、public abstract List<ApplicationInfo> getInstalledApplications(int flags);获取安装的ApplicationInfo信息
+
+（13）、public abstract boolean addPermission(PermissionInfo info);添加权限
+
+（14）、public abstract void removePermission(String name);移除权限
+
+2、PackageInfo用于描述mainfest中所有描述信息。    
+常见字段：   
+（1）、public String packageName;包名    
+（2）、public String[] splitNames;   
+（3）、public int versionCode;版本号　　　　　
+（4）、public String versionName;版本名称    
+（5）、public ApplicationInfo applicationInfo;    
+（6）、public long firstInstallTime;第一次安装时间   
+（7）、public long lastUpdateTime;上次更新时间     
+（8）、public ActivityInfo[] activities;所有的Activity信息     
+（9）、public ActivityInfo[] receivers; 所有的广播接收者    
+（10）、public ServiceInfo[] services;所有的服务信息     
+（11）、public ProviderInfo[] providers;获取ContentProvide     
+（12）、public PermissionInfo[] permissions;所有的权限信息
+
+
+#### 三、AndroidManifest文件结构
+
 首先看一下AndroidManifest.xml文件结构。
 
 例如：
