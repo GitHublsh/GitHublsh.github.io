@@ -34,10 +34,31 @@ tags: [View事件分发机制]
 2. 点击事件的分发中最重要的三个方法
 
 	* dispatchTouchEvent(MotionEvent event)--事件分发
+
+		* 用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。
+		
 	* onInterceptTouchEvent(MotionEvent event)--事件拦截
+
+		* 用来判断是否拦截某个事件，如果当前View拦截了某个事件，那么在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。
+		
 	* onTouchEvent(MotionEvent event)--事件消费
 
-3. 
+		* 在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件
+
+3. 伪代码
+
+		public boolean dispatchTouchEvent(MotionEvent ev){
+			boolean touch = false;
+			if(onInterceptTouchEvent(ev)){
+				touch = onTouchEvent(ev);
+			}else{
+				touch = child.dispatchTouchEvent(ev);
+			}
+			return touch;
+		}
      
    
+  * 点击事件的传递规则：
+  	
+  		* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用，	 
    
