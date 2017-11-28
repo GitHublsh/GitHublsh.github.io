@@ -60,5 +60,5 @@ tags: [View事件分发机制]
    
   * 点击事件的传递规则：
   	
-  		* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用，	 
+  		* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用	 
    

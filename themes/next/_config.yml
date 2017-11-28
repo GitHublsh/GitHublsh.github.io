@@ -256,7 +256,7 @@ wechat_subscriber:
   qcode: /images/WechatIMG7.jpeg
   description: 个人微信，欢迎交流
 
-reward_comment: 请我吃包辣条吧~
+reward_comment:   让我感受下知识的力量~
 wechatpay: /images/WechatIMG3.jpeg
 alipay: /images/WechatIMG5.jpeg
 
