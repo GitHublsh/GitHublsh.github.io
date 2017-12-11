@@ -284,6 +284,362 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/15/Github-hexo搭建个人博客（3）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/15/Github-hexo搭建个人博客（3）/" itemprop="url">Hexo+Github搭建个人博客（3）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-15T17:03:56+08:00">
+                2016-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="博客中添加图片"><a href="#博客中添加图片" class="headerlink" title="博客中添加图片"></a>博客中添加图片</h3><p>hexo+github搭建完，开始开开心心的写博客。但是，到了插入图片的时候，好像不是很友好~</p>
+<h3 id="尝试一："><a href="#尝试一：" class="headerlink" title="尝试一："></a>尝试一：</h3><p>本人写博客采用的macdown,首先尝试了本地图片。</p>
+<p>在引用图片位置添加：</p>
+<pre><code>![“图片名称”](../images/imagename.jpg) 
+</code></pre><p>在日志文件的上级目录，新建文件夹images，用来存放图片。</p>
+<p>然后，</p>
+<p>hexo g </p>
+<p>hexo s</p>
+<p>本地查看效果，首页显示正常，进入分类目录，打开后，图片无法显示。</p>
+<h3 id="尝试二："><a href="#尝试二：" class="headerlink" title="尝试二："></a>尝试二：</h3><h4 id="采用七牛云来做图床，亲测可行"><a href="#采用七牛云来做图床，亲测可行" class="headerlink" title="采用七牛云来做图床，亲测可行"></a>采用七牛云来做图床，亲测可行</h4><p>步骤：</p>
+<ol>
+<li>七牛云账号注册</li>
+<li>创建对象存储</li>
+<li>创建之后，进行内容管理，上传图片，这个时候会生成外链默认域名</li>
+<li>创建成功，在macdown中添加图片的外链域名（例如：![“请求报文”]<code>(http://ot29getcp.bkt.clouddn.com
+/images/request.png)</code> ）</li>
+</ol>
+<p>5.添加后本地运行测试，blog 首页展示和分类展示可行</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/14/Hexo-Github搭建个人博客（2）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/14/Hexo-Github搭建个人博客（2）/" itemprop="url">Hexo+Github搭建个人博客（2）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-14T14:01:42+08:00">
+                2016-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Hexo-Github搭建个人博客（2）"><a href="#Hexo-Github搭建个人博客（2）" class="headerlink" title="Hexo+Github搭建个人博客（2）"></a>Hexo+Github搭建个人博客（2）</h3><h4 id="开始动手配置diy博客"><a href="#开始动手配置diy博客" class="headerlink" title="开始动手配置diy博客"></a>开始动手配置diy博客</h4><hr>
+<p>##一、hexo站点配置文件</p>
+<p>打开存放整个博客文件下_config.yml：</p>
+<pre><code># Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: Neil&apos;s blog    #网站标题
+subtitle: Let&apos;s start from here  #网站副标题
+description: 优秀不够，你是否无可替代
+author: Neil Liu    #博主的名字
+email: codeneil@163.com        #博主的邮箱
+language: zh-Hans    #网站使用的语言
+timezone:    #网站时区
+
+# URL
+## If your site is put in a subdirectory, set url as &apos;http://yoursite.com/child&apos; and root as &apos;/child/&apos;
+url: http://yoursite.com
+root: /
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+
+# Directory    目录配置
+source_dir: source    #源文件夹，这个文件夹用来存放内容。
+public_dir: public    #公共文件夹，这个文件夹用于存放生成的站点文件。
+tag_dir: tags    #标签文件夹
+archive_dir: archives    #归档文件夹
+category_dir: categories    #分类文件夹
+code_dir: downloads/code
+i18n_dir: :lang    #国际化（i18n）文件夹
+skip_render:    #跳过指定文件的渲染，您可使用 glob 表达式来匹配路径。
+
+# Writing
+new_post_name: :title.md # File name of new posts
+default_layout: post    # 默认布局
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: false
+post_asset_folder: false    #启动 Asset 文件夹
+relative_link: false
+future: true
+highlight:    #代码块的设置 
+  enable: true
+  line_number: true
+  auto_detect: true
+  tab_replace:
+
+# Category &amp; Tag     分类和标签的设置
+default_category: uncategorized     #默认分类
+category_map:    #分类别名
+tag_map:#标签别名
+
+# Archives 默认值为2，这里都修改为1，相应页面就只会列出标题，而非全文
+## 2: Enable pagination
+## 1: Disable pagination
+## 0: Fully Disable
+archive: 1
+category: 1
+tag: 1
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 5
+pagination_dir: page    #分页目录
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next    # hexo主题
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repository: git@github.com:Githublsh/Githublsh.github.io.git
+  branch: master
+</code></pre><h3 id="二、hexo主题配合文件"><a href="#二、hexo主题配合文件" class="headerlink" title="二、hexo主题配合文件"></a>二、hexo主题配合文件</h3><p>打开themes\next下的_config.yml文件</p>
+<ol>
+<li><p>开启打赏功能</p>
+<pre><code>reward_comment: 让我感受一下知识的力量~
+wechatpay: /images/WechatIMG3.jpeg
+alipay: /images/WechatIMG5.jpeg
+</code></pre></li>
+<li><p>开启个人微信二维码</p>
+<pre><code># Wechat Subscriber
+wechat_subscriber:
+  enabled: true
+  qcode: /images/WechatIMG7.jpeg
+  description: 个人微信，欢迎交流
+</code></pre></li>
+</ol>
+<ol>
+<li><p>开启侧边栏社交链接</p>
+<pre><code>social:
+  GitHub: https://github.com/your-user-name
+  Twitter: https://twitter.com/your-user-name
+  微博: http://weibo.com/your-user-name
+  豆瓣: http://douban.com/people/your-user-name
+  知乎: http://www.zhihu.com/people/your-user-name
+  # so on
+</code></pre></li>
+<li><p>选择 Scheme</p>
+<pre><code>#scheme: Muse
+scheme: Mist
+#scheme: Pisces
+</code></pre></li>
+</ol>
+<h4 id="更多自定义配置请参考NexT主题配置"><a href="#更多自定义配置请参考NexT主题配置" class="headerlink" title="更多自定义配置请参考NexT主题配置"></a>更多自定义配置请参考<a href="http://theme-next.iissnan.com/theme-settings.html" target="_blank" rel="external">NexT主题配置</a></h4>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/12/Git提交index.lock问题解决/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -741,280 +1097,11 @@ deploy:
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/02/ADB常用命令备忘录/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/09/02/ADB常用命令备忘录/" itemprop="url">ADB常用命令备忘录</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-02T23:27:48+08:00">
-                2016-09-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>adb start-server    启动服务</p>
-</li>
-<li><p>adb kill-server    关闭服务</p>
-</li>
-<li><p>adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）</p>
-</li>
-<li><p>adb install xxx.apk    将应用安装进设备中</p>
-</li>
-<li><p>adb uninstall &lt;包名&gt;    卸载应用</p>
-</li>
-<li><p>adb -s &lt;设备名&gt; &lt;命令&gt;    如果有多个设备，指定某一个设备进行操作</p>
-</li>
-<li><p>adb pull &lt;手机文件&gt; &lt;电脑文件&gt;    将手机内文件导入到电脑上(文件名均为全称)</p>
-</li>
-<li><p>adb push &lt;电脑文件&gt; &lt;手机文件&gt;    将电脑中文件推送到手机上(文件名均为全称)</p>
-</li>
-<li><p>adb shell    进入手机命令行终端</p>
-</li>
-<li><p>adb logcat  打印 Android 的系统日志</p>
-</li>
-<li><p>adb logcat | grep MyApp 匹配字符串过滤</p>
-</li>
-<li><p>adb logcat | grep -i myapp 忽略大小写通过字符串过滤</p>
-</li>
-<li><p>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</p>
-</li>
-<li><p>adb bugreport &gt; d:\bugreport.log  输出比较多，建议重定向到一个文件中</p>
-</li>
-<li><p>adb shell pm list package    不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）</p>
-</li>
-<li><p>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</p>
-</li>
-</ul>
-<ul>
-<li>logcat | grep ActivityManager :查看当前运行的Activity</li>
-<li>adb shell dumpsys activity activities | grep “Run”:查看当前运行的Activity </li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-Hello " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/01/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/09/01/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-01T20:02:08+08:00">
-                2016-09-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1059,7 +1146,7 @@ deploy:
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1072,7 +1159,7 @@ deploy:
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
