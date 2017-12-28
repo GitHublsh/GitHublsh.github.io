@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2017-10-27T07:02:48.000Z">
+<meta property="og:updated_time" content="2017-12-20T07:22:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
@@ -928,17 +928,19 @@ this.routeSelector = new RouteSelector(address, routeDatabase());
 this.callStackTrace = callStackTrace;
   }
 </code></pre><p>在把这个三个参数保存为内部变量的同时也创建了一个线路选择器</p>
+<p>streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。</p>
 <p>接下来继续看StreamAllocation中的newSream()方法</p>
 <pre><code>public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
-//获取连接超时时间
+//读取从OkHttpClient配置的超时时间
 int connectTimeout = client.connectTimeoutMillis();
 //获取读写超时时间
 int readTimeout = client.readTimeoutMillis();
 int writeTimeout = client.writeTimeoutMillis();
+//连接重试
 boolean connectionRetryEnabled = client.retryOnConnectionFailure();
 
 try {
-//找到一个健康的连接
+//找到一个健康的连接（在连接池中寻找或者新创建一个连接）
   RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
       writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
   //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化

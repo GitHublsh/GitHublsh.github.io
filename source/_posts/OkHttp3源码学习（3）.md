@@ -605,18 +605,21 @@ CacheInterceptor主要就是负责Cache的管理
   	}
 在把这个三个参数保存为内部变量的同时也创建了一个线路选择器
 
+streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。
+
 接下来继续看StreamAllocation中的newSream()方法
 
 	public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
-	//获取连接超时时间
+	//读取从OkHttpClient配置的超时时间
     int connectTimeout = client.connectTimeoutMillis();
     //获取读写超时时间
     int readTimeout = client.readTimeoutMillis();
     int writeTimeout = client.writeTimeoutMillis();
+    //连接重试
     boolean connectionRetryEnabled = client.retryOnConnectionFailure();
 
     try {
-    //找到一个健康的连接
+    //找到一个健康的连接（在连接池中寻找或者新创建一个连接）
       RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
           writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
       //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化
