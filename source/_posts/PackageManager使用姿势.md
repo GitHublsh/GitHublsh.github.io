@@ -124,7 +124,7 @@ GET_UNINSTALLED_PACKAGES
 #### 四、获取信息
 
 
-1. ApplicationInfo类测试：获取Application节点信息
+##### 1.ApplicationInfo类测试：获取Application节点信息
 
   * 示例：
 
@@ -147,7 +147,7 @@ GET_UNINSTALLED_PACKAGES
 			 	com.example.liushihan.glidedemo
 			 	com.example.liushihan.glidedemo
 			 	
-2. 获取所有安装的Packages
+##### 2. 获取所有安装的Packages
 
   * 示例：
 
@@ -163,7 +163,7 @@ GET_UNINSTALLED_PACKAGES
 			
 			
 			
-3. 获取指定应用的PackageInfo
+##### 3. 获取指定应用的PackageInfo
 
  * 示例：
 
@@ -187,7 +187,7 @@ GET_UNINSTALLED_PACKAGES
 			                             
 			                             
 			       
-4. 获取应用程序中的permission
+##### 4. 获取应用程序中的permission
 
  * 示例：
 
@@ -215,7 +215,7 @@ GET_UNINSTALLED_PACKAGES
 		                                      
                   
                   
-5. 获取应用程序中执行的ActivityInfo
+##### å5. 获取应用程序中执行的ActivityInfo
 
  * 示例：
 
