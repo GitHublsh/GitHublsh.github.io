@@ -120,3 +120,121 @@ GET_UNINSTALLED_PACKAGES
 	
 	
 
+### 四、获取信息
+
+1. ApplicationInfo类测试：获取Application节点信息
+
+ * 示例：
+
+			ApplicationInfo applicationInfo = getApplicationInfo();  
+			 Log.d("lsh",applicationInfo.className + "\n" +  
+			        applicationInfo.dataDir+"\n" +  
+			        applicationInfo.permission + "\n"  
+			        + applicationInfo.packageName + "\n"  
+			        + applicationInfo.processName + "\n"  
+			        + applicationInfo.taskAffinity + "\n"  
+			);  
+	
+
+ * Logcat:
+
+			3402-3402/com.example.liushihan.glidedemo D/lsh: null                                                 
+			    /data/data/com.example.liushihan.glidedemo
+			    null
+			 	com.example.liushihan.glidedemo
+			 	com.example.liushihan.glidedemo
+			 	com.example.liushihan.glidedemo
+			 	
+2. 获取所有安装的Packages
+
+ * 示例：
+
+			List<PackageInfo> listPack = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
+
+
+ * Logcat:
+   部分日志
+
+			 D/lsh: PackageInfo{132b54a7 com.android.smoketest}
+			com.example.liushihan.glidedemo D/lsh: PackageInfo{3d681d54 com.example.android.livecubes}
+			com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.providers.telephony}
+			
+			
+			
+3. 获取指定应用的PackageInfo
+
+ * 示例：
+
+			PackageManager packageManager = getPackageManager();
+			        PackageInfo packageInfo = null;
+			        try {
+			            packageInfo = packageManager.getPackageInfo("com.example.liushihan",
+			                    PackageManager.GET_ACTIVITIES);
+			            Log.d("lsh", packageInfo.packageName + "\n"
+			                    + packageInfo.versionName + "\n"
+			            );
+			        } catch (PackageManager.NameNotFoundException e) {
+			            e.printStackTrace();
+			        }
+			        
+			        
+ * Logcat
+
+			 D/lsh: com.example.liushihan.glidedemo
+			                             1.0
+			                             
+			                             
+			       
+4. 获取应用程序中的permission
+
+ * 示例：
+
+			   try {
+			            PermissionInfo permissionInfo = getPackageManager().getPermissionInfo("android.permission.INTERNET",
+			                    PermissionInfo.PROTECTION_NORMAL);
+			            List<PermissionGroupInfo> list = getPackageManager().getAllPermissionGroups(PackageManager.PERMISSION_GRANTED);
+			            Log.d("lsh",
+			                    permissionInfo.group + "\n"
+			                            + permissionInfo.packageName + "\n"
+			                            + permissionInfo.name + "\n"
+			                            + permissionInfo.flags + "\n"
+			            );
+			        } catch (PackageManager.NameNotFoundException e) {
+			            e.printStackTrace();
+			        }
+			        
+			        
+   * Logcat:
+
+		    D/lsh: android.permission-group.NETWORK
+		                                      android
+		                                      android.permission.INTERNET
+		                                      0
+		                                      
+                  
+                  
+5. 获取应用程序中执行的ActivityInfo
+
+* 示例：
+
+
+		ComponentName componentName = new ComponentName("com.example.liushihan.glidedemo","com.example.liushihan.glidedemo.MainActivity");
+		        try {
+		            @SuppressLint("WrongConstant") ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
+		            Log.d("lsh:activityInfo",activityInfo.name + "\n"
+		                    + activityInfo.packageName +"\n"
+		                    + activityInfo.targetActivity
+		            );
+		        } catch (PackageManager.NameNotFoundException e) {
+		            e.printStackTrace();
+		        }  
+		        
+		        
+* Logcat:
+
+		
+		4829-4829/com.example.liushihan.glidedemo D/lsh:activityInfo: com.example.liushihan.glidedemo.MainActivity
+		                                                                                 com.example.liushihan.glidedemo
+		                                                                                 null
+		                                                                                 
+		                                                                                 

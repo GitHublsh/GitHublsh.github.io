@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/25/PackageManager使用姿势/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
-<meta property="og:updated_time" content="2017-11-08T13:18:37.000Z">
+<meta property="og:updated_time" content="2017-12-30T06:01:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManager使用姿势">
 <meta name="twitter:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
@@ -409,7 +409,125 @@
 <li>通过包名判断APP是否安装</li>
 <li>通过遍历获取AndroidManifest.xml文件信息</li>
 </ul>
-
+<h3 id="四、获取信息"><a href="#四、获取信息" class="headerlink" title="四、获取信息"></a>四、获取信息</h3><ol>
+<li><p>ApplicationInfo类测试：获取Application节点信息</p>
+<ul>
+<li><p>示例：</p>
+<pre><code>ApplicationInfo applicationInfo = getApplicationInfo();  
+ Log.d(&quot;lsh&quot;,applicationInfo.className + &quot;\n&quot; +  
+        applicationInfo.dataDir+&quot;\n&quot; +  
+        applicationInfo.permission + &quot;\n&quot;  
+        + applicationInfo.packageName + &quot;\n&quot;  
+        + applicationInfo.processName + &quot;\n&quot;  
+        + applicationInfo.taskAffinity + &quot;\n&quot;  
+);  
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>Logcat:</p>
+<pre><code>3402-3402/com.example.liushihan.glidedemo D/lsh: null                                                 
+    /data/data/com.example.liushihan.glidedemo
+    null
+     com.example.liushihan.glidedemo
+     com.example.liushihan.glidedemo
+     com.example.liushihan.glidedemo
+</code></pre></li>
+</ul>
+<ol>
+<li><p>获取所有安装的Packages</p>
+<ul>
+<li><p>示例：</p>
+<pre><code>List&lt;PackageInfo&gt; listPack = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>Logcat:<br>部分日志</p>
+<pre><code> D/lsh: PackageInfo{132b54a7 com.android.smoketest}
+com.example.liushihan.glidedemo D/lsh: PackageInfo{3d681d54 com.example.android.livecubes}
+com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.providers.telephony}
+</code></pre></li>
+</ul>
+<ol>
+<li><p>获取指定应用的PackageInfo</p>
+<ul>
+<li><p>示例：</p>
+<pre><code>PackageManager packageManager = getPackageManager();
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = packageManager.getPackageInfo(&quot;com.example.liushihan&quot;,
+                    PackageManager.GET_ACTIVITIES);
+            Log.d(&quot;lsh&quot;, packageInfo.packageName + &quot;\n&quot;
+                    + packageInfo.versionName + &quot;\n&quot;
+            );
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>Logcat</p>
+<pre><code>D/lsh: com.example.liushihan.glidedemo
+                            1.0
+</code></pre></li>
+</ul>
+<ol>
+<li><p>获取应用程序中的permission</p>
+<ul>
+<li><p>示例：</p>
+<pre><code>try {
+         PermissionInfo permissionInfo = getPackageManager().getPermissionInfo(&quot;android.permission.INTERNET&quot;,
+                 PermissionInfo.PROTECTION_NORMAL);
+         List&lt;PermissionGroupInfo&gt; list = getPackageManager().getAllPermissionGroups(PackageManager.PERMISSION_GRANTED);
+         Log.d(&quot;lsh&quot;,
+                 permissionInfo.group + &quot;\n&quot;
+                         + permissionInfo.packageName + &quot;\n&quot;
+                         + permissionInfo.name + &quot;\n&quot;
+                         + permissionInfo.flags + &quot;\n&quot;
+         );
+     } catch (PackageManager.NameNotFoundException e) {
+         e.printStackTrace();
+     }
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>Logcat:</p>
+<pre><code>D/lsh: android.permission-group.NETWORK
+                                  android
+                                  android.permission.INTERNET
+                                  0
+</code></pre></li>
+</ul>
+<ol>
+<li>获取应用程序中执行的ActivityInfo</li>
+</ol>
+<ul>
+<li>示例：</li>
+</ul>
+<pre><code>ComponentName componentName = new ComponentName(&quot;com.example.liushihan.glidedemo&quot;,&quot;com.example.liushihan.glidedemo.MainActivity&quot;);
+        try {
+            @SuppressLint(&quot;WrongConstant&quot;) ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
+            Log.d(&quot;lsh:activityInfo&quot;,activityInfo.name + &quot;\n&quot;
+                    + activityInfo.packageName +&quot;\n&quot;
+                    + activityInfo.targetActivity
+            );
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }  
+</code></pre><ul>
+<li>Logcat:</li>
+</ul>
+<pre><code>4829-4829/com.example.liushihan.glidedemo D/lsh:activityInfo: com.example.liushihan.glidedemo.MainActivity
+                                                                                 com.example.liushihan.glidedemo
+                                                                                 null
+</code></pre>
       
     </div>
 
@@ -622,7 +740,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、主要功能"><span class="nav-number">1.</span> <span class="nav-text">一、主要功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、常用方法"><span class="nav-number">2.</span> <span class="nav-text">二、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、AndroidManifest文件结构"><span class="nav-number">3.</span> <span class="nav-text">三、AndroidManifest文件结构</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、主要功能"><span class="nav-number">1.</span> <span class="nav-text">一、主要功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、常用方法"><span class="nav-number">2.</span> <span class="nav-text">二、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、AndroidManifest文件结构"><span class="nav-number">3.</span> <span class="nav-text">三、AndroidManifest文件结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、获取信息"><span class="nav-number"></span> <span class="nav-text">四、获取信息</span></a></div>
             
 
           </div>
