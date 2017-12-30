@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png">
-<meta property="og:updated_time" content="2017-12-30T09:36:32.000Z">
+<meta property="og:updated_time" content="2017-12-30T10:37:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Gradle构建入门">
 <meta name="twitter:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
@@ -376,7 +376,7 @@ zipStorePath=wrapper/dists
 distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
 </code></pre><p>前四行表示当包装首次运行时，它将下载Gradle发行版并将其存储在您的主目录中的.gradle / wrapper / dists目录中。</p>
 <p>最后一行显示了distributionUrl的值，这是Gradle将下载指定分配的地址。（具体版本号可能与此处（4.1）中显示的版本号不同，并且URL可能引用二进制版本（-bin），而不是此示例中显示的完整版本（-all）。）</p>
-<h4 id="二、查看项目的Gradle构建文件"><a href="#二、查看项目的Gradle构建文件" class="headerlink" title="二、查看项目的Gradle构建文件"></a>二、查看项目的Gradle构建文件</h4><p>project的build.geadle文件：</p>
+<h4 id="二、查看整个项目的build-gradle"><a href="#二、查看整个项目的build-gradle" class="headerlink" title="二、查看整个项目的build.gradle"></a>二、查看整个项目的build.gradle</h4><p>project的build.geadle文件：</p>
 <pre><code>// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
@@ -415,6 +415,96 @@ task clean(type: Delete) {
 <p>当Gradle第一次构建这个项目时，插件将被下载并缓存，所以这个任务只执行一次。</p>
 <p>allprojects标签保存适用于顶层项目及其包含的任何子项目的配置细节。 在这种情况下，该块指定任何所需的依赖项应该从<a href="https://jcenter.bintray.com上的公共Bintray" target="_blank" rel="external">https://jcenter.bintray.com上的公共Bintray</a> Artifactory存储库的google或jcenter下载。</p>
 <p>最后，构建文件包含一个名为clean的自定义（或临时）任务。 它使用内置的任务类型Delete并对其进行配置，以便干净的任务将删除rootProject中的buildDir。 两者都是项目属性，其值默认为该应用程序驻留的项目中的构建目录。</p>
+<h4 id="三、查看app-module的build-gradle"><a href="#三、查看app-module的build-gradle" class="headerlink" title="三、查看app module的build.gradle"></a>三、查看app module的build.gradle</h4><p>看一下 build.gradle</p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId &quot;com.example.liushihan.gradletest&quot;
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName &quot;1.0&quot;
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    implementation &apos;com.android.support:appcompat-v7:26.1.0&apos;
+    implementation &apos;com.android.support.constraint:constraint-layout:1.0.2&apos;
+    testImplementation &apos;junit:junit:4.12&apos;
+    androidTestImplementation &apos;com.android.support.test:runner:1.0.1&apos;
+    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.1&apos;
+}
+</code></pre><p>第一行：</p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+</code></pre><p>应用Android插件（在项目构建文件的构建脚本部分中引用）到当前项目。Gradle中的插件可以将自定义任务，新配置，依赖关系和其他功能添加到Gradle项目中。 在这种情况下，应用Android插件会添加各种各样的任务，这些任务由接下来显示的android块配置。</p>
+<pre><code>android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId &quot;com.example.liushihan.gradletest&quot;
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName &quot;1.0&quot;
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+        }
+    }
+}
+</code></pre><p>对这些属性进行简单的介绍：</p>
+<ul>
+<li>compileSdkVersion：Android SDK版本</li>
+<li>defaultConfig:defaultConfig部分包含应用程序的所有变体（构建类型和产品风格的组合）共享的属性。<ul>
+<li>applicationId:applicationId基于创建应用程序时指定的域名和项目名称，并且在Google Play商店中必须是唯一的。</li>
+</ul>
+</li>
+</ul>
+<pre><code>* minSdkVersion:minSdkVersion是你愿意支持这个应用程序的最低Android API，targetSdkVersion应该是最新的Android版本。
+
+
+* versionCode:versionCode的值应该是在将新版本的应用上传到Google Play商店之前递增的整数。 这个值和applicationId一起告诉Google，这是一个现有应用程序的新版本，而不是一个新的应用程序。
+
+* versionName:版本名称值用于自己的内部版本跟踪。
+
+* testInstrumentationRunner：testInstrumentationRunner属性配置为使用为Android应用程序配置的JUnit 4测试运行器。
+</code></pre><p>在这个代码块下面，就是buildTypes.默认情况下，Android应用程序支持两种构建类型，debug和release.这里没有显示debug配置部分，即使用所有调试的默认设置。</p>
+<pre><code>buildTypes {
+      release {
+          minifyEnabled false
+          proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+      }
+  }
+</code></pre><p>继续往下面看，就是这个应用程序所依赖的库</p>
+<pre><code>dependencies {
+    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    implementation &apos;com.android.support:appcompat-v7:26.1.0&apos;
+    implementation &apos;com.android.support.constraint:constraint-layout:1.0.2&apos;
+    testImplementation &apos;junit:junit:4.12&apos;
+    androidTestImplementation &apos;com.android.support.test:runner:1.0.1&apos;
+    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.1&apos;
+}
+</code></pre><p>配置依赖关系是构建Gradle应用程序的基础部分。 在这种情况下，依赖项部分显示了Implementation，testImplementation和androidTestImplementation配置的值。</p>
+<p>testImplementation依赖只包含最新的稳定的JUnit 4发行版。 JUnit类和测试注释将在编译时在src / test / java层次结构中可用。</p>
+<p>androidTestImplementation依赖项是指Espresso测试库，用于Android应用程序的集成测试。 在这种情况下，Espresso在没有通常包含的support-annotations库的情况下被请求，因为已经通过其他依赖项包含了不同的版本。 在后面的步骤中，您将看到如何找出该库的版本以及原因。</p>
+<pre><code>fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+</code></pre><p>是一个fileTree依赖项，它将libs文件夹中的所有jar文件添加到编译类路径中</p>
+<pre><code>com.android.support:appcompat-v7:26.1.0
+</code></pre><p>将Android兼容性库添加到项目中。 这使您可以在SDK版本7以前的任何Android应用程序中使用材质设计主题和其他功能。</p>
+<pre><code>com.android.support.constraint:constraint-layout:1.0.2
+</code></pre><p>将Android约束布局添加到项目中。 这允许您在任何像SDK版本9一样早的Android应用程序中使用ConstraintLayout布局类。</p>
 
       
     </div>
@@ -624,7 +714,7 @@ task clean(type: Delete) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Gradle入门"><span class="nav-number">1.</span> <span class="nav-text">Android Gradle入门</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#本文内容来自官方文档整理"><span class="nav-number">1.0.1.</span> <span class="nav-text">本文内容来自官方文档整理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、查看生成的Gradle文件列表"><span class="nav-number">1.1.</span> <span class="nav-text">一、查看生成的Gradle文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、查看项目的Gradle构建文件"><span class="nav-number">1.2.</span> <span class="nav-text">二、查看项目的Gradle构建文件</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Gradle入门"><span class="nav-number">1.</span> <span class="nav-text">Android Gradle入门</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#本文内容来自官方文档整理"><span class="nav-number">1.0.1.</span> <span class="nav-text">本文内容来自官方文档整理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、查看生成的Gradle文件列表"><span class="nav-number">1.1.</span> <span class="nav-text">一、查看生成的Gradle文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、查看整个项目的build-gradle"><span class="nav-number">1.2.</span> <span class="nav-text">二、查看整个项目的build.gradle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、查看app-module的build-gradle"><span class="nav-number">1.3.</span> <span class="nav-text">三、查看app module的build.gradle</span></a></li></ol></li></ol></div>
             
 
           </div>
