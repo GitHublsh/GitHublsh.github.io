@@ -123,9 +123,10 @@ GET_UNINSTALLED_PACKAGES
 
 #### 四、获取信息
 
+
 1. ApplicationInfo类测试：获取Application节点信息
 
- * 示例：
+  * 示例：
 
 			ApplicationInfo applicationInfo = getApplicationInfo();  
 			 Log.d("lsh",applicationInfo.className + "\n" +  
@@ -148,12 +149,12 @@ GET_UNINSTALLED_PACKAGES
 			 	
 2. 获取所有安装的Packages
 
- * 示例：
+  * 示例：
 
 			List<PackageInfo> listPack = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
 
 
- * Logcat:
+   * Logcat:
    部分日志
 
 			 D/lsh: PackageInfo{132b54a7 com.android.smoketest}
@@ -216,26 +217,26 @@ GET_UNINSTALLED_PACKAGES
                   
 5. 获取应用程序中执行的ActivityInfo
 
-* 示例：
+ * 示例：
 
 
-		ComponentName componentName = new ComponentName("com.example.liushihan.glidedemo","com.example.liushihan.glidedemo.MainActivity");
-		        try {
-		            @SuppressLint("WrongConstant") ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
-		            Log.d("lsh:activityInfo",activityInfo.name + "\n"
-		                    + activityInfo.packageName +"\n"
-		                    + activityInfo.targetActivity
-		            );
-		        } catch (PackageManager.NameNotFoundException e) {
-		            e.printStackTrace();
-		        }  
+			ComponentName componentName = new ComponentName("com.example.liushihan.glidedemo","com.example.liushihan.glidedemo.MainActivity");
+			        try {
+			            @SuppressLint("WrongConstant") ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
+			            Log.d("lsh:activityInfo",activityInfo.name + "\n"
+			                    + activityInfo.packageName +"\n"
+			                    + activityInfo.targetActivity
+			            );
+			        } catch (PackageManager.NameNotFoundException e) {
+			            e.printStackTrace();
+			        }  
 		        
 		        
-* Logcat:
+ * Logcat:
 
-		
-		4829-4829/com.example.liushihan.glidedemo D/lsh:activityInfo: com.example.liushihan.glidedemo.MainActivity
-		                                                                                 com.example.liushihan.glidedemo
-		                                                                                 null
+			
+			4829-4829/com.example.liushihan.glidedemo D/lsh:activityInfo: com.example.liushihan.glidedemo.MainActivity
+			                                                                                 com.example.liushihan.glidedemo
+			                                                                                 null
 		                                                                                 
 		                                                                                 

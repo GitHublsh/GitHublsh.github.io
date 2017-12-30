@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/25/PackageManager使用姿势/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
-<meta property="og:updated_time" content="2017-12-30T06:21:19.000Z">
+<meta property="og:updated_time" content="2017-12-30T06:24:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManager使用姿势">
 <meta name="twitter:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
@@ -506,11 +506,12 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 </code></pre></li>
 </ul>
 <ol>
-<li>获取应用程序中执行的ActivityInfo</li>
-</ol>
+<li><p>获取应用程序中执行的ActivityInfo</p>
 <ul>
 <li>示例：</li>
 </ul>
+</li>
+</ol>
 <pre><code>ComponentName componentName = new ComponentName(&quot;com.example.liushihan.glidedemo&quot;,&quot;com.example.liushihan.glidedemo.MainActivity&quot;);
         try {
             @SuppressLint(&quot;WrongConstant&quot;) ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);

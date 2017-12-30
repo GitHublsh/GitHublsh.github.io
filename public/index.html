@@ -1244,11 +1244,12 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 </code></pre></li>
 </ul>
 <ol>
-<li>获取应用程序中执行的ActivityInfo</li>
-</ol>
+<li><p>获取应用程序中执行的ActivityInfo</p>
 <ul>
 <li>示例：</li>
 </ul>
+</li>
+</ol>
 <pre><code>ComponentName componentName = new ComponentName(&quot;com.example.liushihan.glidedemo&quot;,&quot;com.example.liushihan.glidedemo.MainActivity&quot;);
         try {
             @SuppressLint(&quot;WrongConstant&quot;) ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
