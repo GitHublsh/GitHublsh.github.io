@@ -284,6 +284,177 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/30/Android-Gradle构建入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/30/Android-Gradle构建入门/" itemprop="url">Android Gradle构建入门</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-30T17:35:50+08:00">
+                2017-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Android-Gradle入门"><a href="#Android-Gradle入门" class="headerlink" title="Android Gradle入门"></a>Android Gradle入门</h3><h5 id="本文内容来自官方文档整理"><a href="#本文内容来自官方文档整理" class="headerlink" title="本文内容来自官方文档整理"></a>本文内容来自官方文档整理</h5><h4 id="一、查看生成的Gradle文件列表"><a href="#一、查看生成的Gradle文件列表" class="headerlink" title="一、查看生成的Gradle文件列表"></a>一、查看生成的Gradle文件列表</h4><p>默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png" alt="“asmodel”"></p>
+<p>Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorldGradle），并且应用程序构建文件（Module：app）附加到其中。</p>
+<p>在项目中，可能有两个名为gradle.properties的文件。 一个是本地项目。 另一个只有在主目录的.gradle子目录中具有全局gradle.properties文件的同名文件才存在。</p>
+<ul>
+<li>settings.gradle</li>
+</ul>
+<p>Gradle使用文件settings.gradle来配置多项目构建。 它应该由一行代码组成：</p>
+<pre><code>include &apos;:app&apos;
+</code></pre><p>这就是告诉Gradle，app也是一个Gradle project,当项目中还会依赖别的library，那么还需要在后面添加相应的信息。</p>
+<ul>
+<li>gradle-wrapper.properties</li>
+</ul>
+<p>gradle-wrapper.properties，它配置了所谓的Gradle Wrapper。 这使您可以构建Android项目，而无需首先安装Gradle。 该文件的内容应该类似于：</p>
+<pre><code>distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
+</code></pre><p>前四行表示当包装首次运行时，它将下载Gradle发行版并将其存储在您的主目录中的.gradle / wrapper / dists目录中。</p>
+<p>最后一行显示了distributionUrl的值，这是Gradle将下载指定分配的地址。（具体版本号可能与此处（4.1）中显示的版本号不同，并且URL可能引用二进制版本（-bin），而不是此示例中显示的完整版本（-all）。）</p>
+<h4 id="二、查看项目的Gradle构建文件"><a href="#二、查看项目的Gradle构建文件" class="headerlink" title="二、查看项目的Gradle构建文件"></a>二、查看项目的Gradle构建文件</h4><p>project的build.geadle文件：</p>
+<pre><code>// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath &apos;com.android.tools.build:gradle:3.0.0&apos;
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+</code></pre><p>各个代码块具体作用：</p>
+<ol>
+<li>buildscript - 下载插件</li>
+<li>dependencies - 标识Android插件</li>
+<li>allproject -     top-level and module projects的配置</li>
+<li>task clean - 特设任务</li>
+</ol>
+<p>Gradle定义了一种基于Groovy的DSL语言来构建，buildscript标签是DSL的一部分。 它告诉Gradle构建需要一个可能不是基线Gradle分布的一部分的插件，并告诉Gradle在哪里找到它。 在这种情况下，使用坐标语法“group：name：version”指定所需的插件，其中组为com.android.tools.build，名称为gradle，版本为3.0.1。</p>
+<p>当Gradle第一次构建这个项目时，插件将被下载并缓存，所以这个任务只执行一次。</p>
+<p>allprojects标签保存适用于顶层项目及其包含的任何子项目的配置细节。 在这种情况下，该块指定任何所需的依赖项应该从<a href="https://jcenter.bintray.com上的公共Bintray" target="_blank" rel="external">https://jcenter.bintray.com上的公共Bintray</a> Artifactory存储库的google或jcenter下载。</p>
+<p>最后，构建文件包含一个名为clean的自定义（或临时）任务。 它使用内置的任务类型Delete并对其进行配置，以便干净的任务将删除rootProject中的buildDir。 两者都是项目属性，其值默认为该应用程序驻留的项目中的构建目录。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1451,159 +1622,6 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/21/自定义View-2-Canvas简介/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/21/自定义View-2-Canvas简介/" itemprop="url">自定义View(2)Canvas简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T10:56:35+08:00">
-                2017-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、Canvas简介"><a href="#一、Canvas简介" class="headerlink" title="一、Canvas简介"></a>一、Canvas简介</h3><h4 id="（1）Canvas简介"><a href="#（1）Canvas简介" class="headerlink" title="（1）Canvas简介"></a>（1）Canvas简介</h4><p>Canvas,即画布。</p>
-<h4 id="（2）Canvas详解"><a href="#（2）Canvas详解" class="headerlink" title="（2）Canvas详解"></a>（2）Canvas详解</h4><p>画布，就是我们用来绘制的载体，我们可以用画笔（Paint）在画布（Canvas）上绘制我们想要的图形。</p>
-<ul>
-<li><p>首先介绍一下画笔Paint</p>
-<ul>
-<li><p>1.三个构造函数</p>
-<ul>
-<li>Paint()    创建一个画笔</li>
-<li>Paint(int flags) 创建一个画笔，指定flag。也可在不指定flag创建后，通过setFlag指定。例如：Paint.ANTI_ALIAS_FLAG(用于绘制时抗锯齿）</li>
-<li>Paint(Paint paint)    使用已构造的Paint创建一个画笔</li>
-</ul>
-</li>
-<li><p>2.常用方法</p>
-<ul>
-<li>setAlpha(int a)    设置透明度</li>
-<li>setARGB(int a, int r, int g, int b)     设置画笔颜色，a-alpha透明度，r-red,g-green,b-blue</li>
-<li>setAntiAlias(boolean aa)    设置抗锯齿</li>
-<li>setColor(@ColorInt int color) 设置颜色</li>
-<li>setDither(boolean dither) 设置抖动，设置后线条会相对柔和一些，不那么僵硬</li>
-<li>setUnderlineText(boolean underlineText)    设置文本下划线</li>
-<li>setStyle(Style style)    设置画笔风格。FILL内部填充，STROKE描边，FILL_AND_STROKE填充内部和描边</li>
-<li>setStrikeThruText(boolean strikeThruText)    设置文本删除线</li>
-<li>setFilterBitmap(boolean filter)        对bitmap进行滤波处理，true-去除优化，加快显示</li>
-<li><p>setColorFilter(ColorFilter filter)     设置颜色过滤</p>
-<p>······</p>
-</li>
-</ul>
-</li>
-<li><p>3.ColorFilter</p>
-<p>  ColorFilter主要用来处理颜色.它有三个子类：ColorMatrixColorFilter、LightingColorFilter、PorterDuffColorFilter。下面一一进行解释。</p>
-<ol>
-<li><p>ColorMatrixColorFilter</p>
-<ul>
-<li>ColorMatrixColorFilter在Android中，图片是以一个个 RGBA 的像素点的形式加载到内存中的，所以如果需要改变图片的颜色，就需要针对这一个个像素点的RGBA的值进行修改。修改图片的RGBA值，需要ColorMatrix类支持.</li>
-<li>通过4x5颜色矩阵转换颜色的滤色镜。 该滤镜可用于改变像素的饱和度，从YUV转换为RGB等。</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1653,7 +1671,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1666,7 +1684,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

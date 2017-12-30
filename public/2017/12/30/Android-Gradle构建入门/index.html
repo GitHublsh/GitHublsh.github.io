@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="OkHttp3," />
+  <meta name="keywords" content="Gradle," />
 
 
 
@@ -111,19 +111,19 @@
 
 
 
-<meta name="description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
-<meta name="keywords" content="OkHttp3">
+<meta name="description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
+<meta name="keywords" content="Gradle">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OkHttp3源码学习（2）-发起请求源码实现">
-<meta property="og:url" content="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/index.html">
+<meta property="og:title" content="Android Gradle构建入门">
+<meta property="og:url" content="http://yoursite.com/2017/12/30/Android-Gradle构建入门/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
-<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
-<meta property="og:updated_time" content="2017-08-28T15:01:05.000Z">
+<meta property="og:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png">
+<meta property="og:updated_time" content="2017-12-30T09:36:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OkHttp3源码学习（2）-发起请求源码实现">
-<meta name="twitter:description" content="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。 那么，从这一节开始，进行源码分析解读··· 一、创建OkHttpClient对象OkHttpClient client = new OkHttpClient(); 创建时，做了什么事情？ 直接进OkHttpClient.java  如果我们不做任何配置，那么就采用默认的配置，已经写好。 public OkHttpClient() {">
-<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png">
+<meta name="twitter:title" content="Android Gradle构建入门">
+<meta name="twitter:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png">
 
 
 
@@ -151,13 +151,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/30/Android-Gradle构建入门/"/>
 
 
 
 
 
-  <title>OkHttp3源码学习（2）-发起请求源码实现 | Neil's blog</title>
+  <title>Android Gradle构建入门 | Neil's blog</title>
   
 
 
@@ -286,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/30/Android-Gradle构建入门/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -303,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">OkHttp3源码学习（2）-发起请求源码实现</h1>
+          <h1 class="post-title" itemprop="name headline">Android Gradle构建入门</h1>
         
 
         <div class="post-meta">
@@ -315,8 +315,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T15:25:37+08:00">
-                2017-07-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-30T17:35:50+08:00">
+                2017-12-30
               </time>
             
 
@@ -355,202 +355,66 @@
       
 
       
-        <h4 id="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><a href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。" class="headerlink" title="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"></a>上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</h4><p><img src="http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png" alt="“整体流程“"></p>
-<p>那么，从这一节开始，进行源码分析解读···</p>
-<h4 id="一、创建OkHttpClient对象"><a href="#一、创建OkHttpClient对象" class="headerlink" title="一、创建OkHttpClient对象"></a>一、创建OkHttpClient对象</h4><pre><code>OkHttpClient client = new OkHttpClient();
-</code></pre><p>创建时，做了什么事情？</p>
-<p>直接进OkHttpClient.java </p>
-<p>如果我们不做任何配置，那么就采用默认的配置，已经写好。</p>
-<pre><code>public OkHttpClient() {
-    this(new Builder());
-  }
-
-public Builder() {
-  dispatcher = new Dispatcher();
-  protocols = DEFAULT_PROTOCOLS;
-  connectionSpecs = DEFAULT_CONNECTION_SPECS;
-  eventListenerFactory = EventListener.factory(EventListener.NONE);
-  proxySelector = ProxySelector.getDefault();
-  cookieJar = CookieJar.NO_COOKIES;
-  socketFactory = SocketFactory.getDefault();
-  hostnameVerifier = OkHostnameVerifier.INSTANCE;
-  certificatePinner = CertificatePinner.DEFAULT;
-  proxyAuthenticator = Authenticator.NONE;
-  authenticator = Authenticator.NONE;
-  connectionPool = new ConnectionPool();
-  dns = Dns.SYSTEM;
-  followSslRedirects = true;
-  followRedirects = true;
-  retryOnConnectionFailure = true;
-  connectTimeout = 10_000;
-  readTimeout = 10_000;
-  writeTimeout = 10_000;
-  pingInterval = 0;
-}
-</code></pre><p>  当然，如果自己想设置一些参数:</p>
-<pre><code>OkHttpClient client = new OkHttpClient.Builder()  
-      .connectTimeout(10, TimeUnit.SECONDS)
-      .addInterceptor(...)
-      ....
-      .build();
-</code></pre><p> 个性化配置包你满意。</p>
-<h4 id="二、创建网络请求"><a href="#二、创建网络请求" class="headerlink" title="二、创建网络请求"></a>二、创建网络请求</h4><pre><code>Request request = new Request.Builder()  
-    .addHeader(&quot;Connection&quot;, &quot;Keep-Alive&quot;)
-    .url(&quot;http://www.google.com&quot;)
-    ....
-    .build();
-</code></pre><p>  这里默认发送的请求是GET：</p>
-<pre><code>public Builder() {
-   this.method = &quot;GET&quot;;
-   this.headers = new Headers.Builder();
- }
-</code></pre><p>发送POST请求，上一章节已经说明了请求方法，源码中实现：</p>
-<pre><code>  public Builder post(RequestBody body) {
-  return method(&quot;POST&quot;, body);
-}
-</code></pre><h4 id="三、拿到Call对象"><a href="#三、拿到Call对象" class="headerlink" title="三、拿到Call对象"></a>三、拿到Call对象</h4><pre><code>Call call = client.newCall(request);
-</code></pre><p>Call即是一个实际的访问请求，用户的每一个网络请求都是一个Call实例。</p>
-<pre><code>/**
- * A call is a request that has been prepared for execution. A call can be canceled. As this object
- * represents a single request/response pair (stream), it cannot be executed twice.
- */
-public interface Call extends Cloneable {
-    ···
-}
-</code></pre><p>一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个，所以不能执行两次。</p>
-<pre><code>/**
- * Prepares the {@code request} to be executed at some point in the future.
- */
-@Override public Call newCall(Request request) {
-  return new RealCall(this, request, false /* for web socket */);
-}
-</code></pre><p>实际在执行过程中，OkHttp会为每个请求创建一个RealCall.那么再进RealCall看看。</p>
+        <h3 id="Android-Gradle入门"><a href="#Android-Gradle入门" class="headerlink" title="Android Gradle入门"></a>Android Gradle入门</h3><h5 id="本文内容来自官方文档整理"><a href="#本文内容来自官方文档整理" class="headerlink" title="本文内容来自官方文档整理"></a>本文内容来自官方文档整理</h5><h4 id="一、查看生成的Gradle文件列表"><a href="#一、查看生成的Gradle文件列表" class="headerlink" title="一、查看生成的Gradle文件列表"></a>一、查看生成的Gradle文件列表</h4><p>默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png" alt="“asmodel”"></p>
+<p>Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorldGradle），并且应用程序构建文件（Module：app）附加到其中。</p>
+<p>在项目中，可能有两个名为gradle.properties的文件。 一个是本地项目。 另一个只有在主目录的.gradle子目录中具有全局gradle.properties文件的同名文件才存在。</p>
 <ul>
-<li>发起一个同步请求</li>
+<li>settings.gradle</li>
 </ul>
-<pre><code>      @Override public Response execute() throws IOException {
-        synchronized (this) {
-          if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
-          executed = true;
-        }
-        captureCallStackTrace();
-        try {
-          client.dispatcher().executed(this);
-          Response result = getResponseWithInterceptorChain();
-          if (result == null) throw new IOException(&quot;Canceled&quot;);
-          return result;
-        } finally {
-          client.dispatcher().finished(this);
-        }
-      }
-
-
-
-       /** Used by {@code Call#execute} to signal it is in-flight. */
-          synchronized void executed(RealCall call) {
-            runningSyncCalls.add(call);
-          }
-
-* 发起同步请求，通过dispatcher.executed()添加到同步队列中执行
-* 调用getResponseWithInterceptorChain获取服务器返回
-* 最后通知任务分发器client.dispatcher().finished(this)任务结束
-</code></pre><ul>
-<li>发起异步请求</li>
+<p>Gradle使用文件settings.gradle来配置多项目构建。 它应该由一行代码组成：</p>
+<pre><code>include &apos;:app&apos;
+</code></pre><p>这就是告诉Gradle，app也是一个Gradle project,当项目中还会依赖别的library，那么还需要在后面添加相应的信息。</p>
+<ul>
+<li>gradle-wrapper.properties</li>
 </ul>
-<pre><code>      @Override public void enqueue(Callback responseCallback) {
-        synchronized (this) {
-          if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
-          executed = true;
-        }
-        captureCallStackTrace();
-        client.dispatcher().enqueue(new AsyncCall(responseCallback));
-      }
+<p>gradle-wrapper.properties，它配置了所谓的Gradle Wrapper。 这使您可以构建Android项目，而无需首先安装Gradle。 该文件的内容应该类似于：</p>
+<pre><code>distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
+</code></pre><p>前四行表示当包装首次运行时，它将下载Gradle发行版并将其存储在您的主目录中的.gradle / wrapper / dists目录中。</p>
+<p>最后一行显示了distributionUrl的值，这是Gradle将下载指定分配的地址。（具体版本号可能与此处（4.1）中显示的版本号不同，并且URL可能引用二进制版本（-bin），而不是此示例中显示的完整版本（-all）。）</p>
+<h4 id="二、查看项目的Gradle构建文件"><a href="#二、查看项目的Gradle构建文件" class="headerlink" title="二、查看项目的Gradle构建文件"></a>二、查看项目的Gradle构建文件</h4><p>project的build.geadle文件：</p>
+<pre><code>// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+buildscript {
 
-
-    synchronized void enqueue(AsyncCall call) {
-    if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(call) &lt; maxRequestsPerHost) {
-      runningAsyncCalls.add(call);
-      executorService().execute(call);
-    } else {
-      readyAsyncCalls.add(call);
+    repositories {
+        google()
+        jcenter()
     }
+    dependencies {
+        classpath &apos;com.android.tools.build:gradle:3.0.0&apos;
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
+}
 
-
-AsyncCall.java
-
-    final class AsyncCall extends NamedRunnable {
-    private final Callback responseCallback;
-
-    AsyncCall(Callback responseCallback) {
-      super(&quot;OkHttp %s&quot;, redactedUrl());
-      this.responseCallback = responseCallback;
+allprojects {
+    repositories {
+        google()
+        jcenter()
     }
+}
 
-    String host() {
-      return originalRequest.url().host();
-    }
-
-    Request request() {
-      return originalRequest;
-    }
-
-    RealCall get() {
-      return RealCall.this;
-    }
-
-    @Override protected void execute() {
-      boolean signalledCallback = false;
-      try {
-        Response response = getResponseWithInterceptorChain();
-        if (retryAndFollowUpInterceptor.isCanceled()) {
-          signalledCallback = true;
-          responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));
-        } else {
-          signalledCallback = true;
-          responseCallback.onResponse(RealCall.this, response);
-        }
-      } catch (IOException e) {
-        if (signalledCallback) {
-          // Do not signal the callback twice!
-          Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);
-        } else {
-          responseCallback.onFailure(RealCall.this, e);
-        }
-      } finally {
-        client.dispatcher().finished(this);
-      }
-    }
-      }
-
-
- RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。
-</code></pre><h4 id="四、构建拦截器链"><a href="#四、构建拦截器链" class="headerlink" title="四、构建拦截器链"></a>四、构建拦截器链</h4><p>还是在RealCall.java中，看源码是如何构建的。</p>
-<pre><code>Response getResponseWithInterceptorChain() throws IOException {
-   // Build a full stack of interceptors.
-   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
-   interceptors.addAll(client.interceptors());
-   interceptors.add(retryAndFollowUpInterceptor);
-   interceptors.add(new BridgeInterceptor(client.cookieJar()));
-   interceptors.add(new CacheInterceptor(client.internalCache()));
-   interceptors.add(new ConnectInterceptor(client));
-   if (!forWebSocket) {
-     interceptors.addAll(client.networkInterceptors());
-   }
-   interceptors.add(new CallServerInterceptor(forWebSocket));
-
-   Interceptor.Chain chain = new RealInterceptorChain(
-       interceptors, null, null, null, 0, originalRequest);
-   return chain.proceed(originalRequest);
- }
-</code></pre><ul>
-<li>创建一系列拦截器，并存放在拦截器数组中。</li>
-<li>然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)</li>
-<li>经过一系列拦截器的处理后，获取Response.</li>
-</ul>
-<h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>本节主要对请求的整个流程进行相对应的源码实现过程解析。</p>
-<p>下节对几种拦截器进行解析。</p>
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+</code></pre><p>各个代码块具体作用：</p>
+<ol>
+<li>buildscript - 下载插件</li>
+<li>dependencies - 标识Android插件</li>
+<li>allproject -     top-level and module projects的配置</li>
+<li>task clean - 特设任务</li>
+</ol>
+<p>Gradle定义了一种基于Groovy的DSL语言来构建，buildscript标签是DSL的一部分。 它告诉Gradle构建需要一个可能不是基线Gradle分布的一部分的插件，并告诉Gradle在哪里找到它。 在这种情况下，使用坐标语法“group：name：version”指定所需的插件，其中组为com.android.tools.build，名称为gradle，版本为3.0.1。</p>
+<p>当Gradle第一次构建这个项目时，插件将被下载并缓存，所以这个任务只执行一次。</p>
+<p>allprojects标签保存适用于顶层项目及其包含的任何子项目的配置细节。 在这种情况下，该块指定任何所需的依赖项应该从<a href="https://jcenter.bintray.com上的公共Bintray" target="_blank" rel="external">https://jcenter.bintray.com上的公共Bintray</a> Artifactory存储库的google或jcenter下载。</p>
+<p>最后，构建文件包含一个名为clean的自定义（或临时）任务。 它使用内置的任务类型Delete并对其进行配置，以便干净的任务将删除rootProject中的buildDir。 两者都是项目属性，其值默认为该应用程序驻留的项目中的构建目录。</p>
 
       
     </div>
@@ -606,7 +470,7 @@ AsyncCall.java
       
         <div class="post-tags">
           
-            <a href="/tags/OkHttp3/" rel="tag"># OkHttp3</a>
+            <a href="/tags/Gradle/" rel="tag"># Gradle</a>
           
         </div>
       
@@ -619,8 +483,8 @@ AsyncCall.java
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/25/OkHttp3源码学习（1）/" rel="next" title="OkHttp3源码学习（1）-简单实用教程">
-                <i class="fa fa-chevron-left"></i> OkHttp3源码学习（1）-简单实用教程
+              <a href="/2017/12/11/Glide4.x源码解析(1)-基本使用/" rel="next" title="Glide4.x源码解析(1)-基本使用">
+                <i class="fa fa-chevron-left"></i> Glide4.x源码解析(1)-基本使用
               </a>
             
           </div>
@@ -628,10 +492,6 @@ AsyncCall.java
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/27/OkHttp3源码学习（3）/" rel="prev" title="OkHttp3源码学习（3）-拦截器链详解">
-                OkHttp3源码学习（3）-拦截器链详解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -764,7 +624,7 @@ AsyncCall.java
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><span class="nav-number">1.</span> <span class="nav-text">上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、创建OkHttpClient对象"><span class="nav-number">2.</span> <span class="nav-text">一、创建OkHttpClient对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、创建网络请求"><span class="nav-number">3.</span> <span class="nav-text">二、创建网络请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、拿到Call对象"><span class="nav-number">4.</span> <span class="nav-text">三、拿到Call对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、构建拦截器链"><span class="nav-number">5.</span> <span class="nav-text">四、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、小结"><span class="nav-number">6.</span> <span class="nav-text">五、小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Gradle入门"><span class="nav-number">1.</span> <span class="nav-text">Android Gradle入门</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#本文内容来自官方文档整理"><span class="nav-number">1.0.1.</span> <span class="nav-text">本文内容来自官方文档整理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、查看生成的Gradle文件列表"><span class="nav-number">1.1.</span> <span class="nav-text">一、查看生成的Gradle文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、查看项目的Gradle构建文件"><span class="nav-number">1.2.</span> <span class="nav-text">二、查看项目的Gradle构建文件</span></a></li></ol></li></ol></div>
             
 
           </div>
