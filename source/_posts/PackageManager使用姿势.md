@@ -120,7 +120,8 @@ GET_UNINSTALLED_PACKAGES
 	
 	
 
-### 四、获取信息
+
+#### 四、获取信息
 
 1. ApplicationInfo类测试：获取Application节点信息
 
