@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/25/PackageManager使用姿势/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
-<meta property="og:updated_time" content="2017-12-30T06:28:16.000Z">
+<meta property="og:updated_time" content="2017-12-30T06:29:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PackageManager使用姿势">
 <meta name="twitter:description" content="PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。 一、主要功能 安装、卸载应用 查询权限 查询Application相关信息  二、常用方法1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageI">
@@ -489,7 +489,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
                                   0
 </code></pre></li>
 </ul>
-<h5 id="a5-获取应用程序中执行的ActivityInfo"><a href="#a5-获取应用程序中执行的ActivityInfo" class="headerlink" title="å5. 获取应用程序中执行的ActivityInfo"></a>å5. 获取应用程序中执行的ActivityInfo</h5><ul>
+<h5 id="5-获取应用程序中执行的ActivityInfo"><a href="#5-获取应用程序中执行的ActivityInfo" class="headerlink" title="5. 获取应用程序中执行的ActivityInfo"></a>5. 获取应用程序中执行的ActivityInfo</h5><ul>
 <li>示例：</li>
 </ul>
 <pre><code>ComponentName componentName = new ComponentName(&quot;com.example.liushihan.glidedemo&quot;,&quot;com.example.liushihan.glidedemo.MainActivity&quot;);
@@ -721,7 +721,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、主要功能"><span class="nav-number">1.</span> <span class="nav-text">一、主要功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、常用方法"><span class="nav-number">2.</span> <span class="nav-text">二、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、AndroidManifest文件结构"><span class="nav-number">3.</span> <span class="nav-text">三、AndroidManifest文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、获取信息"><span class="nav-number">4.</span> <span class="nav-text">四、获取信息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-ApplicationInfo类测试：获取Application节点信息"><span class="nav-number">4.1.</span> <span class="nav-text">1.ApplicationInfo类测试：获取Application节点信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-获取所有安装的Packages"><span class="nav-number">4.2.</span> <span class="nav-text">2. 获取所有安装的Packages</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-获取指定应用的PackageInfo"><span class="nav-number">4.3.</span> <span class="nav-text">3. 获取指定应用的PackageInfo</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-获取应用程序中的permission"><span class="nav-number">4.4.</span> <span class="nav-text">4. 获取应用程序中的permission</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#a5-获取应用程序中执行的ActivityInfo"><span class="nav-number">4.5.</span> <span class="nav-text">å5. 获取应用程序中执行的ActivityInfo</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、主要功能"><span class="nav-number">1.</span> <span class="nav-text">一、主要功能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、常用方法"><span class="nav-number">2.</span> <span class="nav-text">二、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、AndroidManifest文件结构"><span class="nav-number">3.</span> <span class="nav-text">三、AndroidManifest文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、获取信息"><span class="nav-number">4.</span> <span class="nav-text">四、获取信息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-ApplicationInfo类测试：获取Application节点信息"><span class="nav-number">4.1.</span> <span class="nav-text">1.ApplicationInfo类测试：获取Application节点信息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-获取所有安装的Packages"><span class="nav-number">4.2.</span> <span class="nav-text">2. 获取所有安装的Packages</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-获取指定应用的PackageInfo"><span class="nav-number">4.3.</span> <span class="nav-text">3. 获取指定应用的PackageInfo</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-获取应用程序中的permission"><span class="nav-number">4.4.</span> <span class="nav-text">4. 获取应用程序中的permission</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-获取应用程序中执行的ActivityInfo"><span class="nav-number">4.5.</span> <span class="nav-text">5. 获取应用程序中执行的ActivityInfo</span></a></li></ol></li></ol></div>
             
 
           </div>

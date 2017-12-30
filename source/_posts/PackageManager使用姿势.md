@@ -215,7 +215,7 @@ GET_UNINSTALLED_PACKAGES
 		                                      
                   
                   
-##### å5. 获取应用程序中执行的ActivityInfo
+##### 5. 获取应用程序中执行的ActivityInfo
 
  * 示例：
 
