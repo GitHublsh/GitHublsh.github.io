@@ -212,3 +212,12 @@ androidTestImplementation依赖项是指Espresso测试库，用于Android应用�
 	com.android.support.constraint:constraint-layout:1.0.2
 	
 将Android约束布局添加到项目中。 这允许您在任何像SDK版本9一样早的Android应用程序中使用ConstraintLayout布局类。
+
+
+### 运行标准的Gradle任务
+
+Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，但最终Gradle还是参与其中。可以在Android Studio中命令行使用gradle命令构建
+
+	$ ./gradlew build
+	
+
