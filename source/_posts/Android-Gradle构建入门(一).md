@@ -220,4 +220,154 @@ Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，
 
 	$ ./gradlew build
 	
+构建完成，Build Successful，可以在app/build/outputs/apk目录查看生成的apk,包括debug和release版本的apk.
+
+* 可以在命令行中显示在项目中使用的support-annotations模块的版本。
+
+执行命令，可以看到结果：
+
+	$ ./gradlew :app:dependencies --configuration releaseCompileClasspath
+	:app:dependencies
+	
+	------------------------------------------------------------
+	Project :app
+	------------------------------------------------------------
+	
+	releaseCompileClasspath - Resolved configuration for compilation for variant: release
+	+--- com.android.support:appcompat-v7:26.1.0
+	|    +--- com.android.support:support-annotations:26.1.0
+	|    +--- com.android.support:support-v4:26.1.0
+	|    |    +--- com.android.support:support-compat:26.1.0
+	|    |    |    +--- com.android.support:support-annotations:26.1.0
+	|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+	|    |    |         +--- android.arch.lifecycle:common:1.0.0
+	|    |    |         \--- android.arch.core:common:1.0.0
+	|    |    +--- com.android.support:support-media-compat:26.1.0
+	|    |    |    +--- com.android.support:support-annotations:26.1.0
+	|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+	|    |    +--- com.android.support:support-core-utils:26.1.0
+	|    |    |    +--- com.android.support:support-annotations:26.1.0
+	|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+	|    |    +--- com.android.support:support-core-ui:26.1.0
+	|    |    |    +--- com.android.support:support-annotations:26.1.0
+	|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+	|    |    \--- com.android.support:support-fragment:26.1.0
+	|    |         +--- com.android.support:support-compat:26.1.0 (*)
+	|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+	|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+	|    +--- com.android.support:support-vector-drawable:26.1.0
+	|    |    +--- com.android.support:support-annotations:26.1.0
+	|    |    \--- com.android.support:support-compat:26.1.0 (*)
+	|    \--- com.android.support:animated-vector-drawable:26.1.0
+	|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+	|         \--- com.android.support:support-core-ui:26.1.0 (*)
+	\--- com.android.support.constraint:constraint-layout:1.0.2
+	     \--- com.android.support.constraint:constraint-layout-solver:1.0.2
+	
+	(*) - dependencies omitted (listed previously)
+	
+	
+	BUILD SUCCESSFUL
+
+
+
+从命令行打印的信息可以看到support-annotations module,version 26.1.0,是appcompat-v7所依赖的一个库
+
+
+* 另一种方式查看所需的版本
+
+执行命令及结果：
+
+	$ ./gradlew :app:dependencyInsight --dependency support-annotations --configuration releaseCompileClasspath
+	:app:dependencyInsight
+	com.android.support:support-annotations:26.1.0
+	+--- com.android.support:appcompat-v7:26.1.0
+	|    \--- releaseCompileClasspath
+	+--- com.android.support:support-compat:26.1.0
+	|    +--- com.android.support:support-vector-drawable:26.1.0
+	|    |    +--- com.android.support:appcompat-v7:26.1.0 (*)
+	|    |    \--- com.android.support:animated-vector-drawable:26.1.0
+	|    |         \--- com.android.support:appcompat-v7:26.1.0 (*)
+	|    +--- com.android.support:support-v4:26.1.0
+	|    |    \--- com.android.support:appcompat-v7:26.1.0 (*)
+	|    +--- com.android.support:support-media-compat:26.1.0
+	|    |    \--- com.android.support:support-v4:26.1.0 (*)
+	|    +--- com.android.support:support-fragment:26.1.0
+	|    |    \--- com.android.support:support-v4:26.1.0 (*)
+	|    +--- com.android.support:support-core-utils:26.1.0
+	|    |    +--- com.android.support:support-v4:26.1.0 (*)
+	|    |    \--- com.android.support:support-fragment:26.1.0 (*)
+	|    \--- com.android.support:support-core-ui:26.1.0
+	|         +--- com.android.support:animated-vector-drawable:26.1.0 (*)
+	|         +--- com.android.support:support-v4:26.1.0 (*)
+	|         \--- com.android.support:support-fragment:26.1.0 (*)
+	+--- com.android.support:support-core-ui:26.1.0 (*)
+	+--- com.android.support:support-core-utils:26.1.0 (*)
+	+--- com.android.support:support-media-compat:26.1.0 (*)
+	\--- com.android.support:support-vector-drawable:26.1.0 (*)
+	
+	(*) - dependencies omitted (listed previously)
+	
+	
+	BUILD SUCCESSFUL
+	
+
+这两种方式都可以帮助追踪和解决与library版本冲突的任何问题。
+
+### 六、查看Gradle窗口可执行的命令
+
+!["gradle window"](http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png)
+
+可以看一下，android-signingReport查看签名报告任务，签名报告任务不需要任何参数，可以双击执行，结果如下：
+
+	Executing tasks: [signingReport]
+	
+	Configuration on demand is an incubating feature.
+	:app:signingReport
+	Variant: release
+	Config: none
+	----------
+	Variant: releaseUnitTest
+	Config: none
+	----------
+	Variant: debug
+	Config: debug
+	Store: /Users/liushihan/.android/debug.keystore
+	Alias: AndroidDebugKey
+	MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+	SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+	Valid until: 2047年5月1日 星期三
+	----------
+	Variant: debugAndroidTest
+	Config: debug
+	Store: /Users/liushihan/.android/debug.keystore
+	Alias: AndroidDebugKey
+	MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+	SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+	Valid until: 2047年5月1日 星期三
+	----------
+	Variant: debugUnitTest
+	Config: debug
+	Store: /Users/liushihan/.android/debug.keystore
+	Alias: AndroidDebugKey
+	MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+	SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+	Valid until: 2047年5月1日 星期三
+	----------
+	
+	BUILD SUCCESSFUL in 14s
+	1 actionable task: 1 executed
+	
+	
+从打印的结果可以看到，公钥存储路径（这里是用户根目录下的debug.keystore文件）
+
+
+下面的install，可以通过installDebug来安装应用
+
+也可用命令行来执行：
+
+	$ ./gradlew installDebug
+	
+
+
 

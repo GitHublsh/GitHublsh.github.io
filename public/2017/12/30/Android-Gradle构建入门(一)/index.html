@@ -119,7 +119,8 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
 <meta property="og:image" content="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png">
-<meta property="og:updated_time" content="2018-01-03T06:34:57.000Z">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png">
+<meta property="og:updated_time" content="2018-01-03T07:25:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Gradle构建入门 (一)">
 <meta name="twitter:description" content="Android Gradle入门本文内容来自官方文档整理一、查看生成的Gradle文件列表默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：  Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorl">
@@ -507,6 +508,134 @@ dependencies {
 </code></pre><p>将Android约束布局添加到项目中。 这允许您在任何像SDK版本9一样早的Android应用程序中使用ConstraintLayout布局类。</p>
 <h3 id="四、运行标准的Gradle任务"><a href="#四、运行标准的Gradle任务" class="headerlink" title="四、运行标准的Gradle任务"></a>四、运行标准的Gradle任务</h3><p>Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，但最终Gradle还是参与其中。可以在Android Studio中命令行使用gradle命令构建</p>
 <pre><code>$ ./gradlew build
+</code></pre><p>构建完成，Build Successful，可以在app/build/outputs/apk目录查看生成的apk,包括debug和release版本的apk.</p>
+<ul>
+<li>可以在命令行中显示在项目中使用的support-annotations模块的版本。</li>
+</ul>
+<p>执行命令，可以看到结果：</p>
+<pre><code>$ ./gradlew :app:dependencies --configuration releaseCompileClasspath
+:app:dependencies
+
+------------------------------------------------------------
+Project :app
+------------------------------------------------------------
+
+releaseCompileClasspath - Resolved configuration for compilation for variant: release
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
+\--- com.android.support.constraint:constraint-layout:1.0.2
+     \--- com.android.support.constraint:constraint-layout-solver:1.0.2
+
+(*) - dependencies omitted (listed previously)
+
+
+BUILD SUCCESSFUL
+</code></pre><p>从命令行打印的信息可以看到support-annotations module,version 26.1.0,是appcompat-v7所依赖的一个库</p>
+<ul>
+<li>另一种方式查看所需的版本</li>
+</ul>
+<p>执行命令及结果：</p>
+<pre><code>$ ./gradlew :app:dependencyInsight --dependency support-annotations --configuration releaseCompileClasspath
+:app:dependencyInsight
+com.android.support:support-annotations:26.1.0
++--- com.android.support:appcompat-v7:26.1.0
+|    \--- releaseCompileClasspath
++--- com.android.support:support-compat:26.1.0
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:appcompat-v7:26.1.0 (*)
+|    |    \--- com.android.support:animated-vector-drawable:26.1.0
+|    |         \--- com.android.support:appcompat-v7:26.1.0 (*)
+|    +--- com.android.support:support-v4:26.1.0
+|    |    \--- com.android.support:appcompat-v7:26.1.0 (*)
+|    +--- com.android.support:support-media-compat:26.1.0
+|    |    \--- com.android.support:support-v4:26.1.0 (*)
+|    +--- com.android.support:support-fragment:26.1.0
+|    |    \--- com.android.support:support-v4:26.1.0 (*)
+|    +--- com.android.support:support-core-utils:26.1.0
+|    |    +--- com.android.support:support-v4:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0 (*)
+|    \--- com.android.support:support-core-ui:26.1.0
+|         +--- com.android.support:animated-vector-drawable:26.1.0 (*)
+|         +--- com.android.support:support-v4:26.1.0 (*)
+|         \--- com.android.support:support-fragment:26.1.0 (*)
++--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support:support-core-utils:26.1.0 (*)
++--- com.android.support:support-media-compat:26.1.0 (*)
+\--- com.android.support:support-vector-drawable:26.1.0 (*)
+
+(*) - dependencies omitted (listed previously)
+
+
+BUILD SUCCESSFUL
+</code></pre><p>这两种方式都可以帮助追踪和解决与library版本冲突的任何问题。</p>
+<h3 id="六、查看Gradle窗口可执行的命令"><a href="#六、查看Gradle窗口可执行的命令" class="headerlink" title="六、查看Gradle窗口可执行的命令"></a>六、查看Gradle窗口可执行的命令</h3><p><img src="http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png" alt="&quot;gradle window&quot;"></p>
+<p>可以看一下，android-signingReport查看签名报告任务，签名报告任务不需要任何参数，可以双击执行，结果如下：</p>
+<pre><code>Executing tasks: [signingReport]
+
+Configuration on demand is an incubating feature.
+:app:signingReport
+Variant: release
+Config: none
+----------
+Variant: releaseUnitTest
+Config: none
+----------
+Variant: debug
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+Variant: debugAndroidTest
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+Variant: debugUnitTest
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+
+BUILD SUCCESSFUL in 14s
+1 actionable task: 1 executed
+</code></pre><p>从打印的结果可以看到，公钥存储路径（这里是用户根目录下的debug.keystore文件）</p>
+<p>下面的install，可以通过installDebug来安装应用</p>
+<p>也可用命令行来执行：</p>
+<pre><code>$ ./gradlew installDebug
 </code></pre>
       
     </div>
@@ -716,7 +845,7 @@ dependencies {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Gradle入门"><span class="nav-number">1.</span> <span class="nav-text">Android Gradle入门</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#本文内容来自官方文档整理"><span class="nav-number">1.0.1.</span> <span class="nav-text">本文内容来自官方文档整理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、查看生成的Gradle文件列表"><span class="nav-number">1.1.</span> <span class="nav-text">一、查看生成的Gradle文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、查看整个项目的build-gradle"><span class="nav-number">1.2.</span> <span class="nav-text">二、查看整个项目的build.gradle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、查看app-module的build-gradle"><span class="nav-number">1.3.</span> <span class="nav-text">三、查看app module的build.gradle</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、运行标准的Gradle任务"><span class="nav-number">2.</span> <span class="nav-text">四、运行标准的Gradle任务</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Gradle入门"><span class="nav-number">1.</span> <span class="nav-text">Android Gradle入门</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#本文内容来自官方文档整理"><span class="nav-number">1.0.1.</span> <span class="nav-text">本文内容来自官方文档整理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、查看生成的Gradle文件列表"><span class="nav-number">1.1.</span> <span class="nav-text">一、查看生成的Gradle文件列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、查看整个项目的build-gradle"><span class="nav-number">1.2.</span> <span class="nav-text">二、查看整个项目的build.gradle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、查看app-module的build-gradle"><span class="nav-number">1.3.</span> <span class="nav-text">三、查看app module的build.gradle</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、运行标准的Gradle任务"><span class="nav-number">2.</span> <span class="nav-text">四、运行标准的Gradle任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、查看Gradle窗口可执行的命令"><span class="nav-number">3.</span> <span class="nav-text">六、查看Gradle窗口可执行的命令</span></a></li></ol></div>
             
 
           </div>
