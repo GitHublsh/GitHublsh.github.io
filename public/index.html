@@ -502,7 +502,7 @@ dependencies {
 </code></pre><p>将Android兼容性库添加到项目中。 这使您可以在SDK版本7以前的任何Android应用程序中使用材质设计主题和其他功能。</p>
 <pre><code>com.android.support.constraint:constraint-layout:1.0.2
 </code></pre><p>将Android约束布局添加到项目中。 这允许您在任何像SDK版本9一样早的Android应用程序中使用ConstraintLayout布局类。</p>
-<h3 id="四、运行标准的Gradle任务"><a href="#四、运行标准的Gradle任务" class="headerlink" title="四、运行标准的Gradle任务"></a>四、运行标准的Gradle任务</h3><p>Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，但最终Gradle还是参与其中。可以在Android Studio中命令行使用gradle命令构建</p>
+<h4 id="四、运行标准的Gradle任务"><a href="#四、运行标准的Gradle任务" class="headerlink" title="四、运行标准的Gradle任务"></a>四、运行标准的Gradle任务</h4><p>Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，但最终Gradle还是参与其中。可以在Android Studio中命令行使用gradle命令构建</p>
 <pre><code>$ ./gradlew build
 </code></pre><p>构建完成，Build Successful，可以在app/build/outputs/apk目录查看生成的apk,包括debug和release版本的apk.</p>
 <ul>
@@ -589,7 +589,7 @@ com.android.support:support-annotations:26.1.0
 
 BUILD SUCCESSFUL
 </code></pre><p>这两种方式都可以帮助追踪和解决与library版本冲突的任何问题。</p>
-<h3 id="六、查看Gradle窗口可执行的命令"><a href="#六、查看Gradle窗口可执行的命令" class="headerlink" title="六、查看Gradle窗口可执行的命令"></a>六、查看Gradle窗口可执行的命令</h3><p><img src="http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png" alt="&quot;gradle window&quot;"></p>
+<h4 id="五、查看Gradle窗口可执行的命令"><a href="#五、查看Gradle窗口可执行的命令" class="headerlink" title="五、查看Gradle窗口可执行的命令"></a>五、查看Gradle窗口可执行的命令</h4><p><img src="http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png" alt="&quot;gradle window&quot;"></p>
 <p>可以看一下，android-signingReport查看签名报告任务，签名报告任务不需要任何参数，可以双击执行，结果如下：</p>
 <pre><code>Executing tasks: [signingReport]
 
