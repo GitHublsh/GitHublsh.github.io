@@ -74,6 +74,10 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: next
 
+# Support for LiveRe comments system.
+# You can get your uid from https://livere.com/insight/myCode (General web site)
+livere_uid: yMTAyMC8zMzk3OC8xMDUxMw==
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
