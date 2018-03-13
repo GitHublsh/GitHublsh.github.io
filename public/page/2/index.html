@@ -284,6 +284,177 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/Android-View事件分发机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/11/Android-View事件分发机制/" itemprop="url">Android View事件分发机制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T17:27:08+08:00">
+                2017-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、点击事件的传递规则"><a href="#一、点击事件的传递规则" class="headerlink" title="一、点击事件的传递规则"></a>一、点击事件的传递规则</h3><p>   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。</p>
+<ol>
+<li><p>MotionEvent</p>
+<p>常见的动作：</p>
+<p>常见的动作常量：</p>
+<ul>
+<li><p>public static final int ACTION_DOWN = 0;单点触摸动作</p>
+</li>
+<li><p>public static final int ACTION_UP = 1;单点触摸离开动作</p>
+</li>
+<li>public static final int ACTION_MOVE = 2;触摸点移动动作</li>
+<li>public static final int ACTION_CANCEL = 3;触摸动作取消</li>
+<li>public static final int ACTION_OUTSIDE = 4;触摸动作超出边界</li>
+<li>public static final int ACTION_POINTER_DOWN = 5;多点触摸动作</li>
+<li>public static final int ACTION_POINTER_UP       = 6;多点离开动作</li>
+</ul>
+</li>
+</ol>
+<pre><code>主要就是：
+
+* ACTION_DOWN--手指刚接触屏幕
+* ACTION_MOVE--手指在屏幕上滑动
+* ACTION_UP--手指离开屏幕
+</code></pre><ol>
+<li><p>点击事件的分发中最重要的三个方法</p>
+<ul>
+<li><p>dispatchTouchEvent(MotionEvent event)–事件分发</p>
+<ul>
+<li>用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。</li>
+</ul>
+</li>
+<li><p>onInterceptTouchEvent(MotionEvent event)–事件拦截</p>
+<ul>
+<li>用来判断是否拦截某个事件，如果当前View拦截了某个事件，那么在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。</li>
+</ul>
+</li>
+<li><p>onTouchEvent(MotionEvent event)–事件消费</p>
+<ul>
+<li>在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>伪代码</p>
+<pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
+    boolean touch = false;
+    if(onInterceptTouchEvent(ev)){
+        touch = onTouchEvent(ev);
+    }else{
+        touch = child.dispatchTouchEvent(ev);
+    }
+    return touch;
+}
+</code></pre></li>
+</ol>
+<ul>
+<li><p>点击事件的传递规则：</p>
+<pre><code>* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     
+</code></pre></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/21/自定义View-2-Canvas简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -789,120 +960,6 @@ animal.drink();
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/03/书读的不多，却想的太多/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/03/书读的不多，却想的太多/" itemprop="url">书读的不多，却想的太多</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-03T14:54:22+08:00">
-                2017-09-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>书读得不多却想的太多。<br>先好好看书。<br>持续更新···</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/chengxusheji.png" alt="程序设计"></p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/ruanjiangongcheng.png" alt="软件工程"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -952,7 +1009,7 @@ animal.drink();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
