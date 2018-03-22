@@ -55,7 +55,7 @@ Android系统为每个应用分配一个唯一的UID，具有相同UID的应用�
   
 #### 四、Serializable VS  Parcelable
 
-##### Serializable
+##### 1. Serializable
 
 Serializable是java提供的一个序列化接口，它是一个空接口，专门为对象提供标准的序列化和反序列化操作，使用Serializable实现类的序列化比较简单，只要在类声明中实现Serializable接口即可。
 
@@ -121,7 +121,7 @@ Serializable是java提供的一个序列化接口，它是一个空接口，专�
 
 例子的实现很简单，当然也是有弊端的，如果在此过程中使用反射，可能会创建大量其他对象，这就可能会导致很多垃圾回收。造成的结果是性能差和电池耗尽。
 
-##### Parcelable
+##### 2. Parcelable
 
 Parcelable是Android SDK中接口。鉴于Serializable在内存序列化上开销比较大，而内存资源属于android系统中的稀有资源（android系统分配给每个应用的内存开销都是有限的），为此android中提供了Parcelable接口来实现序列化操作，Parcelable的性能比Serializable好，在内存开销方面较小，所以在内存间数据传输时推荐使用Parcelable，如通过Intent在activity间传输数据，而Parcelable的缺点就使用起来比较麻烦。
 
@@ -231,7 +231,7 @@ Parcelable是Android SDK中接口。鉴于Serializable在内存序列化上开�
  一句话概括，就是通过writeToParcel将我们的对象映射成Parcel对象，再通过createFromParcel将Parcel对象映射成我们的对象。
 
 
-##### Serializable 和 Parcelable 异同
+##### 3. Serializable 和 Parcelable 异同
 
 * 都能序列化，都可用于Intent传递数据
 

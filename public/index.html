@@ -383,7 +383,7 @@ u0_a60    4170  1207  1254256 41744 ffffffff b74c94f5 S com.neil.binder.three
 <p>反序列化恰恰是序列化的反向操作，也就是说，把已存在在磁盘或者其他介质中的对象，反序列化（读取）到内存中，以便后续操作，而这个过程就叫做反序列化。</p>
 <p>  概括性来说序列化是指将对象实例的状态存储到存储媒体（磁盘或者其他介质）的过程。在此过程中，先将对象的公共字段和私有字段以及类的名称（包括类所在的程序集）转换为字节流，然后再把字节流写入数据流。在随后对对象进行反序列化时，将创建出与原对象完全相同的副本。<br>  <br>  把磁盘文件中的对象数据或者把网络节点上的对象数据，恢复成Java对象模型的过程。也就是将在序列化过程中所生成的二进制串转换成数据结构或者对象的过程
   </p>
-<h4 id="四、Serializable-VS-Parcelable"><a href="#四、Serializable-VS-Parcelable" class="headerlink" title="四、Serializable VS  Parcelable"></a>四、Serializable VS  Parcelable</h4><h5 id="Serializable"><a href="#Serializable" class="headerlink" title="Serializable"></a>Serializable</h5><p>Serializable是java提供的一个序列化接口，它是一个空接口，专门为对象提供标准的序列化和反序列化操作，使用Serializable实现类的序列化比较简单，只要在类声明中实现Serializable接口即可。</p>
+<h4 id="四、Serializable-VS-Parcelable"><a href="#四、Serializable-VS-Parcelable" class="headerlink" title="四、Serializable VS  Parcelable"></a>四、Serializable VS  Parcelable</h4><h5 id="1-Serializable"><a href="#1-Serializable" class="headerlink" title="1. Serializable"></a>1. Serializable</h5><p>Serializable是java提供的一个序列化接口，它是一个空接口，专门为对象提供标准的序列化和反序列化操作，使用Serializable实现类的序列化比较简单，只要在类声明中实现Serializable接口即可。</p>
 <p>举个例子：</p>
 <pre><code>import java.io.Serializable;
 
@@ -436,7 +436,7 @@ public class Person implements Serializable {
 <p>那么既然自动生成我们是不是可以不写？</p>
 <p>由于serialVersionUID是用来辅助序列化和反序列化过程的，原则上序列化后的对象中serialVersionUID只有和当前类的serialVersionUID相同才能够正常被反序列化，也就是说序列化与反序列化的serialVersionUID必须相同才能够使序列化操作成功。具体过程是这样的：序列化操作的时候系统会把当前类的serialVersionUID写入到序列化文件中，当反序列化时系统会去检测文件中的serialVersionUID，判断它是否与当前类的serialVersionUID一致，如果一致就说明序列化类的版本与当前类版本是一样的，可以反序列化成功，否则失败。不指定的话在反序列化会报错。</p>
 <p>例子的实现很简单，当然也是有弊端的，如果在此过程中使用反射，可能会创建大量其他对象，这就可能会导致很多垃圾回收。造成的结果是性能差和电池耗尽。</p>
-<h5 id="Parcelable"><a href="#Parcelable" class="headerlink" title="Parcelable"></a>Parcelable</h5><p>Parcelable是Android SDK中接口。鉴于Serializable在内存序列化上开销比较大，而内存资源属于android系统中的稀有资源（android系统分配给每个应用的内存开销都是有限的），为此android中提供了Parcelable接口来实现序列化操作，Parcelable的性能比Serializable好，在内存开销方面较小，所以在内存间数据传输时推荐使用Parcelable，如通过Intent在activity间传输数据，而Parcelable的缺点就使用起来比较麻烦。</p>
+<h5 id="2-Parcelable"><a href="#2-Parcelable" class="headerlink" title="2. Parcelable"></a>2. Parcelable</h5><p>Parcelable是Android SDK中接口。鉴于Serializable在内存序列化上开销比较大，而内存资源属于android系统中的稀有资源（android系统分配给每个应用的内存开销都是有限的），为此android中提供了Parcelable接口来实现序列化操作，Parcelable的性能比Serializable好，在内存开销方面较小，所以在内存间数据传输时推荐使用Parcelable，如通过Intent在activity间传输数据，而Parcelable的缺点就使用起来比较麻烦。</p>
 <p>举个例子：</p>
 <pre><code>import android.os.Parcel;
 import android.os.Parcelable;
@@ -536,7 +536,7 @@ public class Person implements Parcelable {
 <p> 序列化过程中，需要实现序列化和反序列化以及内容描述。</p>
 <p> writeToParcel实现序列化，通过CREATOR内部对象来实现反序列化，其内部通过createFromParcel方法来创建序列化对象并通过newArray方法创建数组，最终利用Parcel的一系列read方法完成反序列化，最后由describeContents完成内容描述功能，该方法一般返回0，仅当对象中存在文件描述符时返回1。</p>
 <p> 一句话概括，就是通过writeToParcel将我们的对象映射成Parcel对象，再通过createFromParcel将Parcel对象映射成我们的对象。</p>
-<h5 id="Serializable-和-Parcelable-异同"><a href="#Serializable-和-Parcelable-异同" class="headerlink" title="Serializable 和 Parcelable 异同"></a>Serializable 和 Parcelable 异同</h5><ul>
+<h5 id="3-Serializable-和-Parcelable-异同"><a href="#3-Serializable-和-Parcelable-异同" class="headerlink" title="3. Serializable 和 Parcelable 异同"></a>3. Serializable 和 Parcelable 异同</h5><ul>
 <li><p>都能序列化，都可用于Intent传递数据</p>
 </li>
 <li><p>Serializable是Java中的序列化接口，使用简单但是内存开销大，序列化和反序列化需要大量的I/O操作。</p>
