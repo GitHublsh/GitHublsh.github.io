@@ -159,3 +159,8 @@ IntentService 执行以下操作：
 	}
 
 只需要一个构造函数和一个 onHandleIntent() 实现即可。
+
+
+两种方式的生命周期如下：
+
+![service_lifecycle](http://ot29getcp.bkt.clouddn.com//blog/service_lifecycle.png)

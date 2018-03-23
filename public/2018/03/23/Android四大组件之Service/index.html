@@ -118,10 +118,12 @@
 <meta property="og:url" content="http://yoursite.com/2018/03/23/Android四大组件之Service/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、Service简介Service 是一个可以在后台执行长时间运行操作而不提供用户界面的应用组件。服务可由其他应用组件启动，而且即使用户切换到其他应用，服务仍将在后台继续运行。 此外，组件可以绑定到服务，以与之进行交互，甚至是执行进程间通信 (IPC)。 例如，服务可以处理网络事务、播放音乐，执行文件 I/O 或与内容提供程序交互，而所有这一切均可在后台进行。服务基本上分为两种形式： 启动  当">
-<meta property="og:updated_time" content="2018-03-23T02:47:34.000Z">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com//blog/service_lifecycle.png">
+<meta property="og:updated_time" content="2018-03-23T03:37:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android四大组件之Service">
 <meta name="twitter:description" content="一、Service简介Service 是一个可以在后台执行长时间运行操作而不提供用户界面的应用组件。服务可由其他应用组件启动，而且即使用户切换到其他应用，服务仍将在后台继续运行。 此外，组件可以绑定到服务，以与之进行交互，甚至是执行进程间通信 (IPC)。 例如，服务可以处理网络事务、播放音乐，执行文件 I/O 或与内容提供程序交互，而所有这一切均可在后台进行。服务基本上分为两种形式： 启动  当">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com//blog/service_lifecycle.png">
 
 
 
@@ -474,6 +476,8 @@
   }
 }
 </code></pre><p>只需要一个构造函数和一个 onHandleIntent() 实现即可。</p>
+<p>两种方式的生命周期如下：</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com//blog/service_lifecycle.png" alt="service_lifecycle"></p>
 
       
     </div>
