@@ -48,3 +48,9 @@ HashMap 底层就是一个数组结构，数组中的每一项又是一个链表
 	
 	// 包含“子Map”的构造函数
 	HashMap(Map<? extends K, ? extends V> map)
+	
+	
+	
+#### HashMap的整体结构
+
+![HashMap整体结构](http://ot29getcp.bkt.clouddn.com//blog/hashmapbuild.png)
