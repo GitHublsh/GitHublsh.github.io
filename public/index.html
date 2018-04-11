@@ -372,8 +372,6 @@
 </li>
 <li><p>通过设置Options.inPreferredConfig值来降低内存消耗：<br>  默认为ARGB_8888: 每个像素4字节. 共32位。<br>  Alpha_8: 只保存透明度，共8位，1字节。<br>  ARGB_4444: 共16位，2字节。<br>  RGB_565:共16位，2字节。<br>  如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。</p>
 </li>
-</ol>
-<ol>
 <li><p>通过设置Options.inSampleSize 对大图片进行压缩，可先设置Options.inJustDecodeBounds，获取Bitmap的外围数据，宽和高等。然后计算压缩比例，进行压缩。</p>
 </li>
 <li><p>设置Options.inPurgeable和inInputShareable：让系统能及时回收内存。</p>

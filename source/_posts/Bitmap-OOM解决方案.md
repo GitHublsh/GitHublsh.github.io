@@ -18,7 +18,6 @@ tags: [内存优化]
      RGB_565:共16位，2字节。
      如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。
      
-    
 4. 通过设置Options.inSampleSize 对大图片进行压缩，可先设置Options.inJustDecodeBounds，获取Bitmap的外围数据，宽和高等。然后计算压缩比例，进行压缩。
 
 5. 设置Options.inPurgeable和inInputShareable：让系统能及时回收内存。

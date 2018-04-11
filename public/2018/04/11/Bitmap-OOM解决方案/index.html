@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/04/11/Bitmap-OOM解决方案/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Bitmap OOM常用解决方案  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。  在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。  通过设置Options.i">
-<meta property="og:updated_time" content="2018-04-11T11:33:35.000Z">
+<meta property="og:updated_time" content="2018-04-11T11:35:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bitmap OOM解决方案">
 <meta name="twitter:description" content="Bitmap OOM常用解决方案  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。  在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。  通过设置Options.i">
@@ -373,8 +373,6 @@
 </li>
 <li><p>通过设置Options.inPreferredConfig值来降低内存消耗：<br>  默认为ARGB_8888: 每个像素4字节. 共32位。<br>  Alpha_8: 只保存透明度，共8位，1字节。<br>  ARGB_4444: 共16位，2字节。<br>  RGB_565:共16位，2字节。<br>  如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。</p>
 </li>
-</ol>
-<ol>
 <li><p>通过设置Options.inSampleSize 对大图片进行压缩，可先设置Options.inJustDecodeBounds，获取Bitmap的外围数据，宽和高等。然后计算压缩比例，进行压缩。</p>
 </li>
 <li><p>设置Options.inPurgeable和inInputShareable：让系统能及时回收内存。</p>
