@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。">
+<meta name="description" content="Bitmap OOM常用解决方案 在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重">
 <meta name="keywords" content="内存优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bitmap OOM解决方案">
 <meta property="og:url" content="http://yoursite.com/2018/04/11/Bitmap-OOM解决方案/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。">
-<meta property="og:updated_time" content="2018-04-11T10:16:10.000Z">
+<meta property="og:description" content="Bitmap OOM常用解决方案 在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重">
+<meta property="og:updated_time" content="2018-04-11T10:21:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bitmap OOM解决方案">
-<meta name="twitter:description" content="在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。">
+<meta name="twitter:description" content="Bitmap OOM常用解决方案 在加载图片资源时，可采用以下一些方法来避免OOM的问题：  在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。   在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重">
 
 
 
@@ -365,7 +365,8 @@
       
 
       
-        <p>在加载图片资源时，可采用以下一些方法来避免OOM的问题：</p>
+        <h3 id="Bitmap-OOM常用解决方案"><a href="#Bitmap-OOM常用解决方案" class="headerlink" title="Bitmap OOM常用解决方案"></a>Bitmap OOM常用解决方案</h3><hr>
+<p>在加载图片资源时，可采用以下一些方法来避免OOM的问题：</p>
 <ol>
 <li>在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。</li>
 </ol>
@@ -373,7 +374,7 @@
 <li>在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。</li>
 </ol>
 <ol>
-<li>通过设置Options.inPreferredConfig值来降低内存消耗：<br>  默认为ARGB_8888: 每个像素4字节. 共32位。<br>  Alpha_8: 只保存透明度，共8位，1字节。<br>  ARGB_4444: 共16位，2字节。<br>  RGB_565:共16位，2字节。<br>  如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。</li>
+<li>通过设置Options.inPreferredConfig值来降低内存消耗：<br> 默认为ARGB_8888: 每个像素4字节. 共32位。<br> Alpha_8: 只保存透明度，共8位，1字节。<br> ARGB_4444: 共16位，2字节。<br> RGB_565:共16位，2字节。<br> 如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。</li>
 </ol>
 <ol>
 <li>通过设置Options.inSampleSize 对大图片进行压缩，可先设置Options.inJustDecodeBounds，获取Bitmap的外围数据，宽和高等。然后计算压缩比例，进行压缩。</li>
@@ -382,29 +383,31 @@
 <li><p>设置Options.inPurgeable和inInputShareable：让系统能及时回收内存。</p>
 <ul>
 <li><p>inPurgeable:</p>
-<pre><code>* 设置为True,则使用BitmapFactory创建的Bitmap用于存储Pixel的内存空间，在系统内存不足时可以被回收，当应用需要再次访问该Bitmap的Pixel时，系统会再次调用BitmapFactory 的decode方法重新生成Bitmap的Pixel数组。
-</code></pre></li>
+<ul>
+<li>设置为True,则使用BitmapFactory创建的Bitmap用于存储Pixel的内存空间，在系统内存不足时可以被回收，当应用需要再次访问该Bitmap的Pixel时，系统会再次调用BitmapFactory 的decode方法重新生成Bitmap的Pixel数组。</li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
-<pre><code>* 设置为False时，表示不能被回收。
-</code></pre><ul>
-<li>inInputShareable：设置是否深拷贝，与inPurgeable结合使用，inPurgeable为</li>
-</ul>
-<pre><code>* false，该参数无意义；
-* True,share  a reference to the input data(inputStream, array,etc) 。 False ：a deep copy。
+<pre><code>      * 设置为False时，表示不能被回收。
+
+
+* inInputShareable：设置是否深拷贝，与inPurgeable结合使用，inPurgeable为
+
+
+    * false，该参数无意义；
+    * True,share  a reference to the input data(inputStream, array,etc) 。 False ：a deep copy。
 </code></pre><ol>
 <li>使用decodeStream代替其他decodeResource,setImageResource,setImageBitmap等方法来加载图片。</li>
 </ol>
-<pre><code>区别： 
- decodeStream直接读取图片字节码，调用nativeDecodeAsset/nativeDecodeStream来完成decode。无需使用Java空间的一些额外处理过程，节省dalvik内存。但是由于直接读取字节码，没有处理过程，因此不会根据机器的各种分辨率来自动适应，需要在hdpi,mdpi和ldpi中分别配置相应的图片资源，否则在不同分辨率机器上都是同样的大小(像素点数量)，显示的实际大小不对。
- decodeResource会在读取完图片数据后，根据机器的分辨率，进行图片的适配处理，导致增大了很多dalvik内存消耗。
-
-  decodeStream调用过程：
-        decodeStream(InputStream,Rect,Options) -&gt; nativeDecodeAsset/nativeDecodeStream
-  decodeResource调用过程：即finishDecode之后，调用额外的Java层的createBitmap方法，消耗更多dalvik内存。
-        decodeResource(Resource,resId,Options)  -&gt; decodeResourceStream (设置Options的inDensity和inTargetDensity参数)  -&gt; decodeStream() (在完成Decode后，进行finishDecode操作)
-        finishDecode() -&gt; Bitmap.createScaleBitmap()(根据inDensity和inTargetDensity计算scale) -&gt; Bitmap.createBitmap()
+<p>区别：<br>decodeStream直接读取图片字节码，调用nativeDecodeAsset/nativeDecodeStream来完成decode。无需使用Java空间的一些额外处理过程，节省dalvik内存。但是由于直接读取字节码，没有处理过程，因此不会根据机器的各种分辨率来自动适应，需要在hdpi,mdpi和ldpi中分别配置相应的图片资源，否则在不同分辨率机器上都是同样的大小(像素点数量)，显示的实际大小不对。</p>
+<p>decodeResource会在读取完图片数据后，根据机器的分辨率，进行图片的适配处理，导致增大了很多dalvik内存消耗。</p>
+<pre><code>decodeStream调用过程：
+      decodeStream(InputStream,Rect,Options) -&gt; nativeDecodeAsset/nativeDecodeStream
+decodeResource调用过程：即finishDecode之后，调用额外的Java层的createBitmap方法，消耗更多dalvik内存。
+      decodeResource(Resource,resId,Options)  -&gt; decodeResourceStream (设置Options的inDensity和inTargetDensity参数)  -&gt; decodeStream() (在完成Decode后，进行finishDecode操作)
+      finishDecode() -&gt; Bitmap.createScaleBitmap()(根据inDensity和inTargetDensity计算scale) -&gt; Bitmap.createBitmap()
 </code></pre><p>以上方法的组合使用，合理避免OOM错误。</p>
 
       
@@ -531,8 +534,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -596,6 +608,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmap-OOM常用解决方案"><span class="nav-number">1.</span> <span class="nav-text">Bitmap OOM常用解决方案</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
