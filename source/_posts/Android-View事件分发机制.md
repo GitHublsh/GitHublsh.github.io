@@ -299,3 +299,4 @@ tags: [View事件分发机制]
 * View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用
 * View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。
 * 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View
+* 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。
