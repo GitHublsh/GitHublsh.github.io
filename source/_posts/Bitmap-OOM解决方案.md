@@ -25,13 +25,9 @@ tags: [内存优化]
    
  		* 设置为True,则使用BitmapFactory创建的Bitmap用于存储Pixel的内存空间，在系统内存不足时可以被回收，当应用需要再次访问该Bitmap的Pixel时，系统会再次调用BitmapFactory 的decode方法重新生成Bitmap的Pixel数组。
 
- 
    		* 设置为False时，表示不能被回收。
-
-   		
+   			
  	* inInputShareable：设置是否深拷贝，与inPurgeable结合使用，inPurgeable为
-
- 
  		* false，该参数无意义；
  		* True,share  a reference to the input data(inputStream, array,etc) 。 False ：a deep copy。
  		                               
