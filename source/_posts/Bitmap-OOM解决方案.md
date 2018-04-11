@@ -34,7 +34,7 @@ tags: [内存优化]
  
  		* false，该参数无意义；
  		* True,share  a reference to the input data(inputStream, array,etc) 。 False ：a deep copy。
-                                  
+ 		                               
 6. 使用decodeStream代替其他decodeResource,setImageResource,setImageBitmap等方法来加载图片。
      
      
