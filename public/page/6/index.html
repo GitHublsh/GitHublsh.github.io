@@ -284,6 +284,239 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/20/Android屏幕适配解决方案(1)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/20/Android屏幕适配解决方案(1)/" itemprop="url">Android屏幕适配解决方案(1)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-20T11:23:22+08:00">
+                2017-07-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/20/Android屏幕适配解决方案(1)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/20/Android屏幕适配解决方案(1)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="首先科普一下涉及到的概念"><a href="#首先科普一下涉及到的概念" class="headerlink" title="首先科普一下涉及到的概念"></a>首先科普一下涉及到的概念</h4><h5 id="屏幕尺寸定义："><a href="#屏幕尺寸定义：" class="headerlink" title="屏幕尺寸定义："></a>屏幕尺寸定义：</h5><p>屏幕对角线的尺寸，单位是英寸（1英寸=2.54cm）。</p>
+<p>屏幕尺寸分为物理尺寸和显示分辨率两个部分。物理尺寸是指屏幕的实际大小；屏幕分辨率即把LCD格数（单位是点[dot] ）除以屏幕面积得到的就是屏幕分辨率，这个指标是决定画面好坏的最大因素。</p>
+<h5 id="屏幕分辨率"><a href="#屏幕分辨率" class="headerlink" title="屏幕分辨率"></a>屏幕分辨率</h5><p>屏幕分辨率是指屏幕显示的分辨率。</p>
+<ul>
+<li><p>屏幕分辨率确定计算机屏幕上显示多少信息的设置，以水平和垂直像素来衡量。屏幕分辨率低时（例如 640 x 480），在屏幕上显示的像素少，但尺寸比较大。屏幕分辨率高时（例如 1600 x 1200），在屏幕上显示的像素多，但尺寸比较小。</p>
+</li>
+<li><p>显示分辨率就是屏幕上显示的像素个数，分辨率160×128的意思是水平方向含有像素数为160个，垂直方向像素数128个。屏幕尺寸一样的情况下，分辨率越高，显示效果就越精细和细腻。</p>
+</li>
+<li><p>单位：px（pixel），1px=1像素点</p>
+</li>
+<li><p>Android手机常见的分辨率：320x480、480x800、720x1280、1080x1920</p>
+</li>
+</ul>
+<h5 id="像素密度"><a href="#像素密度" class="headerlink" title="像素密度"></a>像素密度</h5><ul>
+<li>像素密度，即每英寸屏幕所拥有的像素数，像素密度越大，显示画面细节就越丰富。<br>　　像素密度=√{（长度像素数^2+宽度像素数^2）}/ 屏幕尺寸<br>　　注：屏幕尺寸单位为英寸 例：分辨率为1280*720 屏幕宽度为6英寸 计算所得像素密度约等于245
+　　</li>
+<li><p>单位：dpi（dots per ich），假设设备内每英寸有160个像素，那么该设备的屏幕像素密度=160dpi</p>
+</li>
+<li><p>安卓手机对于每类手机屏幕大小都有一个相应的屏幕像素密度：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>密度类型</th>
+<th>代表的分辨率（px)</th>
+<th>屏幕像素密度（dpi）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>低密度（ldpi）</td>
+<td>240x320</td>
+<td>120</td>
+</tr>
+<tr>
+<td>中密度（mdpi）</td>
+<td>320x480</td>
+<td>160</td>
+</tr>
+<tr>
+<td>高密度（hdpi）</td>
+<td>480x800</td>
+<td>240</td>
+</tr>
+<tr>
+<td>超高密度（xhdpi）</td>
+<td>720x1280</td>
+<td>320</td>
+</tr>
+<tr>
+<td>超超高密度（xxhdpi）</td>
+<td>1080x1920</td>
+<td>480</td>
+</tr>
+</tbody>
+</table>
+<h5 id="密度无关像素"><a href="#密度无关像素" class="headerlink" title="密度无关像素"></a>密度无关像素</h5><p>指一个抽象意义上的像素，程序用它来定义界面元素。它作为一个与实际密度无关的单位，帮助程序员构建一个布局方案（界面元素的宽度，高度，位置）。</p>
+<p>一个与密度无关的像素，在逻辑尺寸上，与一个位于像素密度为160DPI的屏幕上的像素是一致的，这也是Android平台所假定的默认显示设备。在运行的时候，平台会以目标屏幕的密度作为基准，“透明地”处理所有需要的DIP缩放操作。要把密度无关像素转换为屏幕像素，可以用这样一个简单的公式：pixels = dips * (density / 160)。举个例子，在DPI为240的屏幕上，1个DIP等于1.5个物理像素。我们强烈推荐你用DIP来定义你程序的界面布局，因为这样可以保证你的 UI在各种分辨率的屏幕上都可以正常显示。</p>
+<p> dip到pixel转化<br>Resources r = getResources();<br>float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());</p>
+<p>这样再绘图时候在不同分辨率下，pixel的值是不同的。</p>
+<h5 id="dp与px的转换"><a href="#dp与px的转换" class="headerlink" title="dp与px的转换"></a>dp与px的转换</h5><table>
+<thead>
+<tr>
+<th>密度类型</th>
+<th>代表的分辨率（px）</th>
+<th>屏幕密度（dpi）</th>
+<th>换算（px/dp）</th>
+<th>比例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>低密度（ldpi）</td>
+<td>240x320</td>
+<td>120</td>
+<td>1dp=0.75px</td>
+<td>3</td>
+</tr>
+<tr>
+<td>中密度（mdpi）</td>
+<td>320x480</td>
+<td>160</td>
+<td>1dp=1px</td>
+<td>4</td>
+</tr>
+<tr>
+<td>高密度（hdpi）</td>
+<td>480x800</td>
+<td>240</td>
+<td>1dp=1.5px</td>
+<td>6</td>
+</tr>
+<tr>
+<td>超高密度（xhdpi）</td>
+<td>720x1280</td>
+<td>320</td>
+<td>1dp=2px</td>
+<td>8</td>
+</tr>
+<tr>
+<td>超超高密度（xxhdpi)</td>
+<td>1080x1920</td>
+<td>480</td>
+<td>1dp=3px</td>
+<td>12</td>
+</tr>
+</tbody>
+</table>
+<p>使得某一元素在Android不同尺寸、不同分辨率的手机上具备相同的显示效果;使得布局、布局组件自适应屏幕尺寸；<br>根据屏幕的配置来加载相应的UI布局、用户界面流程</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/19/设计模式之路（4）装饰者模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -887,151 +1120,6 @@ audi.drive();
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/14/Bugsnag-监控应用程序错误，以改善客户体验和代码质量/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/14/Bugsnag-监控应用程序错误，以改善客户体验和代码质量/" itemprop="url">Bugsnag:监控应用程序错误，以改善客户体验和代码质量</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-14T10:48:23+08:00">
-                2017-07-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/14/Bugsnag-监控应用程序错误，以改善客户体验和代码质量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/14/Bugsnag-监控应用程序错误，以改善客户体验和代码质量/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Bugsnag-exception-reporter-for-Android"><a href="#Bugsnag-exception-reporter-for-Android" class="headerlink" title="Bugsnag exception reporter for Android"></a>Bugsnag exception reporter for Android</h2><p><img src="http://ot29getcp.bkt.clouddn.com
-/images/bugsnag.png" alt="“getstart”"> </p>
-<p>Bugsnag的Android崩溃报告库会自动检测Android应用程序中的崩溃，收集诊断信息，并立即通知您的开发团队，帮助您尽快了解和解决问题。</p>
-<h3 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h3><ul>
-<li>自动报告未处理的异常和崩溃</li>
-<li>报告处理异常</li>
-<li>记录附加到崩溃报告的日志和添加对用户操作的洞察</li>
-<li>附上用户信息来确定多少人受到崩溃的影响</li>
-</ul>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><ol>
-<li>创建Bugsnag账号</li>
-<li>完成集成指南的说明来报告从你的应用程序中抛出的未处理的异常</li>
-<li>使用 Bugsnag.notify 来报告已处理的异常</li>
-<li>使用 configuration options 来自定义集成</li>
-</ol>
-<h3 id="支持"><a href="#支持" class="headerlink" title="支持"></a>支持</h3><ul>
-<li>阅读集成指南或者配置文件选项</li>
-<li>查询已开启或已关闭的类似问题</li>
-<li>报告错误或请求功能</li>
-</ul>
-<p>Github : <a><a href="https://github.com/bugsnag/bugsnag-android#features" target="_blank" rel="external">https://github.com/bugsnag/bugsnag-android#features</a></a></p>
-<p>Bugsnag官网：<a><a href="https://app.bugsnag.com/accounts/sf-1/welcome" target="_blank" rel="external">https://app.bugsnag.com/accounts/sf-1/welcome</a></a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1081,7 +1169,7 @@ audi.drive();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1094,7 +1182,7 @@ audi.drive();
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
