@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/10/11/Android-View事件分发机制/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
-<meta property="og:updated_time" content="2017-12-30T06:19:40.000Z">
+<meta property="og:updated_time" content="2018-04-11T09:59:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View事件分发机制">
 <meta name="twitter:description" content="一、点击事件的传递规则   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。  MotionEvent 常见的动作： 常见的动作常量：  public static final int ACTION_DOWN = 0;单点触摸动作  public static final int ACTION_UP = 1;单点触摸离开动作  public static final int A">
@@ -425,6 +425,233 @@
 <pre><code>* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     
 </code></pre></li>
 </ul>
+<pre><code>* 首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了
+
+* 如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件
+
+
+经典的伪代码如上。
+</code></pre><ol>
+<li><p>同一次点击事件只能被一个 View 消费</p>
+<p>安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
+</li>
+</ol>
+<p>借用GcsSloop源码分析：</p>
+<pre><code>public boolean dispatchTouchEvent(MotionEvent ev) {
+      // 调试用
+    if (mInputEventConsistencyVerifier != null) {
+        mInputEventConsistencyVerifier.onTouchEvent(ev, 1);
+    }
+
+      // 判断事件是否是针对可访问的焦点视图(很晚才添加的内容，个人猜测和屏幕辅助相关，方便盲人等使用设备)
+    if (ev.isTargetAccessibilityFocus() &amp;&amp; isAccessibilityFocusedViewOrHost()) {
+        ev.setTargetAccessibilityFocus(false);
+    }
+
+    boolean handled = false;
+    if (onFilterTouchEventForSecurity(ev)) {
+        final int action = ev.getAction();
+        final int actionMasked = action &amp; MotionEvent.ACTION_MASK;
+
+        // 处理第一次ACTION_DOWN.
+        if (actionMasked == MotionEvent.ACTION_DOWN) {
+            // 清除之前所有的状态
+            cancelAndClearTouchTargets(ev);
+            resetTouchState();
+        }
+
+        // 检查是否需要拦截.
+        final boolean intercepted;
+        if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null) {
+            final boolean disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != 0;
+            if (!disallowIntercept) {
+                intercepted = onInterceptTouchEvent(ev);    // 询问是否拦截
+                ev.setAction(action);                         // 恢复操作，防止被更改
+            } else {
+                intercepted = false;
+            }
+        } else {
+              // 没有目标来处理该事件，而且也不是一个新的事件事件(ACTION_DOWN), 进行拦截。
+            intercepted = true;
+        }
+
+          // 判断事件是否是针对可访问的焦点视图
+        if (intercepted || mFirstTouchTarget != null) {
+            ev.setTargetAccessibilityFocus(false);
+        }
+
+        // 检查事件是否被取消(ACTION_CANCEL).
+        final boolean canceled = resetCancelNextUpFlag(this)
+                || actionMasked == MotionEvent.ACTION_CANCEL;
+
+        final boolean split = (mGroupFlags &amp; FLAG_SPLIT_MOTION_EVENTS) != 0;
+        TouchTarget newTouchTarget = null;
+        boolean alreadyDispatchedToNewTouchTarget = false;
+
+          // 如果没有取消也没有被拦截    (进入事件分发)
+        if (!canceled &amp;&amp; !intercepted) {
+
+            // 如果事件是针对可访问性焦点视图，我们将其提供给具有可访问性焦点的视图。
+              // 如果它不处理它，我们清除该标志并像往常一样将事件分派给所有的 ChildView。 
+            // 我们检测并避免保持这种状态，因为这些事非常罕见。
+            View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()
+                    ? findChildWithAccessibilityFocus() : null;
+
+            if (actionMasked == MotionEvent.ACTION_DOWN
+                    || (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_DOWN)
+                    || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+                final int actionIndex = ev.getActionIndex();
+                final int idBitsToAssign = split ? 1 &lt;&lt; ev.getPointerId(actionIndex)
+                        : TouchTarget.ALL_POINTER_IDS;
+
+                // 清除此指针ID的早期触摸目标，防止不同步。
+                removePointersFromTouchTargets(idBitsToAssign);
+
+                final int childrenCount = mChildrenCount;
+                if (newTouchTarget == null &amp;&amp; childrenCount != 0) {
+                    final float x = ev.getX(actionIndex);    // 获取触摸位置坐标
+                    final float y = ev.getY(actionIndex);
+                    // 查找可以接受事件的 ChildView
+                    final ArrayList&lt;View&gt; preorderedList = buildOrderedChildList();
+                    final boolean customOrder = preorderedList == null
+                            &amp;&amp; isChildrenDrawingOrderEnabled();
+                    final View[] children = mChildren;
+                      // ▼注意，从最后向前扫描
+                    for (int i = childrenCount - 1; i &gt;= 0; i--) {
+                        final int childIndex = customOrder
+                                ? getChildDrawingOrder(childrenCount, i) : i;
+                        final View child = (preorderedList == null)
+                                ? children[childIndex] : preorderedList.get(childIndex);
+
+                        // 如果有一个视图具有可访问性焦点，我们希望它首先获取事件，
+                          // 如果不处理，我们将执行正常的分派。 
+                          // 尽管这可能会分发两次，但它能保证在给定的时间内更安全的执行。
+                        if (childWithAccessibilityFocus != null) {
+                            if (childWithAccessibilityFocus != child) {
+                                continue;
+                            }
+                            childWithAccessibilityFocus = null;
+                            i = childrenCount - 1;
+                        }
+
+                          // 检查View是否允许接受事件(即处于显示状态(VISIBLE)或者正在播放动画)
+                          // 检查触摸位置是否在View区域内
+                        if (!canViewReceivePointerEvents(child)
+                                || !isTransformedTouchPointInView(x, y, child, null)) {
+                            ev.setTargetAccessibilityFocus(false);
+                            continue;
+                        }
+
+                          // getTouchTarget 中判断了 child 是否包含在 mFirstTouchTarget 中
+                          // 如果有返回 target，如果没有返回 null 
+                        newTouchTarget = getTouchTarget(child);
+                        if (newTouchTarget != null) {
+                            // ChildView 已经准备好接受在其区域内的事件。
+                            newTouchTarget.pointerIdBits |= idBitsToAssign;
+                            break;    // ◀︎已经找到目标View，跳出循环
+                        }
+
+                        resetCancelNextUpFlag(child);
+                        if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) {
+                            mLastTouchDownTime = ev.getDownTime();
+                            if (preorderedList != null) {
+                                for (int j = 0; j &lt; childrenCount; j++) {
+                                    if (children[childIndex] == mChildren[j]) {
+                                        mLastTouchDownIndex = j;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                mLastTouchDownIndex = childIndex;
+                            }
+                            mLastTouchDownX = ev.getX();
+                            mLastTouchDownY = ev.getY();
+                            newTouchTarget = addTouchTarget(child, idBitsToAssign);
+                            alreadyDispatchedToNewTouchTarget = true;
+                            break;
+                        }
+
+                        ev.setTargetAccessibilityFocus(false);
+                    }
+                    if (preorderedList != null) preorderedList.clear();
+                }
+
+                if (newTouchTarget == null &amp;&amp; mFirstTouchTarget != null) {
+                    // 没有找到 ChildView 接收事件
+                    newTouchTarget = mFirstTouchTarget;
+                    while (newTouchTarget.next != null) {
+                        newTouchTarget = newTouchTarget.next;
+                    }
+                    newTouchTarget.pointerIdBits |= idBitsToAssign;
+                }
+            }
+        }
+
+        // 分发 TouchTarget
+        if (mFirstTouchTarget == null) {
+            // 没有 TouchTarget，将当前 ViewGroup 当作普通的 View 处理。
+            handled = dispatchTransformedTouchEvent(ev, canceled, null,
+                    TouchTarget.ALL_POINTER_IDS);
+        } else {
+            // 分发TouchTarget，如果我们已经分发过，则避免分配给新的目标。 
+              // 如有必要，取消分发。
+            TouchTarget predecessor = null;
+            TouchTarget target = mFirstTouchTarget;
+            while (target != null) {
+                final TouchTarget next = target.next;
+                if (alreadyDispatchedToNewTouchTarget &amp;&amp; target == newTouchTarget) {
+                    handled = true;
+                } else {
+                    final boolean cancelChild = resetCancelNextUpFlag(target.child)
+                            || intercepted;
+                    if (dispatchTransformedTouchEvent(ev, cancelChild,
+                            target.child, target.pointerIdBits)) {
+                        handled = true;
+                    }
+                    if (cancelChild) {
+                        if (predecessor == null) {
+                            mFirstTouchTarget = next;
+                        } else {
+                            predecessor.next = next;
+                        }
+                        target.recycle();
+                        target = next;
+                        continue;
+                    }
+                }
+                predecessor = target;
+                target = next;
+            }
+        }
+
+        // 如果需要，更新指针的触摸目标列表或取消。
+        if (canceled
+                || actionMasked == MotionEvent.ACTION_UP
+                || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+            resetTouchState();
+        } else if (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_UP) {
+            final int actionIndex = ev.getActionIndex();
+            final int idBitsToRemove = 1 &lt;&lt; ev.getPointerId(actionIndex);
+            removePointersFromTouchTargets(idBitsToRemove);
+        }
+    }
+
+    if (!handled &amp;&amp; mInputEventConsistencyVerifier != null) {
+        mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);
+    }
+    return handled;
+}
+</code></pre><h3 id="二、小结"><a href="#二、小结" class="headerlink" title="二、小结"></a>二、小结</h3><ul>
+<li>同一个事件是从DOWN开始到UP结束的</li>
+<li>一个事件最终只能由一个View拦截和消费掉</li>
+<li>某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了</li>
+<li>如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。</li>
+<li>ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false</li>
+<li>事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。</li>
+<li>View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用</li>
+<li>View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。</li>
+<li>事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View</li>
+</ul>
 
       
     </div>
@@ -638,7 +865,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、点击事件的传递规则"><span class="nav-number">1.</span> <span class="nav-text">一、点击事件的传递规则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、点击事件的传递规则"><span class="nav-number">1.</span> <span class="nav-text">一、点击事件的传递规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、小结"><span class="nav-number">2.</span> <span class="nav-text">二、小结</span></a></li></ol></div>
             
 
           </div>
