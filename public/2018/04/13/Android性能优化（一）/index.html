@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/04/13/Android性能优化（一）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="布局优化主要的思想就一点：减少布局的层级 常用的优化方式有三种： 一、\标签\标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。 举个例子： &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt; &amp;lt;LinearLayout xmlns:android=&amp;quot;http://schemas">
-<meta property="og:updated_time" content="2018-04-13T07:23:18.000Z">
+<meta property="og:updated_time" content="2018-04-13T07:26:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android性能优化（一）布局优化">
 <meta name="twitter:description" content="布局优化主要的思想就一点：减少布局的层级 常用的优化方式有三种： 一、\标签\标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。 举个例子： &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt; &amp;lt;LinearLayout xmlns:android=&amp;quot;http://schemas">
@@ -367,7 +367,7 @@
       
         <p>布局优化主要的思想就一点：减少布局的层级</p>
 <p>常用的优化方式有三种：</p>
-<h4 id="一、-标签"><a href="#一、-标签" class="headerlink" title="一、\标签"></a>一、\<include>标签</include></h4><p>\<include>标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。</include></p>
+<h4 id="一、-标签"><a href="#一、-标签" class="headerlink" title="一、\标签"></a>一、\<include\>标签</include\></h4><p>\<include\>标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。</include\></p>
 <p>举个例子：</p>
 <pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
@@ -392,14 +392,14 @@
     android:background=&quot;@color/comm_color18&quot;
     /&gt;
 </code></pre><p>需要注意的是，include标签仅支持layout开头的属性；当在include的布局中指定了id,在当前的布局文件中也指定了id,那么是以include中指定的id为准的。</p>
-<h4 id="二、-标签"><a href="#二、-标签" class="headerlink" title="二、\标签"></a>二、\<merge>标签</merge></h4><p>\<merge>标签，一般是和<include>标签配合使用的，举个例子：</include></merge></p>
+<h4 id="二、-标签"><a href="#二、-标签" class="headerlink" title="二、\标签"></a>二、\<merge\>标签</merge\></h4><p>\<merge\>标签，一般是和<include>标签配合使用的，举个例子：</include></merge\></p>
 <pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;merge&gt;
 
     &lt;View style=&quot;@style/Comm.Divider.Horizontal&quot; /&gt;
 &lt;/merge&gt;
 </code></pre><p>使用场景也很好理解，如果当前布局是LinearLayout，被包含的布局也是LinearLayout,那么就可以使用<merge>标签，这样做就减少了布局的层级了。</merge></p>
-<h4 id="三、-标签"><a href="#三、-标签" class="headerlink" title="三、 \标签"></a>三、 \<viewstub>标签</viewstub></h4><p>\<viewstub>标签，ViewStub继承自View,标签最大的特点就是当你需要的时候才会加载，但并不会影响UI初始化的性能。各种不常用的布局文件如进度条、显示错误信息等可以使用<viewstub>标签以减少内存使用量，加快渲染速度。<viewstub>标签是一个不可见的，大小为0的View。所以不会参与任何布局和绘制。</viewstub></viewstub></viewstub></p>
+<h4 id="三、-标签"><a href="#三、-标签" class="headerlink" title="三、 \标签"></a>三、 \<viewstub\>标签</viewstub\></h4><p>\<viewstub\>标签，ViewStub继承自View,标签最大的特点就是当你需要的时候才会加载，但并不会影响UI初始化的性能。各种不常用的布局文件如进度条、显示错误信息等可以使用<viewstub>标签以减少内存使用量，加快渲染速度。<viewstub>标签是一个不可见的，大小为0的View。所以不会参与任何布局和绘制。</viewstub></viewstub></viewstub\></p>
 <p>在需要使用的时候再去加载显示，这样就提高了程序初始的性能了。</p>
 <p>举个例子：</p>
 <pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  
