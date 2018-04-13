@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ADB," />
+  <meta name="keywords" content="Android性能优化," />
 
 
 
@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
-<meta name="keywords" content="ADB">
+<meta name="description" content="布局优化主要的思想就一点：减少布局的层级 常用的优化方式有三种： 一、\标签\标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。 举个例子： &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt; &amp;lt;LinearLayout xmlns:android=&amp;quot;http://schemas">
+<meta name="keywords" content="Android性能优化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ADB常用命令备忘录">
-<meta property="og:url" content="http://yoursite.com/2016/09/02/ADB常用命令备忘录/index.html">
+<meta property="og:title" content="Android性能优化（一）布局优化">
+<meta property="og:url" content="http://yoursite.com/2018/04/13/Android性能优化（一）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
-<meta property="og:updated_time" content="2017-09-14T13:43:51.000Z">
+<meta property="og:description" content="布局优化主要的思想就一点：减少布局的层级 常用的优化方式有三种： 一、\标签\标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。 举个例子： &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt; &amp;lt;LinearLayout xmlns:android=&amp;quot;http://schemas">
+<meta property="og:updated_time" content="2018-04-13T07:23:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ADB常用命令备忘录">
-<meta name="twitter:description" content="adb start-server    启动服务  adb kill-server    关闭服务  adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）  adb install xxx.apk    将应用安装进设备中  adb uninstall &amp;lt;包名&amp;gt;    卸载应用  adb -s &amp;lt;设备名&amp;gt; &amp;lt;命令&amp;gt;    如果有多">
+<meta name="twitter:title" content="Android性能优化（一）布局优化">
+<meta name="twitter:description" content="布局优化主要的思想就一点：减少布局的层级 常用的优化方式有三种： 一、\标签\标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。 举个例子： &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;utf-8&amp;quot;?&amp;gt; &amp;lt;LinearLayout xmlns:android=&amp;quot;http://schemas">
 
 
 
@@ -149,13 +149,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/09/02/ADB常用命令备忘录/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/13/Android性能优化（一）/"/>
 
 
 
 
 
-  <title>ADB常用命令备忘录 | Neil's blog</title>
+  <title>Android性能优化（一）布局优化 | Neil's blog</title>
   
 
 
@@ -284,7 +284,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/02/ADB常用命令备忘录/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Android性能优化（一）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -301,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ADB常用命令备忘录</h1>
+          <h1 class="post-title" itemprop="name headline">Android性能优化（一）布局优化</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-02T23:27:48+08:00">
-                2016-09-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T14:57:40+08:00">
+                2018-04-13
               </time>
             
 
@@ -333,8 +333,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/09/02/ADB常用命令备忘录/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/09/02/ADB常用命令备忘录/" itemprop="commentsCount"></span>
+                <a href="/2018/04/13/Android性能优化（一）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/04/13/Android性能优化（一）/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -365,43 +365,80 @@
       
 
       
-        <ul>
-<li><p>adb start-server    启动服务</p>
-</li>
-<li><p>adb kill-server    关闭服务</p>
-</li>
-<li><p>adb devices    显示当前连接的所有设备（如果服务没有开启会自动开启）</p>
-</li>
-<li><p>adb install xxx.apk    将应用安装进设备中</p>
-</li>
-<li><p>adb uninstall &lt;包名&gt;    卸载应用</p>
-</li>
-<li><p>adb -s &lt;设备名&gt; &lt;命令&gt;    如果有多个设备，指定某一个设备进行操作</p>
-</li>
-<li><p>adb pull &lt;手机文件&gt; &lt;电脑文件&gt;    将手机内文件导入到电脑上(文件名均为全称)</p>
-</li>
-<li><p>adb push &lt;电脑文件&gt; &lt;手机文件&gt;    将电脑中文件推送到手机上(文件名均为全称)</p>
-</li>
-<li><p>adb shell    进入手机命令行终端</p>
-</li>
-<li><p>adb logcat  打印 Android 的系统日志</p>
-</li>
-<li><p>adb logcat | grep MyApp 匹配字符串过滤</p>
-</li>
-<li><p>adb logcat | grep -i myapp 忽略大小写通过字符串过滤</p>
-</li>
-<li><p>adb bugreport , 打印dumpsys、dumpstate、logcat的输出，也是用于分析错误</p>
-</li>
-<li><p>adb bugreport &gt; d:\bugreport.log  输出比较多，建议重定向到一个文件中</p>
-</li>
-<li><p>adb shell pm list package    不带任何选项：列出所有的应用的包名（不知道怎么找应用的包名的同学看这里）</p>
-</li>
-<li><p>adb shell pm list package -3    列出第三方应用    -s：列出系统应用    命令最后增加 FILTER：过滤关键字，可以很方便地查找自己想要的应用</p>
-</li>
-</ul>
+        <p>布局优化主要的思想就一点：减少布局的层级</p>
+<p>常用的优化方式有三种：</p>
+<h4 id="一、-标签"><a href="#一、-标签" class="headerlink" title="一、\标签"></a>一、\<include>标签</include></h4><p>\<include>标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。</include></p>
+<p>举个例子：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:orientation=&quot;vertical&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+
+    &lt;include layout=&quot;@layout/include_comm_new_topbar_header&quot;/&gt;
+
+    &lt;android.support.v7.widget.RecyclerView
+        android:id=&quot;@+id/courier_recycle_change_record&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;match_parent&quot; /&gt;
+&lt;/LinearLayout&gt;
+</code></pre><p>引用的部分，</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+
+&lt;ComTopBarNew xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:id=&quot;@+id/toolBar&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;@dimen/com_toolbar_height&quot;
+    android:background=&quot;@color/comm_color18&quot;
+    /&gt;
+</code></pre><p>需要注意的是，include标签仅支持layout开头的属性；当在include的布局中指定了id,在当前的布局文件中也指定了id,那么是以include中指定的id为准的。</p>
+<h4 id="二、-标签"><a href="#二、-标签" class="headerlink" title="二、\标签"></a>二、\<merge>标签</merge></h4><p>\<merge>标签，一般是和<include>标签配合使用的，举个例子：</include></merge></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;merge&gt;
+
+    &lt;View style=&quot;@style/Comm.Divider.Horizontal&quot; /&gt;
+&lt;/merge&gt;
+</code></pre><p>使用场景也很好理解，如果当前布局是LinearLayout，被包含的布局也是LinearLayout,那么就可以使用<merge>标签，这样做就减少了布局的层级了。</merge></p>
+<h4 id="三、-标签"><a href="#三、-标签" class="headerlink" title="三、 \标签"></a>三、 \<viewstub>标签</viewstub></h4><p>\<viewstub>标签，ViewStub继承自View,标签最大的特点就是当你需要的时候才会加载，但并不会影响UI初始化的性能。各种不常用的布局文件如进度条、显示错误信息等可以使用<viewstub>标签以减少内存使用量，加快渲染速度。<viewstub>标签是一个不可见的，大小为0的View。所以不会参与任何布局和绘制。</viewstub></viewstub></viewstub></p>
+<p>在需要使用的时候再去加载显示，这样就提高了程序初始的性能了。</p>
+<p>举个例子：</p>
+<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;  
+    android:layout_width=&quot;match_parent&quot;  
+    android:layout_height=&quot;match_parent&quot;  
+    android:orientation=&quot;vertical&quot;  
+    tools:context=&quot;.MainActivity&quot;&gt;  
+
+    &lt;Button  
+        android:id=&quot;@+id/btn_show&quot;  
+        android:layout_width=&quot;wrap_content&quot;  
+        android:layout_height=&quot;wrap_content&quot;  
+        android:text=&quot;Show&quot;/&gt;  
+    &lt;Button  
+        android:id=&quot;@+id/btn_gone&quot;  
+        android:layout_width=&quot;wrap_content&quot;  
+        android:layout_height=&quot;wrap_content&quot;  
+        android:text=&quot;GONE&quot;/&gt;  
+
+    &lt;LinearLayout  
+        android:layout_width=&quot;wrap_content&quot;  
+        android:layout_height=&quot;wrap_content&quot;&gt;  
+    &lt;ViewStub  
+        android:id=&quot;@+id/viewstub&quot;  
+        android:layout_width=&quot;wrap_content&quot;  
+        android:layout_height=&quot;wrap_content&quot;  
+        android:layout=&quot;@layout/view&quot;/&gt;  
+    &lt;/LinearLayout&gt;  
+
+&lt;/LinearLayout&gt; 
+</code></pre><p>在需要展示的时候，在设置显示出来，即按需加载。ViewStub是一个轻量级的View，它一个看不见的，不占布局位置，占用资源非常小的控件。可以为ViewStub指定一个布局，在Inflate布局的时候，只有ViewStub会被初始化，然后当ViewStub被设置为可见的时候，或是调用了ViewStub.inflate()的时候，ViewStub所向的布局就会被Inflate和实例化，然后ViewStub的布局属性都会传给它所指向的布局。这样，就可以使用ViewStub来方便的在运行时，要还是不要显示某个布局。</p>
+<p>那么如何加载？</p>
+<p>两种方式：</p>
 <ul>
-<li>logcat | grep ActivityManager :查看当前运行的Activity</li>
-<li>adb shell dumpsys activity activities | grep “Run”:查看当前运行的Activity </li>
+<li><p>stub.setVisibility(View.VISIBLE); </p>
+</li>
+<li><p>stub.inflate();</p>
+</li>
 </ul>
 
       
@@ -458,7 +495,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ADB/" rel="tag"># ADB</a>
+            <a href="/tags/Android性能优化/" rel="tag"># Android性能优化</a>
           
         </div>
       
@@ -471,8 +508,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/01/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/04/11/Bitmap-OOM解决方案/" rel="next" title="Bitmap OOM解决方案">
+                <i class="fa fa-chevron-left"></i> Bitmap OOM解决方案
               </a>
             
           </div>
@@ -480,10 +517,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/04/MarkDown语法/" rel="prev" title="MarkDown语法">
-                MarkDown语法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -532,8 +565,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -597,6 +639,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、-标签"><span class="nav-number">1.</span> <span class="nav-text">一、\标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、-标签"><span class="nav-number">2.</span> <span class="nav-text">二、\标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、-标签"><span class="nav-number">3.</span> <span class="nav-text">三、 \标签</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -758,7 +816,7 @@
 		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2016/09/02/ADB常用命令备忘录/"});
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2018/04/13/Android性能优化（一）/"});
 		
 
 		(function() {
