@@ -284,6 +284,149 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/设计模式之路（2）单一职责原则/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/18/设计模式之路（2）单一职责原则/" itemprop="url">设计模式之路（2）单一职责原则</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T15:06:41+08:00">
+                2017-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/18/设计模式之路（2）单一职责原则/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/18/设计模式之路（2）单一职责原则/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、单一职责原则基本定义"><a href="#一、单一职责原则基本定义" class="headerlink" title="一、单一职责原则基本定义"></a>一、单一职责原则基本定义</h3><p>Single Responsibility Principle，缩写是SRP。</p>
+<p>定义：There should never be more than one reason for a class to change.</p>
+<p>即单一职责原则是最简单的面向对象设计原则，它用于控制类的粒度大小。</p>
+<p>单一职责原则定义如下： 单一职责原则(Single Responsibility Principle, SRP)：一个类只负责一个功能领域中的相应职责，或者可以定义为：就一个类而言，应该只有一个引起它变化的原因。</p>
+<h3 id="二、由来"><a href="#二、由来" class="headerlink" title="二、由来"></a>二、由来</h3><p>SRP这一概念，由Robot C. Martin在其广泛流行的经典著作《Agile Software Development, Principles, Patterns, and Practices》中的面向对象设计原则部分引入。此原则有两个约束：</p>
+<ul>
+<li><p>职责：什么是职责？我之前认为是一个类要实现的功能，或者提供的服务，从面向对象的角度说是内聚性。从这个角度去理解也可以，但是，功能的大小怎么定义是个难题，什么样的功能放在一起是好的内聚也不好定义。我们知道，面向对象设计更多考虑变化因素可能导致系统的改变，从而提供更灵活应变的设计。所以Robert C. Martin从变化这个角度对职责的定义为：“变化的原因（a reason for change）”，理解为，如果你能想到多于一个的动机去改变一个类，那么这个类就具有多于一个的职责。</p>
+</li>
+<li><p>单一：只有一个引起类改变的原因</p>
+</li>
+</ul>
+<p>在Martin的书中分析单一职责带来的好处是：</p>
+<ul>
+<li>可以分离变化</li>
+<li>减少改动</li>
+<li>减少不必要的依赖，从而在发生变化时减少设计所遭受的破坏。</li>
+</ul>
+<p>但更多的是从类和接口的角度去分析。然而SRP对每一个程序模块都是适用的，比如小到代码块，函数，大到包级别，组件级别。</p>
+<h3 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h3><p>  SRP是一把双刃剑，如果做到极端，没有合理的权衡，对于类来说就有可能形成爆炸。类爆炸的可能性有，职责没有划分清楚而形成过多的类；因为业务的需要，需求的复杂性带来的。不论其产生的原因，过多的类，如果没有好的组织方式，杂乱无章，势必带来维护的复杂性。所谓维护的复杂性，在于代码的可读性，以及重构的高成本。一种可行的解决方案就是利用模式来管理，定义清晰的层次结构。比如利用工厂，模板方法等等。</p>
+<p>总结起来，对于SRP，正如Robert C. Martin所说，是一起面向对象设计中最简单的原则之一，也是最难正确应用之一。它是其它原则的基础，比如OCP（Open for extension, Close for modification）。但是，万变不离其宗，本质是抽象变化，解除耦合，让设计出来的系统可读性好，可维护性好，可扩展性好。合理的职责划定带来清晰代码单元结构，如果设计不合理则适得其反，导致代码难以读懂，维护成本增加。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/17/设计模式之路（1）-简单工厂模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -994,242 +1137,6 @@ set.removeAll(delSet);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/19/HTTP需要知道的知识点-补充/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/19/HTTP需要知道的知识点-补充/" itemprop="url">HTTP需要知道的知识点-补充</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-19T19:33:52+08:00">
-                2016-11-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/11/19/HTTP需要知道的知识点-补充/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2016/11/19/HTTP需要知道的知识点-补充/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>一、HTTP协议</p>
-<ul>
-<li><p>1.1协议的作用及版本</p>
-<ul>
-<li>1.1.1HTTP是Hyper Text Transfer Protocol（超文本–html传输协议）。</li>
-<li>1.1.2HTTP协议的作用用户描述客户端与服务器间的数据传递的。</li>
-<li>1.1.3：Http协议的版本：<ul>
-<li>1.0：特点：每次请求服务器上的资源都要建立新的连接，响应完毕后都会关闭连接。是无状态的协议。</li>
-<li>1.1:特点：在一次TCP/IP连接的基础上可以发出多次请求和得到多次的响应。比1.0多了一些请求和响应头。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>1.2协议的组成</p>
-<ul>
-<li><p>1.2.1请求部分：</p>
-<pre><code>GET /App1/1.html HTTP/1.1
-Accept: */*
-Accept-Language: zh-cn
-Accept-Encoding: gzip, deflate
-User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)
-Host: localhost:8080
-Connection: Keep-Alive
-
-username=admin&amp;password=123
-</code></pre><p>请求部分由三部分组成的：<br>  请求行：位于第一行<br>  请求消息头：从第二行开始至第一个空行结束<br>  请求正文：从第一个空行之后的都是正文</p>
-</li>
-<li><p>1.2.2响应部分：</p>
-<pre><code>HTTP/1.1 200 OK
-Server: Apache-Coyote/1.1
-Accept-Ranges: bytes
-ETag: W/&quot;65-1366335797484&quot;
-Last-Modified: Fri, 19 Apr 2013 01:43:17 GMT
-Content-Type: text/html
-Content-Length: 65
-Date: Fri, 19 Apr 2013 02:06:23 GMT
-Warnning：w1
-Warnning: w2
-</code></pre></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>        响应部分由三部分组成的：
-
-        响应行：位于第一行
-
-        响应消息头：从第二行开始至第一个空行结束
-
-        响应正文：从第一个空行之后的都是正文
-
-* 1.3协议详细讲解
-
-    请求行：
-    GET /App1/1.html HTTP/1.1
-    GET：请求方式。默认的请求方式。其他常用的请求方式还有POST。
-    GET的特点：默认的请求方式。
-
-        /App1/c.html?username=sdsfds&amp;password=234324
-把表单的请求的数据放在了请求的URI的后面。?username=sdsfds&amp;password=234324
-这样不好:暴露数据；请求行长度有限。
-
-    POST的特点(经常使用的)：借助HTML中的form表单。&lt;form action=&quot;c.html&quot; method=&quot;post&quot;&gt;
-请求参数出现在正文部分。长度木有限制。相对安全。
-</code></pre><h3 id="二、HTTP-1-1：客户端使用的协议的版本"><a href="#二、HTTP-1-1：客户端使用的协议的版本" class="headerlink" title="二、HTTP/1.1：客户端使用的协议的版本"></a>二、HTTP/1.1：客户端使用的协议的版本</h3><ul>
-<li><p>响应行：HTTP/1.1 200 OK</p>
-<p>  HTTP/1.1：服务器用的协议版本</p>
-</li>
-<li><p>响应码：代表服务器处理的结果的一种表示</p>
-<pre><code>200：正常
-302/307：重定向
-304:服务器的资源没有被修改
-404：请求的资源不存在
-500：服务器报错了
-</code></pre></li>
-<li><p>OK：响应码描述</p>
-</li>
-<li><p>请求消息头：向服务器传递附加信息</p>
-<ul>
-<li>Accept:通知服务器，浏览器可以接受的MIME类型。（文件系统中用文件扩展名区分数据的类型。网络上用MIME类型来区分数据类型。Tomcat\conf\web.mxl）</li>
-<li>MIME类型名称：大类型/小类型</li>
-<li>Accept-Charset:通知服务器，浏览器支持的字符集</li>
-<li>Accept-Encoding:通知服务器，浏览器能够解码的数据压缩方式。比如：gzip</li>
-<li>Accept-language:通知服务器，所希望的语言</li>
-<li>Host：请求的主机和端口</li>
-<li>Referer：是一个URL地址。取值是当前页面之前的那个页面地址的。防盗链</li>
-<li>Content-Type:通知服务器，请求正文的MIME类型。</li>
-<li>取值：application/x-www-form-urlencoded默认值<br>对应的是form表单的enctype属性</li>
-<li>If-Modified-Since:通知服务器，缓存的文件的最后修改时间。</li>
-<li>User-Agent:通知服务器，浏览器类型.</li>
-<li>Content-Length:表示请求消息正文的长度 </li>
-<li>Connection:表示是否需要持久连接。如果服务器看到这里的值为“Keep -Alive”，或者看到请求使用的是HTTP 1.1（HTTP 1.1默认进行持久连接 </li>
-<li>Cookie:这是最重要的请求头信息之一（会话有关）<br>响应消息头：</li>
-<li>Location:通知客户端，指示新的资源的位置（结合302/307来用。请求重定向）<br>Server:通知客户端，服务器的类型</li>
-<li>Content-Encoding:通知客户端，响应正文的压缩编码方式。常用的是gzip。</li>
-<li>Content-Length：通知客户端响应正文的数据大小</li>
-<li>Content-Type:通知客户端响应正文的MIME类型</li>
-<li>Refresh：让浏览器自动刷新。取值为整数（刷新的时间间隔，单位是秒）</li>
-<li>Refresh:3</li>
-<li>Refresh:3;URL=其他资源的URI</li>
-<li>Content-Disposition：通知客户端，以下载的方式打开资源。</li>
-<li>Content-Disposition：attachment;filename=1.jpg</li>
-<li><p>Set-Cookie:SS=Q0=5Lb_nQ; path=/search服务器端发送的Cookie（会话有关）</p>
-</li>
-<li><p>Expires: -1             网页的有效时间。单位是毫秒</p>
-</li>
-<li>Cache-Control: no-cache (1.1)  </li>
-<li>Pragma: no-cache   (1.0)                               通知客户端不要缓存</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1279,7 +1186,7 @@ Warnning: w2
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1292,7 +1199,7 @@ Warnning: w2
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

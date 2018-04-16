@@ -284,6 +284,154 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/20/HashMap的实现原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/20/HashMap的实现原理/" itemprop="url">HashMap的实现原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T15:59:34+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/20/HashMap的实现原理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/03/20/HashMap的实现原理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="HashMap实现原理"><a href="#HashMap实现原理" class="headerlink" title="HashMap实现原理"></a>HashMap实现原理</h3><h4 id="HashMap简介"><a href="#HashMap简介" class="headerlink" title="HashMap简介"></a>HashMap简介</h4><p>HashMap 是一个散列表，允许使用空值和空键。存储的内容是键值对(key-value)映射</p>
+<p>HashMap 继承于AbstractMap，实现了Map、Cloneable、java.io.Serializable接口。<br>HashMap 的实现不是同步的，这意味着它不是线程安全的。它的key、value都可以为null。此外，HashMap中的映射不是有序的。</p>
+<p>HashMap 的实例有两个参数影响其性能：“初始容量” 和 “加载因子”。容量 是哈希表中桶的数量，初始容量 只是哈希表在创建时的容量。加载因子 是哈希表在其容量自动增加之前可以达到多满的一种尺度。当哈希表中的条目数超出了加载因子与当前容量的乘积时，则要对该哈希表进行 rehash 操作（即重建内部数据结构），从而哈希表将具有大约两倍的桶数。<br>通常，默认加载因子是 0.75, 这是在时间和空间成本上寻求一种折衷。加载因子过高虽然减少了空间开销，但同时也增加了查询成本（在大多数 HashMap 类的操作中，包括 get 和 put 操作，都反映了这一点）。在设置初始容量时应该考虑到映射中所需的条目数及其加载因子，以便最大限度地减少 rehash 操作次数。如果初始容量大于最大条目数除以加载因子，则不会发生 rehash 操作。</p>
+<h4 id="HashMap的数据结构"><a href="#HashMap的数据结构" class="headerlink" title="HashMap的数据结构"></a>HashMap的数据结构</h4><p>在 Java 编程语言中，最基本的结构就是两种，一个是数组，另外一个是指针（引用），HashMap 就是通过这两个数据结构进行实现。HashMap实际上是一个“链表散列”的数据结构，即数组和链表的结合体。</p>
+<p>HashMap 底层就是一个数组结构，数组中的每一项又是一个链表。当新建一个 HashMap 的时候，就会初始化一个数组。</p>
+<p>继承关系：</p>
+<pre><code>java.lang.Object
+   ↳     java.util.AbstractMap&lt;K, V&gt;
+         ↳     java.util.HashMap&lt;K, V&gt;
+
+public class HashMap&lt;K,V&gt;
+    extends AbstractMap&lt;K,V&gt;
+    implements Map&lt;K,V&gt;, Cloneable, Serializable { }
+</code></pre><h4 id="HashMap的构造函数"><a href="#HashMap的构造函数" class="headerlink" title="HashMap的构造函数"></a>HashMap的构造函数</h4><pre><code>// 默认构造函数。
+HashMap()
+
+// 指定“容量大小”的构造函数
+HashMap(int capacity)
+
+// 指定“容量大小”和“加载因子”的构造函数
+HashMap(int capacity, float loadFactor)
+
+// 包含“子Map”的构造函数
+HashMap(Map&lt;? extends K, ? extends V&gt; map)
+</code></pre><h4 id="HashMap的整体结构"><a href="#HashMap的整体结构" class="headerlink" title="HashMap的整体结构"></a>HashMap的整体结构</h4><p><img src="http://ot29getcp.bkt.clouddn.com//blog/hashmapbuild.png" alt="HashMap整体结构"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/13/Android常见内存泄漏及解决办法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1850,284 +1998,6 @@ public static Singleton getInstance() {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/PackageManager使用姿势/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/PackageManager使用姿势/" itemprop="url">PackageManager使用姿势</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T20:04:03+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/10/25/PackageManager使用姿势/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/10/25/PackageManager使用姿势/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>PackageManager它的主要职责是管理应用程序包。 通过PackageManager，我们就可以获取应用程序信息。</p>
-<h4 id="一、主要功能"><a href="#一、主要功能" class="headerlink" title="一、主要功能"></a>一、主要功能</h4><ol>
-<li>安装、卸载应用</li>
-<li>查询权限</li>
-<li>查询Application相关信息</li>
-</ol>
-<h4 id="二、常用方法"><a href="#二、常用方法" class="headerlink" title="二、常用方法"></a>二、常用方法</h4><p>1）、public abstract PackageInfo getPackageInfo(String packageName, int flags)根据包名获取对应的PackageInfo，注意，此处的flags标签：<br> GET_ACTIVITIES<br>GET_GIDS<br>GET_CONFIGURATIONS<br>GET_INSTRUMENTATION<br>GET_PERMISSIONS<br>GET_PROVIDERS<br>GET_RECEIVERS<br>GET_SERVICES<br>GET_SIGNATURES<br>GET_UNINSTALLED_PACKAGES<br>（2）、public abstract int[] getPackageGids(String packageName)，根据包名获取group-ids</p>
-<p>（3）、public abstract PermissionInfo getPermissionInfo(String name, int flags)，根据包名和指定的flags获取指定的授权信息</p>
-<p>（4）、public abstract List<permissiongroupinfo> getAllPermissionGroups(int flags);获取所以PermissGroup集合</permissiongroupinfo></p>
-<p>（5）、public abstract PermissionGroupInfo getPermissionGroupInfo(String name,<br>    int flags)根据指定的Group名称获取PermissionGroupInfo对象。</p>
-<p>（6）、public abstract ApplicationInfo getApplicationInfo(String packageName,<br>            int flags)，根据指定的包名获取ApplicationInfo信息。</p>
-<p>（7）、public abstract ActivityInfo getActivityInfo(ComponentName component,<br>            int flags)，根据指定的组件，获取ActivityInfo信息</p>
-<p>（8）、public abstract ServiceInfo getServiceInfo(ComponentName component,<br>            int flags)，根据指定组件获取ServiceInfo</p>
-<p>（9）、public abstract ProviderInfo getProviderInfo(ComponentName component,<br>            int flags)，根据指定组件名称获取ProviderInfo信息</p>
-<p>（10）、public abstract List<packageinfo> getInstalledPackages(int flags);获取所有安装的PackagInfo信息</packageinfo></p>
-<p>（11）、public abstract List<packageinfo> getPackagesHoldingPermissions(<br>            String[] permissions, int flags);获取具有特定权限的PackagInfo</packageinfo></p>
-<p>（12）、public abstract List<applicationinfo> getInstalledApplications(int flags);获取安装的ApplicationInfo信息</applicationinfo></p>
-<p>（13）、public abstract boolean addPermission(PermissionInfo info);添加权限</p>
-<p>（14）、public abstract void removePermission(String name);移除权限</p>
-<p>2、PackageInfo用于描述mainfest中所有描述信息。<br>常见字段：<br>（1）、public String packageName;包名<br>（2）、public String[] splitNames;<br>（3）、public int versionCode;版本号　　　　　<br>（4）、public String versionName;版本名称<br>（5）、public ApplicationInfo applicationInfo;<br>（6）、public long firstInstallTime;第一次安装时间<br>（7）、public long lastUpdateTime;上次更新时间<br>（8）、public ActivityInfo[] activities;所有的Activity信息<br>（9）、public ActivityInfo[] receivers; 所有的广播接收者<br>（10）、public ServiceInfo[] services;所有的服务信息<br>（11）、public ProviderInfo[] providers;获取ContentProvide<br>（12）、public PermissionInfo[] permissions;所有的权限信息</p>
-<h4 id="三、AndroidManifest文件结构"><a href="#三、AndroidManifest文件结构" class="headerlink" title="三、AndroidManifest文件结构"></a>三、AndroidManifest文件结构</h4><p>首先看一下AndroidManifest.xml文件结构。</p>
-<p>例如：</p>
-<pre><code>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    package=&quot;com.example.test&quot;&gt;
-
-&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;
-
-&lt;application
-    android:allowBackup=&quot;true&quot;
-    android:icon=&quot;@mipmap/ic_launcher&quot;
-    android:label=&quot;@string/app_name&quot;
-    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;
-    android:supportsRtl=&quot;true&quot;
-    android:theme=&quot;@style/AppTheme&quot;&gt;
-    &lt;activity android:name=&quot;.TestActivity&quot;&gt;
-        &lt;intent-filter&gt;
-            &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
-
-            &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
-        &lt;/intent-filter&gt;
-    &lt;/activity&gt;
-    &lt;service
-        android:name=&quot;testservice&quot;
-        android:enable=&quot;true&quot;
-        android:exproted=&quot;true&quot;&gt;
-        &lt;/service&gt;
-&lt;/application&gt;
-
-&lt;/manifest&gt;
-</code></pre><p>根据AndroidManifest的各个节点可以看出来其中的对应关系：</p>
-<pre><code>* 一个Package对应一个Application
-* 一个Application对应n个Activity、Service等等
-</code></pre><ul>
-<li>通过包名判断APP是否安装</li>
-<li>通过遍历获取AndroidManifest.xml文件信息</li>
-</ul>
-<h4 id="四、获取信息"><a href="#四、获取信息" class="headerlink" title="四、获取信息"></a>四、获取信息</h4><h5 id="1-ApplicationInfo类测试：获取Application节点信息"><a href="#1-ApplicationInfo类测试：获取Application节点信息" class="headerlink" title="1.ApplicationInfo类测试：获取Application节点信息"></a>1.ApplicationInfo类测试：获取Application节点信息</h5><ul>
-<li><p>示例：</p>
-<pre><code>ApplicationInfo applicationInfo = getApplicationInfo();  
- Log.d(&quot;lsh&quot;,applicationInfo.className + &quot;\n&quot; +  
-        applicationInfo.dataDir+&quot;\n&quot; +  
-        applicationInfo.permission + &quot;\n&quot;  
-        + applicationInfo.packageName + &quot;\n&quot;  
-        + applicationInfo.processName + &quot;\n&quot;  
-        + applicationInfo.taskAffinity + &quot;\n&quot;  
-);  
-</code></pre></li>
-</ul>
-<ul>
-<li><p>Logcat:</p>
-<pre><code>3402-3402/com.example.liushihan.glidedemo D/lsh: null                                                 
-    /data/data/com.example.liushihan.glidedemo
-    null
-     com.example.liushihan.glidedemo
-     com.example.liushihan.glidedemo
-     com.example.liushihan.glidedemo
-</code></pre></li>
-</ul>
-<h5 id="2-获取所有安装的Packages"><a href="#2-获取所有安装的Packages" class="headerlink" title="2. 获取所有安装的Packages"></a>2. 获取所有安装的Packages</h5><ul>
-<li><p>示例：</p>
-<pre><code>List&lt;PackageInfo&gt; listPack = getPackageManager().getInstalledPackages(PackageManager.GET_ACTIVITIES);
-</code></pre></li>
-</ul>
-<ul>
-<li><p>Logcat:<br>部分日志</p>
-<pre><code> D/lsh: PackageInfo{132b54a7 com.android.smoketest}
-com.example.liushihan.glidedemo D/lsh: PackageInfo{3d681d54 com.example.android.livecubes}
-com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.providers.telephony}
-</code></pre></li>
-</ul>
-<h5 id="3-获取指定应用的PackageInfo"><a href="#3-获取指定应用的PackageInfo" class="headerlink" title="3. 获取指定应用的PackageInfo"></a>3. 获取指定应用的PackageInfo</h5><ul>
-<li><p>示例：</p>
-<pre><code>PackageManager packageManager = getPackageManager();
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = packageManager.getPackageInfo(&quot;com.example.liushihan&quot;,
-                    PackageManager.GET_ACTIVITIES);
-            Log.d(&quot;lsh&quot;, packageInfo.packageName + &quot;\n&quot;
-                    + packageInfo.versionName + &quot;\n&quot;
-            );
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-</code></pre></li>
-</ul>
-<ul>
-<li><p>Logcat</p>
-<pre><code>D/lsh: com.example.liushihan.glidedemo
-                            1.0
-</code></pre></li>
-</ul>
-<h5 id="4-获取应用程序中的permission"><a href="#4-获取应用程序中的permission" class="headerlink" title="4. 获取应用程序中的permission"></a>4. 获取应用程序中的permission</h5><ul>
-<li><p>示例：</p>
-<pre><code>try {
-         PermissionInfo permissionInfo = getPackageManager().getPermissionInfo(&quot;android.permission.INTERNET&quot;,
-                 PermissionInfo.PROTECTION_NORMAL);
-         List&lt;PermissionGroupInfo&gt; list = getPackageManager().getAllPermissionGroups(PackageManager.PERMISSION_GRANTED);
-         Log.d(&quot;lsh&quot;,
-                 permissionInfo.group + &quot;\n&quot;
-                         + permissionInfo.packageName + &quot;\n&quot;
-                         + permissionInfo.name + &quot;\n&quot;
-                         + permissionInfo.flags + &quot;\n&quot;
-         );
-     } catch (PackageManager.NameNotFoundException e) {
-         e.printStackTrace();
-     }
-</code></pre></li>
-</ul>
-<ul>
-<li><p>Logcat:</p>
-<pre><code>D/lsh: android.permission-group.NETWORK
-                                  android
-                                  android.permission.INTERNET
-                                  0
-</code></pre></li>
-</ul>
-<h5 id="5-获取应用程序中执行的ActivityInfo"><a href="#5-获取应用程序中执行的ActivityInfo" class="headerlink" title="5. 获取应用程序中执行的ActivityInfo"></a>5. 获取应用程序中执行的ActivityInfo</h5><ul>
-<li>示例：</li>
-</ul>
-<pre><code>ComponentName componentName = new ComponentName(&quot;com.example.liushihan.glidedemo&quot;,&quot;com.example.liushihan.glidedemo.MainActivity&quot;);
-        try {
-            @SuppressLint(&quot;WrongConstant&quot;) ActivityInfo activityInfo = getPackageManager().getActivityInfo(componentName, PackageManager.GET_ACTIVITIES);
-            Log.d(&quot;lsh:activityInfo&quot;,activityInfo.name + &quot;\n&quot;
-                    + activityInfo.packageName +&quot;\n&quot;
-                    + activityInfo.targetActivity
-            );
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }  
-</code></pre><ul>
-<li>Logcat:</li>
-</ul>
-<pre><code>4829-4829/com.example.liushihan.glidedemo D/lsh:activityInfo: com.example.liushihan.glidedemo.MainActivity
-                                                                                 com.example.liushihan.glidedemo
-                                                                                 null
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2177,7 +2047,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2190,7 +2060,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
