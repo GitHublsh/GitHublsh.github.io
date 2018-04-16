@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="作为基础回顾~">
+<meta name="description" content="作为基础回顾~ 一、Activity的四种启动模式简介Activity是通过Activity栈来进行管理的。当一个Activity启动时，那么就会根据系统配置来将Activity压入栈中。当Back返回或销毁时,Activity出栈。 如果不指定Activity的启动模式，那么将以默认模式启动。如果要指定启动模式，在AndroidManifest中指定Activity的启动模式。例如： &amp;lt;a">
 <meta name="keywords" content="Activity">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Activity的四种启动模式">
 <meta property="og:url" content="http://yoursite.com/2018/04/15/Activity的四种启动模式/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="作为基础回顾~">
-<meta property="og:updated_time" content="2018-04-16T06:37:13.000Z">
+<meta property="og:description" content="作为基础回顾~ 一、Activity的四种启动模式简介Activity是通过Activity栈来进行管理的。当一个Activity启动时，那么就会根据系统配置来将Activity压入栈中。当Back返回或销毁时,Activity出栈。 如果不指定Activity的启动模式，那么将以默认模式启动。如果要指定启动模式，在AndroidManifest中指定Activity的启动模式。例如： &amp;lt;a">
+<meta property="og:updated_time" content="2018-04-16T07:14:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Activity的四种启动模式">
-<meta name="twitter:description" content="作为基础回顾~">
+<meta name="twitter:description" content="作为基础回顾~ 一、Activity的四种启动模式简介Activity是通过Activity栈来进行管理的。当一个Activity启动时，那么就会根据系统配置来将Activity压入栈中。当Back返回或销毁时,Activity出栈。 如果不指定Activity的启动模式，那么将以默认模式启动。如果要指定启动模式，在AndroidManifest中指定Activity的启动模式。例如： &amp;lt;a">
 
 
 
@@ -366,6 +366,32 @@
 
       
         <p>作为基础回顾~</p>
+<h4 id="一、Activity的四种启动模式简介"><a href="#一、Activity的四种启动模式简介" class="headerlink" title="一、Activity的四种启动模式简介"></a>一、Activity的四种启动模式简介</h4><p>Activity是通过Activity栈来进行管理的。当一个Activity启动时，那么就会根据系统配置来将Activity压入栈中。当Back返回或销毁时,Activity出栈。</p>
+<p>如果不指定Activity的启动模式，那么将以默认模式启动。如果要指定启动模式，在AndroidManifest中指定Activity的启动模式。例如：</p>
+<pre><code>&lt;activity android:name=&quot;com.app.TestActivity&quot; android:launchMode=&quot;standard&quot;&gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name=&quot;android.intent.action.MAIN&quot;/&gt;
+        &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot;/&gt;
+    &lt;/intent-filter&gt;
+&lt;/activity&gt;
+</code></pre><h4 id="二、四种模式详解"><a href="#二、四种模式详解" class="headerlink" title="二、四种模式详解"></a>二、四种模式详解</h4><ol>
+<li>standard</li>
+</ol>
+<p>standard,标准模式。是Activity的系统默认启动模式。每次启动一个Activity都会创建一个新的实例，不管该Activity的实例是否存在。</p>
+<ol>
+<li>singletop</li>
+</ol>
+<p>singletop,栈顶复用模式。这种模式下，如果启动的Activity就在栈顶，那么复用栈顶的Activity，并且调用onNewIntent()方法。通过这个方法，可以取到当前请求的数据。如果启动的Activity已存在，但是不在栈顶，那么就会重新创建新的实例。</p>
+<ol>
+<li>singletask</li>
+</ol>
+<p>singletask,栈内复用模式。在这种模式下，是单实例模式，在这种模式下，只要启动的Activity在任何一个任务栈中存在，就不会重新创建新的实例。和singletop一样，会调用onNewIntent方法。</p>
+<p>那么在启动的时候，先找有没有实例在Activity栈中，如果有那么就会将要启动的Activity置于栈顶，并且调用onNewIntent方法。如果没有那么就会创建新的实例压入栈中。</p>
+<p>需要注意的是，singletask默认是cleartop,会将栈内将要启动的Activity实例上面的Activity全部出栈。使启动的Activity实例位于栈顶。</p>
+<ol>
+<li>singleInstance</li>
+</ol>
+<p>singleInstance,单个实例模式。这种模式下，Activity只能单独的在一个任务栈中存在。当启动一个Activity启动模式为singleInstance时，系统会新建一个任务栈，该实例压入栈中，仅有该实例存在。</p>
 
       
     </div>
@@ -495,8 +521,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -560,6 +595,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、Activity的四种启动模式简介"><span class="nav-number">1.</span> <span class="nav-text">一、Activity的四种启动模式简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、四种模式详解"><span class="nav-number">2.</span> <span class="nav-text">二、四种模式详解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
