@@ -22,16 +22,15 @@ Activity是通过Activity栈来进行管理的。当一个Activity启动时，�
 
 #### 二、四种模式详解
 
-
-1. standard
+* standard
 
 standard,标准模式。是Activity的系统默认启动模式。每次启动一个Activity都会创建一个新的实例，不管该Activity的实例是否存在。
 
-2. singletop
+* singletop
 
 singletop,栈顶复用模式。这种模式下，如果启动的Activity就在栈顶，那么复用栈顶的Activity，并且调用onNewIntent()方法。通过这个方法，可以取到当前请求的数据。如果启动的Activity已存在，但是不在栈顶，那么就会重新创建新的实例。
 
-3. singletask
+* singletask
 
 singletask,栈内复用模式。在这种模式下，是单实例模式，在这种模式下，只要启动的Activity在任何一个任务栈中存在，就不会重新创建新的实例。和singletop一样，会调用onNewIntent方法。
 
@@ -39,6 +38,6 @@ singletask,栈内复用模式。在这种模式下，是单实例模式，在这
 
 需要注意的是，singletask默认是cleartop,会将栈内将要启动的Activity实例上面的Activity全部出栈。使启动的Activity实例位于栈顶。
 
-4. singleInstance
+* singleInstance
 
 singleInstance,单个实例模式。这种模式下，Activity只能单独的在一个任务栈中存在。当启动一个Activity启动模式为singleInstance时，系统会新建一个任务栈，该实例压入栈中，仅有该实例存在。
