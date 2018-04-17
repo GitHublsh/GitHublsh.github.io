@@ -1,7 +1,7 @@
 ---
 title: Activity的四种启动模式
 date: 2018-04-15 14:33:26
-tags: [Activity]
+tags: [Android四大组件]
 ---
 
 作为基础回顾~
