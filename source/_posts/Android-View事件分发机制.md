@@ -284,15 +284,22 @@ tags: [View事件分发机制]
 	}
 	
 	
+
+
+
+
+
+
+
 ### 二、小结
 
-* 同一个事件是从DOWN开始到UP结束的
-* 一个事件最终只能由一个View拦截和消费掉
-* 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了
-* 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。
-* ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false
-* 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。
-* View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用
-* View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。
-* 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View
-* 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。
+##### 1. 同一个事件是从DOWN开始到UP结束的
+##### 2. 一个事件最终只能由一个View拦截和消费掉
+##### 3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了
+##### 4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。
+##### 5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false
+##### 6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。
+##### 7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用
+##### 8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。
+##### 9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View
+##### 10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。
