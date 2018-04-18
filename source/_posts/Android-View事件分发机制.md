@@ -8,7 +8,7 @@ tags: [View事件分发机制]
 
    首先，要明白点击事件的分发就是MotionEvent事件的分发过程。
    
-##### 1.MotionEvent
+#### 1.MotionEvent
    
   常见的动作：
   
@@ -31,7 +31,7 @@ tags: [View事件分发机制]
 	* ACTION_UP--手指离开屏幕
 
 		
-##### 2.点击事件的分发中最重要的三个方法
+#### 2.点击事件的分发中最重要的三个方法
 
 * dispatchTouchEvent(MotionEvent event)--事件分发
 
@@ -45,7 +45,7 @@ tags: [View事件分发机制]
 
 	* 在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件
 
-##### 3. 伪代码
+#### 3. 伪代码
 
 		public boolean dispatchTouchEvent(MotionEvent ev){
 			boolean touch = false;
@@ -69,7 +69,7 @@ tags: [View事件分发机制]
     经典的伪代码如上。
       
       
-##### 4.同一次点击事件只能被一个 View 消费
+#### 4.同一次点击事件只能被一个 View 消费
 
   安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。
 如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。
@@ -284,8 +284,7 @@ tags: [View事件分发机制]
 	}
 	
 	
-
-
+源码注释已经很详细了。
 
 
 
@@ -293,13 +292,13 @@ tags: [View事件分发机制]
 
 ### 二、小结
 
-##### 1. 同一个事件是从DOWN开始到UP结束的
-##### 2. 一个事件最终只能由一个View拦截和消费掉
-##### 3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了
-##### 4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。
-##### 5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false
-##### 6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。
-##### 7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用
-##### 8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。
-##### 9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View
-##### 10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。
+#### 1. 同一个事件是从DOWN开始到UP结束的
+#### 2. 一个事件最终只能由一个View拦截和消费掉
+#### 3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了
+#### 4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。
+#### 5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false
+#### 6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。
+#### 7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用
+#### 8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。
+#### 9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View
+#### 10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。

@@ -643,7 +643,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
         
           
             <h3 id="一、点击事件的传递规则"><a href="#一、点击事件的传递规则" class="headerlink" title="一、点击事件的传递规则"></a>一、点击事件的传递规则</h3><p>   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。</p>
-<h5 id="1-MotionEvent"><a href="#1-MotionEvent" class="headerlink" title="1.MotionEvent"></a>1.MotionEvent</h5><p>  常见的动作：</p>
+<h4 id="1-MotionEvent"><a href="#1-MotionEvent" class="headerlink" title="1.MotionEvent"></a>1.MotionEvent</h4><p>  常见的动作：</p>
 <p>  常见的动作常量：</p>
 <ul>
 <li><p>public static final int ACTION_DOWN = 0;单点触摸动作</p>
@@ -661,7 +661,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 * ACTION_DOWN--手指刚接触屏幕
 * ACTION_MOVE--手指在屏幕上滑动
 * ACTION_UP--手指离开屏幕
-</code></pre><h5 id="2-点击事件的分发中最重要的三个方法"><a href="#2-点击事件的分发中最重要的三个方法" class="headerlink" title="2.点击事件的分发中最重要的三个方法"></a>2.点击事件的分发中最重要的三个方法</h5><ul>
+</code></pre><h4 id="2-点击事件的分发中最重要的三个方法"><a href="#2-点击事件的分发中最重要的三个方法" class="headerlink" title="2.点击事件的分发中最重要的三个方法"></a>2.点击事件的分发中最重要的三个方法</h4><ul>
 <li><p>dispatchTouchEvent(MotionEvent event)–事件分发</p>
 <ul>
 <li>用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。</li>
@@ -678,7 +678,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 </ul>
 </li>
 </ul>
-<h5 id="3-伪代码"><a href="#3-伪代码" class="headerlink" title="3. 伪代码"></a>3. 伪代码</h5><pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
+<h4 id="3-伪代码"><a href="#3-伪代码" class="headerlink" title="3. 伪代码"></a>3. 伪代码</h4><pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
     boolean touch = false;
     if(onInterceptTouchEvent(ev)){
         touch = onTouchEvent(ev);
@@ -700,7 +700,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 </ul>
 </li>
 </ul>
-<h5 id="4-同一次点击事件只能被一个-View-消费"><a href="#4-同一次点击事件只能被一个-View-消费" class="headerlink" title="4.同一次点击事件只能被一个 View 消费"></a>4.同一次点击事件只能被一个 View 消费</h5><p>  安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
+<h4 id="4-同一次点击事件只能被一个-View-消费"><a href="#4-同一次点击事件只能被一个-View-消费" class="headerlink" title="4.同一次点击事件只能被一个 View 消费"></a>4.同一次点击事件只能被一个 View 消费</h4><p>  安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
 <p>借用GcsSloop源码分析：</p>
 <pre><code>public boolean dispatchTouchEvent(MotionEvent ev) {
       // 调试用
@@ -906,7 +906,8 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
     }
     return handled;
 }
-</code></pre><h3 id="二、小结"><a href="#二、小结" class="headerlink" title="二、小结"></a>二、小结</h3><h5 id="1-同一个事件是从DOWN开始到UP结束的"><a href="#1-同一个事件是从DOWN开始到UP结束的" class="headerlink" title="1. 同一个事件是从DOWN开始到UP结束的"></a>1. 同一个事件是从DOWN开始到UP结束的</h5><h5 id="2-一个事件最终只能由一个View拦截和消费掉"><a href="#2-一个事件最终只能由一个View拦截和消费掉" class="headerlink" title="2. 一个事件最终只能由一个View拦截和消费掉"></a>2. 一个事件最终只能由一个View拦截和消费掉</h5><h5 id="3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"><a href="#3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了" class="headerlink" title="3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"></a>3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了</h5><h5 id="4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。"><a href="#4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。" class="headerlink" title="4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。"></a>4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。</h5><h5 id="5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"><a href="#5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false" class="headerlink" title="5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"></a>5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false</h5><h5 id="6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。"><a href="#6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。" class="headerlink" title="6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。"></a>6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。</h5><h5 id="7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"><a href="#7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用" class="headerlink" title="7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"></a>7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用</h5><h5 id="8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"><a href="#8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。" class="headerlink" title="8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"></a>8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。</h5><h5 id="9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"><a href="#9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View" class="headerlink" title="9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"></a>9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View</h5><h5 id="10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。"><a href="#10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。" class="headerlink" title="10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。"></a>10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。</h5>
+</code></pre><p>源码注释已经很详细了。</p>
+<h3 id="二、小结"><a href="#二、小结" class="headerlink" title="二、小结"></a>二、小结</h3><h4 id="1-同一个事件是从DOWN开始到UP结束的"><a href="#1-同一个事件是从DOWN开始到UP结束的" class="headerlink" title="1. 同一个事件是从DOWN开始到UP结束的"></a>1. 同一个事件是从DOWN开始到UP结束的</h4><h4 id="2-一个事件最终只能由一个View拦截和消费掉"><a href="#2-一个事件最终只能由一个View拦截和消费掉" class="headerlink" title="2. 一个事件最终只能由一个View拦截和消费掉"></a>2. 一个事件最终只能由一个View拦截和消费掉</h4><h4 id="3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"><a href="#3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了" class="headerlink" title="3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"></a>3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了</h4><h4 id="4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。"><a href="#4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。" class="headerlink" title="4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。"></a>4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。</h4><h4 id="5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"><a href="#5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false" class="headerlink" title="5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"></a>5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false</h4><h4 id="6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。"><a href="#6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。" class="headerlink" title="6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。"></a>6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。</h4><h4 id="7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"><a href="#7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用" class="headerlink" title="7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"></a>7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用</h4><h4 id="8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"><a href="#8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。" class="headerlink" title="8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"></a>8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。</h4><h4 id="9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"><a href="#9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View" class="headerlink" title="9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"></a>9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View</h4><h4 id="10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。"><a href="#10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。" class="headerlink" title="10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。"></a>10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。</h4>
           
         
       
