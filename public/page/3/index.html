@@ -700,15 +700,16 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 <ul>
 <li><p>点击事件的传递规则：</p>
 <pre><code>* 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     
-</code></pre></li>
+</code></pre><ul>
+<li>首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了 <ul>
+<li>如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件</li>
 </ul>
-<pre><code>* 首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了
-
-* 如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件
-
-
-经典的伪代码如上。
-</code></pre><ol>
+</li>
+</ul>
+<p>经典的伪代码如上。</p>
+</li>
+</ul>
+<ol>
 <li><p>同一次点击事件只能被一个 View 消费</p>
 <p>安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
 </li>
