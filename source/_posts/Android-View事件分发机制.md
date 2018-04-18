@@ -282,10 +282,8 @@ tags: [View事件分发机制]
 	    }
 	    return handled;
 	}
-	      
-
-
-
+	
+	
 ### 二、小结
 
 * 同一个事件是从DOWN开始到UP结束的
