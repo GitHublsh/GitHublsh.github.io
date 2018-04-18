@@ -8,44 +8,44 @@ tags: [View事件分发机制]
 
    首先，要明白点击事件的分发就是MotionEvent事件的分发过程。
    
-   1. MotionEvent
+##### 1.MotionEvent
    
-      常见的动作：
-      
-      常见的动作常量：
-      
-      * public static final int ACTION_DOWN = 0;单点触摸动作
+  常见的动作：
+  
+  常见的动作常量：
+  
+  * public static final int ACTION_DOWN = 0;单点触摸动作
     
-      * public static final int ACTION_UP = 1;单点触摸离开动作
-      * public static final int ACTION_MOVE = 2;触摸点移动动作
-      * public static final int ACTION_CANCEL = 3;触摸动作取消
-      * public static final int ACTION_OUTSIDE = 4;触摸动作超出边界
-      * public static final int ACTION_POINTER_DOWN = 5;多点触摸动作
-      * public static final int ACTION_POINTER_UP       = 6;多点离开动作
+  * public static final int ACTION_UP = 1;单点触摸离开动作
+  * public static final int ACTION_MOVE = 2;触摸点移动动作
+  * public static final int ACTION_CANCEL = 3;触摸动作取消
+  * public static final int ACTION_OUTSIDE = 4;触摸动作超出边界
+  * public static final int ACTION_POINTER_DOWN = 5;多点触摸动作
+  * public static final int ACTION_POINTER_UP       = 6;多点离开动作
 
 
-		主要就是：
+	主要就是：
+	
+	* ACTION_DOWN--手指刚接触屏幕
+	* ACTION_MOVE--手指在屏幕上滑动
+	* ACTION_UP--手指离开屏幕
+
 		
-		* ACTION_DOWN--手指刚接触屏幕
-		* ACTION_MOVE--手指在屏幕上滑动
-		* ACTION_UP--手指离开屏幕
+##### 2.点击事件的分发中最重要的三个方法
 
+* dispatchTouchEvent(MotionEvent event)--事件分发
+
+	* 用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。
 		
-2. 点击事件的分发中最重要的三个方法
+* onInterceptTouchEvent(MotionEvent event)--事件拦截
 
-	* dispatchTouchEvent(MotionEvent event)--事件分发
-
-		* 用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。
+	* 用来判断是否拦截某个事件，如果当前View拦截了某个事件，那么在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。
 		
-	* onInterceptTouchEvent(MotionEvent event)--事件拦截
+* onTouchEvent(MotionEvent event)--事件消费
 
-		* 用来判断是否拦截某个事件，如果当前View拦截了某个事件，那么在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。
-		
-	* onTouchEvent(MotionEvent event)--事件消费
+	* 在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件
 
-		* 在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件
-
-3. 伪代码
+##### 3. 伪代码
 
 		public boolean dispatchTouchEvent(MotionEvent ev){
 			boolean touch = false;
@@ -58,15 +58,18 @@ tags: [View事件分发机制]
 		}
      
    
-  * 点击事件的传递规则：
-  	 * 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用	 
-  	 * 首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了 
-  	 * 如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件
+* 点击事件的传递规则：
+
+  * 对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用	 
+  
+  * 首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了
+ 
+  * 如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件
 
     经典的伪代码如上。
       
       
-4. 同一次点击事件只能被一个 View 消费
+##### 4.同一次点击事件只能被一个 View 消费
 
   安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。
 如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。

@@ -643,10 +643,8 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
         
           
             <h3 id="一、点击事件的传递规则"><a href="#一、点击事件的传递规则" class="headerlink" title="一、点击事件的传递规则"></a>一、点击事件的传递规则</h3><p>   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。</p>
-<ol>
-<li><p>MotionEvent</p>
-<p>常见的动作：</p>
-<p>常见的动作常量：</p>
+<h5 id="1-MotionEvent"><a href="#1-MotionEvent" class="headerlink" title="1.MotionEvent"></a>1.MotionEvent</h5><p>  常见的动作：</p>
+<p>  常见的动作常量：</p>
 <ul>
 <li><p>public static final int ACTION_DOWN = 0;单点触摸动作</p>
 </li>
@@ -658,16 +656,12 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 <li>public static final int ACTION_POINTER_DOWN = 5;多点触摸动作</li>
 <li>public static final int ACTION_POINTER_UP       = 6;多点离开动作</li>
 </ul>
-</li>
-</ol>
 <pre><code>主要就是：
 
 * ACTION_DOWN--手指刚接触屏幕
 * ACTION_MOVE--手指在屏幕上滑动
 * ACTION_UP--手指离开屏幕
-</code></pre><ol>
-<li><p>点击事件的分发中最重要的三个方法</p>
-<ul>
+</code></pre><h5 id="2-点击事件的分发中最重要的三个方法"><a href="#2-点击事件的分发中最重要的三个方法" class="headerlink" title="2.点击事件的分发中最重要的三个方法"></a>2.点击事件的分发中最重要的三个方法</h5><ul>
 <li><p>dispatchTouchEvent(MotionEvent event)–事件分发</p>
 <ul>
 <li>用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。</li>
@@ -684,9 +678,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 </ul>
 </li>
 </ul>
-</li>
-<li><p>伪代码</p>
-<pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
+<h5 id="3-伪代码"><a href="#3-伪代码" class="headerlink" title="3. 伪代码"></a>3. 伪代码</h5><pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
     boolean touch = false;
     if(onInterceptTouchEvent(ev)){
         touch = onTouchEvent(ev);
@@ -695,23 +687,20 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
     }
     return touch;
 }
-</code></pre></li>
-</ol>
-<ul>
+</code></pre><ul>
 <li><p>点击事件的传递规则：</p>
 <ul>
-<li>对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     </li>
-<li>首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了 </li>
-<li>如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件</li>
-</ul>
+<li><p>对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     </p>
+</li>
+<li><p>首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了</p>
+</li>
+<li><p>如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件</p>
 <p>经典的伪代码如上。</p>
 </li>
 </ul>
-<ol>
-<li><p>同一次点击事件只能被一个 View 消费</p>
-<p>安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
 </li>
-</ol>
+</ul>
+<h5 id="4-同一次点击事件只能被一个-View-消费"><a href="#4-同一次点击事件只能被一个-View-消费" class="headerlink" title="4.同一次点击事件只能被一个 View 消费"></a>4.同一次点击事件只能被一个 View 消费</h5><p>  安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
 <p>借用GcsSloop源码分析：</p>
 <pre><code>public boolean dispatchTouchEvent(MotionEvent ev) {
       // 调试用
