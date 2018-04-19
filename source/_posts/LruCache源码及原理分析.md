@@ -504,3 +504,5 @@ loadFactor：加载因子
 
 accessOrder：true,访问顺序；false,插入顺序。
 
+
+其实很简单。
