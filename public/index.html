@@ -284,6 +284,141 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Android-7-0-so库兼容问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/18/Android-7-0-so库兼容问题/" itemprop="url">Android 7.0 so库兼容问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-18T10:38:07+08:00">
+                2018-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/18/Android-7-0-so库兼容问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/05/18/Android-7-0-so库兼容问题/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目前做的项目中，是用sqlcipher来进行数据库加密的。在适配的过程中遇到了问题。</p>
+<p>系统为Android7.0时，在进入项目APP的时候，系统会弹出一个对话框。如图，</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com//blog/Screenshot_20180525-155021.png" alt="加密库兼容问题"></p>
+<p>发扬面向百度编程的精神，百度到网上相关资料分析。</p>
+<p>问题分析，引入的sqlicipher.so库版本太低了，项目中引用的是3.1.0的版本。Android7.0中会报问题，系统就会弹框提示。</p>
+<p>解决方案：</p>
+<p>可以采用gradle引用更高版本的包，</p>
+<p>compile ‘net.zetetic:android-database-sqlcipher:3.5.9@aar’ </p>
+<p>或者</p>
+<p>compile ‘net.zetetic:android-database-sqlcipher:3.5.9’ </p>
+<p>对比低版本的包。发现低版本中没有X86_64,可能问题出在这里。</p>
+<p>详见：<a href="https://blog.csdn.net/qklnmc/article/details/77967636" target="_blank" rel="external">https://blog.csdn.net/qklnmc/article/details/77967636</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/19/LruCache源码及原理分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1466,166 +1601,6 @@ public class LruCache&lt;K, V&gt; {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/11/Bitmap-OOM解决方案/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/11/Bitmap-OOM解决方案/" itemprop="url">Bitmap OOM解决方案</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T18:11:28+08:00">
-                2018-04-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/11/Bitmap-OOM解决方案/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/04/11/Bitmap-OOM解决方案/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Bitmap-OOM常用解决方案"><a href="#Bitmap-OOM常用解决方案" class="headerlink" title="Bitmap OOM常用解决方案"></a>Bitmap OOM常用解决方案</h3><hr>
-<ol>
-<li><p>在Android 2.3.3以及之前，建议使用Bitmap.recycle()方法，及时释放资源。</p>
-</li>
-<li><p>在Android 3.0开始，可设置BitmapFactory.options.inBitmap值，(从缓存中获取)达到重用Bitmap的目的。如果设置，则inPreferredConfig属性值会被重用的Bitmap该属性值覆盖。</p>
-</li>
-<li><p>通过设置Options.inPreferredConfig值来降低内存消耗：<br>  默认为ARGB_8888: 每个像素4字节. 共32位。<br>  Alpha_8: 只保存透明度，共8位，1字节。<br>  ARGB_4444: 共16位，2字节。<br>  RGB_565:共16位，2字节。<br>  如果不需要透明度，可把默认值ARGB_8888改为RGB_565,节约一半内存。</p>
-</li>
-<li><p>通过设置Options.inSampleSize 对大图片进行压缩，可先设置Options.inJustDecodeBounds，获取Bitmap的外围数据，宽和高等。然后计算压缩比例，进行压缩。</p>
-</li>
-<li><p>设置Options.inPurgeable和inInputShareable：让系统能及时回收内存。</p>
-<ul>
-<li><p>inPurgeable:</p>
-<ul>
-<li>设置为True,则使用BitmapFactory创建的Bitmap用于存储Pixel的内存空间，在系统内存不足时可以被回收，当应用需要再次访问该Bitmap的Pixel时，系统会再次调用BitmapFactory 的decode方法重新生成Bitmap的Pixel数组。</li>
-<li>设置为False时，表示不能被回收。</li>
-</ul>
-</li>
-<li><p>inInputShareable：设置是否深拷贝，与inPurgeable结合使用，inPurgeable为</p>
-<ul>
-<li>false，该参数无意义；</li>
-<li>True,share  a reference to the input data(inputStream, array,etc) 。 False ：a deep copy。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>使用decodeStream代替其他decodeResource,setImageResource,setImageBitmap等方法来加载图片。</p>
-</li>
-</ol>
-<p>区别：<br>decodeStream直接读取图片字节码，调用nativeDecodeAsset/nativeDecodeStream来完成decode。无需使用Java空间的一些额外处理过程，节省dalvik内存。但是由于直接读取字节码，没有处理过程，因此不会根据机器的各种分辨率来自动适应，需要在hdpi,mdpi和ldpi中分别配置相应的图片资源，否则在不同分辨率机器上都是同样的大小(像素点数量)，显示的实际大小不对。</p>
-<p>decodeResource会在读取完图片数据后，根据机器的分辨率，进行图片的适配处理，导致增大了很多dalvik内存消耗。</p>
-<pre><code>decodeStream调用过程：
-      decodeStream(InputStream,Rect,Options) -&gt; nativeDecodeAsset/nativeDecodeStream
-decodeResource调用过程：即finishDecode之后，调用额外的Java层的createBitmap方法，消耗更多dalvik内存。
-      decodeResource(Resource,resId,Options)  -&gt; decodeResourceStream (设置Options的inDensity和inTargetDensity参数)  -&gt; decodeStream() (在完成Decode后，进行finishDecode操作)
-      finishDecode() -&gt; Bitmap.createScaleBitmap()(根据inDensity和inTargetDensity计算scale) -&gt; Bitmap.createBitmap()
-</code></pre><p>以上方法的组合使用，合理避免OOM错误。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1675,7 +1650,7 @@ decodeResource调用过程：即finishDecode之后，调用额外的Java层的cr
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

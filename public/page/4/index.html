@@ -284,6 +284,138 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/11/设计模式之路（7）里氏替换原则/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/11/设计模式之路（7）里氏替换原则/" itemprop="url">设计模式之路（7）里氏替换原则</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-11T22:49:50+08:00">
+                2017-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/11/设计模式之路（7）里氏替换原则/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/11/设计模式之路（7）里氏替换原则/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>里氏替换原则（LSP）</p>
+<h4 id="一、基本概念："><a href="#一、基本概念：" class="headerlink" title="一、基本概念："></a>一、基本概念：</h4><p>一个软件实体如果使用的是一个父类的话，那么一定适用于其子类，而且它察觉不出父类对象和子类对象的 区别，也就是说，在软件程序里面，把父类都替换成它的子类，程序的行为没有变化。简单地说，子类型必须能够替换掉它们的父类型。</p>
+<h4 id="二、例证"><a href="#二、例证" class="headerlink" title="二、例证"></a>二、例证</h4><p>只有当子类可以替换掉父类，软件单位的功能不受到影响时，父类才能真正被复用，而子类也能够在父类的基础上增加新的行为特性。</p>
+<p>举个例子：</p>
+<p>小狗具备动物的基本行为：吃、喝等行为，当需要小猫、小猪也有类似的行为时，由于它们都是继承动物，所以只需要更改实例化的地方，程序的其他地方不要更改。</p>
+<pre><code>Animal animal = new Cat();//只需要修改实例化即可，如：new Dog()
+
+animal.eat();
+animal.drink();
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/10/设计模式之路（6）依赖倒转原则/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -876,177 +1008,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/26/自定义View-一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/26/自定义View-一/" itemprop="url">自定义View(一)View简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-26T22:06:02+08:00">
-                2017-08-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/08/26/自定义View-一/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/08/26/自定义View-一/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="一、常见View继承关系"><a href="#一、常见View继承关系" class="headerlink" title="一、常见View继承关系"></a>一、常见View继承关系</h4><ul>
-<li><p>如下图</p>
-<p>  <img src="http://ot29getcp.bkt.clouddn.com/view%E7%BB%A7%E6%89%BF.png" alt="view"></p>
-</li>
-</ul>
-<p>可以看到所有的控件都是最终继承自View。布局控件都是直接或间接继承自ViewGroup.</p>
-<h4 id="二、自定义控件"><a href="#二、自定义控件" class="headerlink" title="二、自定义控件"></a>二、自定义控件</h4><ul>
-<li><p>大致可分为两大类：</p>
-<ul>
-<li>组合或继承基本控件TextView、ImageView等，加上自定义的内容。</li>
-<li>继承自View</li>
-</ul>
-</li>
-</ul>
-<ol>
-<li><p>组合控件或继承基本控件</p>
-<p> 像这种自定义的控件，很好理解，就是在原有的基础上，自定义的进行组合或者添加新的功能属性等。自定义ViewGroup一般是利用现有的组件根据特定的布局方式来组成新的组件，大多继承自ViewGroup或Layout,包含子View</p>
-<p> 举个简单的例子：ToolBar</p>
-<p> 在Android 5.0推出的一个新的导航控件用于取代之前的ActionBar。如果去看ToolBar的源码，就可以发现，其实就是将几种基本控件组合在一起，实现开发者的更好的可定制性。</p>
-<p> 看源码：</p>
-<p> <img src="http://ot29getcp.bkt.clouddn.com/images/toolbar.png" alt="toolbar"></p>
-<p> 可以看出来ToolBar组合了ActionMenuView、TextView、ImageButton、ImageView等。相当于一个布局文件里面加了自己自定义的控件组合而成达到自己想要的效果。</p>
-</li>
-</ol>
-<ol>
-<li><p>自定义View</p>
-<p>自定义View一般是没有需要的View,需要自己实现，继承自View、surfaceView或者其他的View,不包含子View</p>
-<ul>
-<li><p>(1)屏幕坐标系</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/zuobiaoxi.png" alt="zuobiaoxi"></p>
-<p>手机屏幕的坐标系如图所示，是以手机屏幕左上顶角为坐标原点。</p>
-</li>
-<li>（2）View坐标系</li>
-</ul>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/viewzuobiao.png" alt="viewzuobiao"></p>
-<p>View坐标系都是相对父控件而言来确定位置的。</p>
-<ul>
-<li>getTop():view顶部相对于父控件顶部距离</li>
-<li>getBottom():view底部相对于父控件顶部距离</li>
-<li>getLeft():view左边相对于父控件距离</li>
-<li>getRight():view右边相对于父控件距离</li>
-</ul>
-</li>
-</ol>
-<ol>
-<li>View绘制流程</li>
-</ol>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/customview.jpg" alt="viewhuizhi"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1096,7 +1057,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
