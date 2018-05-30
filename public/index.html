@@ -284,6 +284,129 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/30/主线程的Loop-loop-一直无限循环为什么不会造成ANR/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/30/主线程的Loop-loop-一直无限循环为什么不会造成ANR/" itemprop="url">主线程的Loop.loop()一直无限循环为什么不会造成ANR?</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-30T11:27:35+08:00">
+                2018-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/30/主线程的Loop-loop-一直无限循环为什么不会造成ANR/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/05/30/主线程的Loop-loop-一直无限循环为什么不会造成ANR/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Android-7-0-so库兼容问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1403,204 +1526,6 @@ public class LruCache&lt;K, V&gt; {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Android性能优化（一）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/13/Android性能优化（一）/" itemprop="url">Android性能优化（一）布局优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T14:57:40+08:00">
-                2018-04-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/13/Android性能优化（一）/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/04/13/Android性能优化（一）/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>布局优化主要的思想就一点：减少布局的层级</p>
-<p>常用的优化方式有三种：</p>
-<h4 id="一、-lt-include-gt-标签"><a href="#一、-lt-include-gt-标签" class="headerlink" title="一、&lt;include&gt;标签"></a>一、&lt;include&gt;标签</h4><p>&lt;include&gt;标签可以将制定的布局加载到当前布局中。可以多处引用，类似于工具类的公共方法。</p>
-<p>举个例子：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:orientation=&quot;vertical&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;&gt;
-
-    &lt;include layout=&quot;@layout/include_comm_new_topbar_header&quot;/&gt;
-
-    &lt;android.support.v7.widget.RecyclerView
-        android:id=&quot;@+id/courier_recycle_change_record&quot;
-        android:layout_width=&quot;match_parent&quot;
-        android:layout_height=&quot;match_parent&quot; /&gt;
-&lt;/LinearLayout&gt;
-</code></pre><p>引用的部分，</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-
-&lt;ComTopBarNew xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:id=&quot;@+id/toolBar&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;@dimen/com_toolbar_height&quot;
-    android:background=&quot;@color/comm_color18&quot;
-    /&gt;
-</code></pre><p>需要注意的是，include标签仅支持layout开头的属性；当在include的布局中指定了id,在当前的布局文件中也指定了id,那么是以include中指定的id为准的。</p>
-<h4 id="二、-lt-merge-gt-标签"><a href="#二、-lt-merge-gt-标签" class="headerlink" title="二、&lt;merge&gt;标签"></a>二、&lt;merge&gt;标签</h4><p>&lt;merge>标签，一般是和<include>标签配合使用的，举个例子：</include></p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;merge&gt;
-
-    &lt;View style=&quot;@style/Comm.Divider.Horizontal&quot; /&gt;
-&lt;/merge&gt;
-</code></pre><p>使用场景也很好理解，如果当前布局是LinearLayout，被包含的布局也是LinearLayout,那么就可以使用<merge>标签，这样做就减少了布局的层级了。</merge></p>
-<h4 id="三、-lt-ViewStub-gt-标签"><a href="#三、-lt-ViewStub-gt-标签" class="headerlink" title="三、 &lt;ViewStub&gt;标签"></a>三、 &lt;ViewStub&gt;标签</h4><p>&lt;ViewStub>标签，ViewStub继承自View,标签最大的特点就是当你需要的时候才会加载，但并不会影响UI初始化的性能。各种不常用的布局文件如进度条、显示错误信息等可以使用<viewstub>标签以减少内存使用量，加快渲染速度。<viewstub>标签是一个不可见的，大小为0的View。所以不会参与任何布局和绘制。</viewstub></viewstub></p>
-<p>在需要使用的时候再去加载显示，这样就提高了程序初始的性能了。</p>
-<p>举个例子：</p>
-<pre><code>&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;  
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot;  
-    android:layout_width=&quot;match_parent&quot;  
-    android:layout_height=&quot;match_parent&quot;  
-    android:orientation=&quot;vertical&quot;  
-    tools:context=&quot;.MainActivity&quot;&gt;  
-
-    &lt;Button  
-        android:id=&quot;@+id/btn_show&quot;  
-        android:layout_width=&quot;wrap_content&quot;  
-        android:layout_height=&quot;wrap_content&quot;  
-        android:text=&quot;Show&quot;/&gt;  
-    &lt;Button  
-        android:id=&quot;@+id/btn_gone&quot;  
-        android:layout_width=&quot;wrap_content&quot;  
-        android:layout_height=&quot;wrap_content&quot;  
-        android:text=&quot;GONE&quot;/&gt;  
-
-    &lt;LinearLayout  
-        android:layout_width=&quot;wrap_content&quot;  
-        android:layout_height=&quot;wrap_content&quot;&gt;  
-    &lt;ViewStub  
-        android:id=&quot;@+id/viewstub&quot;  
-        android:layout_width=&quot;wrap_content&quot;  
-        android:layout_height=&quot;wrap_content&quot;  
-        android:layout=&quot;@layout/view&quot;/&gt;  
-    &lt;/LinearLayout&gt;  
-
-&lt;/LinearLayout&gt; 
-</code></pre><p>在需要展示的时候，在设置显示出来，即按需加载。ViewStub是一个轻量级的View，它一个看不见的，不占布局位置，占用资源非常小的控件。可以为ViewStub指定一个布局，在Inflate布局的时候，只有ViewStub会被初始化，然后当ViewStub被设置为可见的时候，或是调用了ViewStub.inflate()的时候，ViewStub所向的布局就会被Inflate和实例化，然后ViewStub的布局属性都会传给它所指向的布局。这样，就可以使用ViewStub来方便的在运行时，要还是不要显示某个布局。</p>
-<p>那么如何加载？</p>
-<p>两种方式：</p>
-<ul>
-<li><p>stub.setVisibility(View.VISIBLE); </p>
-</li>
-<li><p>stub.inflate();</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1650,7 +1575,7 @@ public class LruCache&lt;K, V&gt; {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">48</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
