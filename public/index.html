@@ -364,7 +364,49 @@
       
         
           
-            
+            <h4 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h4><pre><code>public static void main(String[] args) {
+     Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;ActivityThreadMain&quot;);
+     SamplingProfilerIntegration.start();
+
+     // CloseGuard defaults to true and can be quite spammy.  We
+     // disable it here, but selectively enable it later (via
+     // StrictMode) on debug builds, but using DropBox, not logs.
+     CloseGuard.setEnabled(false);
+
+     Environment.initForCurrentUser();
+
+     // Set the reporter for event logging in libcore
+     EventLogger.setReporter(new EventLoggingReporter());
+
+     AndroidKeyStoreProvider.install();
+
+     // Make sure TrustedCertificateStore looks in the right place for CA certificates
+     final File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());
+     TrustedCertificateStore.setDefaultUserDirectory(configDir);
+
+     Process.setArgV0(&quot;&lt;pre-initialized&gt;&quot;);
+
+     Looper.prepareMainLooper();
+
+     ActivityThread thread = new ActivityThread();
+     thread.attach(false);
+
+     if (sMainThreadHandler == null) {
+         sMainThreadHandler = thread.getHandler();
+     }
+
+     if (false) {
+         Looper.myLooper().setMessageLogging(new
+                 LogPrinter(Log.DEBUG, &quot;ActivityThread&quot;));
+     }
+
+     // End of event ActivityThreadMain.
+     Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+     Looper.loop();
+
+     throw new RuntimeException(&quot;Main thread loop unexpectedly exited&quot;);
+ }
+</code></pre>
           
         
       
