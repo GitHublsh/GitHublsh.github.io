@@ -364,7 +364,14 @@
       
         
           
-            <h4 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h4><pre><code>public static void main(String[] args) {
+            <h4 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h4><h5 id="什么是ANR"><a href="#什么是ANR" class="headerlink" title="什么是ANR?"></a>什么是ANR?</h5><p>简单来说就是：</p>
+<ol>
+<li><p>当前事件没有机会得到处理</p>
+</li>
+<li><p>当前事件正在处理但是没有及时完成</p>
+</li>
+</ol>
+<pre><code>public static void main(String[] args) {
      Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;ActivityThreadMain&quot;);
      SamplingProfilerIntegration.start();
 
