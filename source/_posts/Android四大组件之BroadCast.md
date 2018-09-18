@@ -90,8 +90,6 @@ Android中内置了一些系统广播。常见的有开关机、网络、电话�
 
 * 插入耳机时	Intent.ACTION_HEADSET_PLUG
 
-* 未正确移除SD卡但已取出来时(正确移除方法:设置–SD卡和设备内存–卸载SD卡)	Intent.ACTION_MEDIA_BAD_REMOVAL
-
 * 插入外部储存装置（如SD卡）	Intent.ACTION_MEDIA_CHECKING
 
 * 成功安装APK	Intent.ACTION_PACKAGE_ADDED
