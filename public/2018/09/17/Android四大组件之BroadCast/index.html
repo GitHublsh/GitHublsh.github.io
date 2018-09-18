@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/09/17/Android四大组件之BroadCast/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Android四大组件之BroadCast一、广播概述Android应用可以从Android系统和其他Android应用发送或接收广播消息，是观察者设计模式，即一对多的关系。例如，应用程序还可以发送自定义广播，以通知其他应用程序可能感兴趣的内容（例如，已下载了一些新数据）。 广播是一种广泛运用的在应用程序之间传输信息的机制。而BroadcastReceiver是对发送出来的广播进行过滤接收并响应的">
-<meta property="og:updated_time" content="2018-09-18T06:44:43.000Z">
+<meta property="og:updated_time" content="2018-09-18T06:46:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android四大组件之BroadCast">
 <meta name="twitter:description" content="Android四大组件之BroadCast一、广播概述Android应用可以从Android系统和其他Android应用发送或接收广播消息，是观察者设计模式，即一对多的关系。例如，应用程序还可以发送自定义广播，以通知其他应用程序可能感兴趣的内容（例如，已下载了一些新数据）。 广播是一种广泛运用的在应用程序之间传输信息的机制。而BroadcastReceiver是对发送出来的广播进行过滤接收并响应的">
@@ -464,7 +464,7 @@ registerReceiver(myReceiver, intentFilter);
 </code></pre><p>和普通广播的区别是，sendStickyBroadcast它将发出的广播保存起来，一旦发现有人注册这条广播，则立即能接收到。比较简单，就不举例说明了。</p>
 <h5 id="5-应用内广播"><a href="#5-应用内广播" class="headerlink" title="5.应用内广播"></a>5.应用内广播</h5><p>应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：</p>
 <p>首先还是注册和解绑的操作，</p>
-<pre><code>        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
+<pre><code>LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
 
 LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
 </code></pre><p>组装好Intent后，发送广播。</p>

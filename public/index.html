@@ -463,7 +463,7 @@ registerReceiver(myReceiver, intentFilter);
 </code></pre><p>和普通广播的区别是，sendStickyBroadcast它将发出的广播保存起来，一旦发现有人注册这条广播，则立即能接收到。比较简单，就不举例说明了。</p>
 <h5 id="5-应用内广播"><a href="#5-应用内广播" class="headerlink" title="5.应用内广播"></a>5.应用内广播</h5><p>应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：</p>
 <p>首先还是注册和解绑的操作，</p>
-<pre><code>        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
+<pre><code>LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
 
 LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
 </code></pre><p>组装好Intent后，发送广播。</p>

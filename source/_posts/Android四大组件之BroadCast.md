@@ -160,8 +160,8 @@ priority值越大，表示优先级越高
 应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：
 
 首先还是注册和解绑的操作，
-
-	        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
+        	
+	LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
 
 	LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
 
