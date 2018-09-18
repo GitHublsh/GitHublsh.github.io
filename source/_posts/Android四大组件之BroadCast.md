@@ -109,7 +109,43 @@ Android中内置了一些系统广播。常见的有开关机、网络、电话�
 
 ##### 3.有序广播
 
-有序广播
+有序广播，也比较常用。发送广播和普通广播的区别是有序广播 通过sendOrderedBroadCast发送广播。
+有序广播的顺序，体现在广播接收者中，是按照广播接收者的优先顺序来的，优先级在清单文件中广播接收者的intent-filter中通过设置priority属性来定义。
+例如：
+	
+	<intent-filter android:priority="2000">
+	
+priority值越大，表示优先级越高
+
+当优先级最高的广播接收者接收到广播后，可以通过setResult继续传递广播，也可以通过abortBroadcast()中断广播的继续传播
+
+代码示例：
+
+	<receiver
+        android:name=".MyOrderedReceiver"
+        android:enabled="true"
+        android:exported="true">
+        <intent-filter android:priority="1000">
+            <action android:name="com.neil.ordered" />
+        </intent-filter>
+    </receiver>
+    <receiver
+        android:name=".MySecondOrderedReceiver"
+        android:enabled="true"
+        android:exported="true">
+        <intent-filter android:priority="500">
+            <action android:name="com.neil.ordered" />
+        </intent-filter>
+    </receiver>
+    
+   
+ 发送广播：
+ 
+	void sendOrderedBroadcast (Intent intent, 
+	                String receiverPermission)
+	                
+接收广播和普通广播一样，只是按照优先级有接收的先后顺序。
+
 
 
 

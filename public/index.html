@@ -433,7 +433,31 @@ registerReceiver(myReceiver, intentFilter);
 <li><p>重启设备    Intent.ACTION_REBOOT</p>
 </li>
 </ul>
-<h5 id="3-有序广播"><a href="#3-有序广播" class="headerlink" title="3.有序广播"></a>3.有序广播</h5><p>有序广播</p>
+<h5 id="3-有序广播"><a href="#3-有序广播" class="headerlink" title="3.有序广播"></a>3.有序广播</h5><p>有序广播，也比较常用。发送广播和普通广播的区别是有序广播 通过sendOrderedBroadCast发送广播。<br>有序广播的顺序，体现在广播接收者中，是按照广播接收者的优先顺序来的，优先级在清单文件中广播接收者的intent-filter中通过设置priority属性来定义。<br>例如：</p>
+<pre><code>&lt;intent-filter android:priority=&quot;2000&quot;&gt;
+</code></pre><p>priority值越大，表示优先级越高</p>
+<p>当优先级最高的广播接收者接收到广播后，可以通过setResult继续传递广播，也可以通过abortBroadcast()中断广播的继续传播</p>
+<p>代码示例：</p>
+<pre><code>&lt;receiver
+    android:name=&quot;.MyOrderedReceiver&quot;
+    android:enabled=&quot;true&quot;
+    android:exported=&quot;true&quot;&gt;
+    &lt;intent-filter android:priority=&quot;1000&quot;&gt;
+        &lt;action android:name=&quot;com.neil.ordered&quot; /&gt;
+    &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+&lt;receiver
+    android:name=&quot;.MySecondOrderedReceiver&quot;
+    android:enabled=&quot;true&quot;
+    android:exported=&quot;true&quot;&gt;
+    &lt;intent-filter android:priority=&quot;500&quot;&gt;
+        &lt;action android:name=&quot;com.neil.ordered&quot; /&gt;
+    &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+</code></pre><p> 发送广播：</p>
+<pre><code>void sendOrderedBroadcast (Intent intent, 
+                String receiverPermission)
+</code></pre><p>接收广播和普通广播一样，只是按照优先级有接收的先后顺序。</p>
 
           
         
