@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/09/17/Android四大组件之BroadCast/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Android四大组件之BroadCast一、广播概述Android应用可以从Android系统和其他Android应用发送或接收广播消息，是观察者设计模式，即一对多的关系。例如，应用程序还可以发送自定义广播，以通知其他应用程序可能感兴趣的内容（例如，已下载了一些新数据）。 广播是一种广泛运用的在应用程序之间传输信息的机制。而BroadcastReceiver是对发送出来的广播进行过滤接收并响应的">
-<meta property="og:updated_time" content="2018-09-18T06:12:05.000Z">
+<meta property="og:updated_time" content="2018-09-18T06:44:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android四大组件之BroadCast">
 <meta name="twitter:description" content="Android四大组件之BroadCast一、广播概述Android应用可以从Android系统和其他Android应用发送或接收广播消息，是观察者设计模式，即一对多的关系。例如，应用程序还可以发送自定义广播，以通知其他应用程序可能感兴趣的内容（例如，已下载了一些新数据）。 广播是一种广泛运用的在应用程序之间传输信息的机制。而BroadcastReceiver是对发送出来的广播进行过滤接收并响应的">
@@ -459,6 +459,17 @@ registerReceiver(myReceiver, intentFilter);
 <pre><code>void sendOrderedBroadcast (Intent intent, 
                 String receiverPermission)
 </code></pre><p>接收广播和普通广播一样，只是按照优先级有接收的先后顺序。</p>
+<h5 id="4-粘性广播"><a href="#4-粘性广播" class="headerlink" title="4.粘性广播"></a>4.粘性广播</h5><p>注册与接收和普通广播是一样的，但是需要添加权限，否则会抛出异常。</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.BROADCAST_STICKY&quot; /&gt;
+</code></pre><p>和普通广播的区别是，sendStickyBroadcast它将发出的广播保存起来，一旦发现有人注册这条广播，则立即能接收到。比较简单，就不举例说明了。</p>
+<h5 id="5-应用内广播"><a href="#5-应用内广播" class="headerlink" title="5.应用内广播"></a>5.应用内广播</h5><p>应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：</p>
+<p>首先还是注册和解绑的操作，</p>
+<pre><code>        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
+
+LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
+</code></pre><p>组装好Intent后，发送广播。</p>
+<pre><code>LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+</code></pre><p>广播接收者和普通广播一样。</p>
 
       
     </div>
@@ -668,7 +679,7 @@ registerReceiver(myReceiver, intentFilter);
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android四大组件之BroadCast"><span class="nav-number">1.</span> <span class="nav-text">Android四大组件之BroadCast</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、广播概述"><span class="nav-number">1.1.</span> <span class="nav-text">一、广播概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、广播分类"><span class="nav-number">1.2.</span> <span class="nav-text">二、广播分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、广播的注册和接收"><span class="nav-number">1.3.</span> <span class="nav-text">三、广播的注册和接收</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-静态注册"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.静态注册</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-动态注册"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.动态注册</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、常用广播的简单使用"><span class="nav-number">1.4.</span> <span class="nav-text">四、常用广播的简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-普通广播"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.普通广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-系统广播"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.系统广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-有序广播"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.有序广播</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android四大组件之BroadCast"><span class="nav-number">1.</span> <span class="nav-text">Android四大组件之BroadCast</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、广播概述"><span class="nav-number">1.1.</span> <span class="nav-text">一、广播概述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、广播分类"><span class="nav-number">1.2.</span> <span class="nav-text">二、广播分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、广播的注册和接收"><span class="nav-number">1.3.</span> <span class="nav-text">三、广播的注册和接收</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-静态注册"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.静态注册</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-动态注册"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.动态注册</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、常用广播的简单使用"><span class="nav-number">1.4.</span> <span class="nav-text">四、常用广播的简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-普通广播"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.普通广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-系统广播"><span class="nav-number">1.4.2.</span> <span class="nav-text">2.系统广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-有序广播"><span class="nav-number">1.4.3.</span> <span class="nav-text">3.有序广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-粘性广播"><span class="nav-number">1.4.4.</span> <span class="nav-text">4.粘性广播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-应用内广播"><span class="nav-number">1.4.5.</span> <span class="nav-text">5.应用内广播</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

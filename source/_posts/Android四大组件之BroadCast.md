@@ -146,6 +146,35 @@ priority值越大，表示优先级越高
 	                
 接收广播和普通广播一样，只是按照优先级有接收的先后顺序。
 
+##### 4.粘性广播
+
+注册与接收和普通广播是一样的，但是需要添加权限，否则会抛出异常。
+
+
+	<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+和普通广播的区别是，sendStickyBroadcast它将发出的广播保存起来，一旦发现有人注册这条广播，则立即能接收到。比较简单，就不举例说明了。
+
+##### 5.应用内广播
+
+应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：
+
+首先还是注册和解绑的操作，
+
+	        LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
+
+	LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
+
+
+组装好Intent后，发送广播。
+
+	LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+	
+广播接收者和普通广播一样。
+
+
+
+
 
 
 
