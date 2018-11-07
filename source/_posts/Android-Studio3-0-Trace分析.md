@@ -29,6 +29,6 @@ However, most components of the Android Device Monitor are deprecated in favor o
 
 结束
 
-	Debug.stopMethodTracing();
+	Debug.stopMethodTracing()
 	
 	
