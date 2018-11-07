@@ -365,7 +365,7 @@
         
           
             <h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。</p>
-<h4 id="二、具体使用方法"><a href="#二、具体使用方法" class="headerlink" title="二、具体使用方法"></a>二、具体使用方法</h4><h5 id="1-使用DDMS工具来查看trace进行分析"><a href="#1-使用DDMS工具来查看trace进行分析" class="headerlink" title="1.使用DDMS工具来查看trace进行分析"></a>1.使用DDMS工具来查看trace进行分析</h5><p>在Android Studio3.0 之前，在AS IDE面板中-&gt;Tools-&gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling按钮开始进行方法调用跟踪，停止时再点击停止，即可生成trace文件进行分析。</p>
+<h4 id="二、具体使用方法"><a href="#二、具体使用方法" class="headerlink" title="二、具体使用方法"></a>二、具体使用方法</h4><h5 id="1-使用DDMS工具来查看trace进行分析"><a href="#1-使用DDMS工具来查看trace进行分析" class="headerlink" title="1.使用DDMS工具来查看trace进行分析"></a>1.使用DDMS工具来查看trace进行分析</h5><p>在Android Studio3.0 之前，在AS IDE面板中-&gt;Tools-&gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling(为红色)按钮开始进行方法调用跟踪(点击后会变为黑色)，停止时再点击停止，即可生成trace文件进行分析。</p>
 <p>需要注意的是，在AS3.0+ DDMS从面板上移除了，官方给的说法是：</p>
 <p>However, most components of the Android Device Monitor are deprecated in favor of updated tools available in Android Studio 3.0 and higher.</p>
 <p>那就手动的去启动就OK了。（在Terminal中输入命令 monitor 启动DDMS）</p>
@@ -374,7 +374,11 @@
 <pre><code>Debug.startMethodTracing()
 </code></pre><p>结束</p>
 <pre><code>Debug.stopMethodTracing()
-</code></pre>
+</code></pre><p>这样就会生成.trace文件了。</p>
+<h4 id="三、分析trace文件"><a href="#三、分析trace文件" class="headerlink" title="三、分析trace文件"></a>三、分析trace文件</h4><p>在面板中会有各种数据，这个时候就需要搞清楚各个参数所代表的具体含义了。</p>
+<p>最关心的数据有：<br>很重要的指标：Calls + Recur Calls / Total , 最重要的指标： Cpu Time / Call<br>因为我们最关心的有两点，一是调用次数不多，但每次调用却需要花费很长时间的函数。这个可以从Cpu Time / Call反映出来。另外一个是那些自身占用时间不长，但调用却非常频繁的函数。这个可以从<strong>Calls + Recur Calls / Total </strong>反映出来。</p>
+<p>当体验卡顿的时候，我们可以借助TraceView来定位问题</p>
+
           
         
       
