@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
+<meta name="description" content="一、简要说明在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。 二、具体使用方法1.使用DDMS工具来查看trace进行分析在Android Studio3.0 之前，在AS IDE面板中-&amp;gt;Tools-&amp;gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling按钮开始进行方">
 <meta name="keywords" content="Android性能优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Studio3.0+ Trace分析">
 <meta property="og:url" content="http://yoursite.com/2018/11/07/Android-Studio3-0-Trace分析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
-<meta property="og:updated_time" content="2018-11-07T03:10:26.000Z">
+<meta property="og:description" content="一、简要说明在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。 二、具体使用方法1.使用DDMS工具来查看trace进行分析在Android Studio3.0 之前，在AS IDE面板中-&amp;gt;Tools-&amp;gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling按钮开始进行方">
+<meta property="og:updated_time" content="2018-11-07T05:44:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Studio3.0+ Trace分析">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:description" content="一、简要说明在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。 二、具体使用方法1.使用DDMS工具来查看trace进行分析在Android Studio3.0 之前，在AS IDE面板中-&amp;gt;Tools-&amp;gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling按钮开始进行方">
 
 
 
@@ -365,7 +365,17 @@
       
 
       
-        
+        <h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。</p>
+<h4 id="二、具体使用方法"><a href="#二、具体使用方法" class="headerlink" title="二、具体使用方法"></a>二、具体使用方法</h4><h5 id="1-使用DDMS工具来查看trace进行分析"><a href="#1-使用DDMS工具来查看trace进行分析" class="headerlink" title="1.使用DDMS工具来查看trace进行分析"></a>1.使用DDMS工具来查看trace进行分析</h5><p>在Android Studio3.0 之前，在AS IDE面板中-&gt;Tools-&gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling按钮开始进行方法调用跟踪，停止时再点击停止，即可生成trace文件进行分析。</p>
+<p>需要注意的是，在AS3.0+ DDMS从面板上移除了，官方给的说法是：</p>
+<p>However, most components of the Android Device Monitor are deprecated in favor of updated tools available in Android Studio 3.0 and higher.</p>
+<p>那就手动的去启动就OK了。（在Terminal中输入命令 monitor 启动DDMS）</p>
+<h5 id="2-通过代码进行追踪"><a href="#2-通过代码进行追踪" class="headerlink" title="2.通过代码进行追踪"></a>2.通过代码进行追踪</h5><p>在需要分析的代码中添加</p>
+<p>开始</p>
+<pre><code>Debug.startMethodTracing()
+</code></pre><p>结束</p>
+<pre><code>Debug.stopMethodTracing();
+</code></pre>
       
     </div>
 
@@ -490,8 +500,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -555,6 +574,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、简要说明"><span class="nav-number">1.</span> <span class="nav-text">一、简要说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、具体使用方法"><span class="nav-number">2.</span> <span class="nav-text">二、具体使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-使用DDMS工具来查看trace进行分析"><span class="nav-number">2.1.</span> <span class="nav-text">1.使用DDMS工具来查看trace进行分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-通过代码进行追踪"><span class="nav-number">2.2.</span> <span class="nav-text">2.通过代码进行追踪</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
