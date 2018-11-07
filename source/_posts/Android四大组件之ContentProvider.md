@@ -46,3 +46,6 @@ ContentProvider的内容Uri格式是固定的，下面详细介绍一下。
 	
 	public String getType(Uri) 用于返回指定的Uri中的数据的MIME类型
 	
+
+
+需要在AndroidManifest.xml中进行声明。
