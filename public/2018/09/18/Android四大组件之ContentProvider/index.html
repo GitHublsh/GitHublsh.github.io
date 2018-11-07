@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/09/18/Android四大组件之ContentProvider/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、简介ContentProvider为不同的软件之间数据共享，提供统一的接口 内容提供器（ContentProvider）主要用于在不同的应用程序之间实现数据共享的功能。它提供一整套完整的机制，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。 内容提供器非常类似于数据库，可以使用insert()、update()、delete()、query()方法进行插入更新删除查询数据，">
-<meta property="og:updated_time" content="2018-09-21T10:08:22.000Z">
+<meta property="og:updated_time" content="2018-10-11T02:15:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android四大组件之ContentProvider">
 <meta name="twitter:description" content="一、简介ContentProvider为不同的软件之间数据共享，提供统一的接口 内容提供器（ContentProvider）主要用于在不同的应用程序之间实现数据共享的功能。它提供一整套完整的机制，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。 内容提供器非常类似于数据库，可以使用insert()、update()、delete()、query()方法进行插入更新删除查询数据，">
@@ -394,7 +394,8 @@ public int update(Uri, ContentValues, String, String[]) 用于更新指定Uri的
 public int delete(Uri, String, String[]) 用于从指定Uri的ContentProvider中删除数据
 
 public String getType(Uri) 用于返回指定的Uri中的数据的MIME类型
-</code></pre>
+</code></pre><p>需要在AndroidManifest.xml中进行声明。</p>
+
       
     </div>
 
@@ -472,6 +473,10 @@ public String getType(Uri) 用于返回指定的Uri中的数据的MIME类型
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/11/07/Android-Studio3-0-Trace分析/" rel="prev" title="Android Studio3.0+ Trace分析">
+                Android Studio3.0+ Trace分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -544,7 +549,7 @@ public String getType(Uri) 用于返回指定的Uri中的数据的MIME类型
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
