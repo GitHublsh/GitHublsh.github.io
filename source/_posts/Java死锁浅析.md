@@ -17,38 +17,38 @@ tags: [Java]
 
 
 ```
-*public class*SyncABDemo {
-    *public static void*main(String args[]){
+public class SyncABDemo {
+    public static void main(String args[]){
 
-    Object a = *new*Object();
-    Object b = *new*Object();
-    Thread threadA = *new*Thread(*new*Runnable() {
+    Object a =  new Object();
+    Object b =  new Object();
+    Thread threadA = new Thread(new Runnable() {
         @Override
-        *public void*run() {
-            *synchronized*(a) {
-                *try*{
-                    System.*out*.println(*"ThreadA--a is Locked"*);
-                    Thread./sleep/(1000);
-                    *synchronized*(b) {
-                        System.*out*.println(*"ThreadA--b is Locked"*);
+        public void run() {
+            synchronized(a) {
+                try{
+                    System.out.println("ThreadA--a is Locked");
+                    Thread.sleep(1000);
+                    synchronized(b) {
+                        System.out.println("ThreadA--b is Locked");
                     }
-                } *catch*(InterruptedException e) {
+                } catch(InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     });
-    Thread threadB = *new*Thread(*new*Runnable() {
+    Thread threadB = new Thread(new Runnable() {
         @Override
-        *public void*run() {
-            *synchronized*(b) {
-                *try*{
-                    System.*out*.println(*"ThreadB--a is Locked"*);
-                    Thread./sleep/(1000);
-                    *synchronized*(a) {
-                        System.*out*.println(*"ThreadB--b is Locked"*);
+        public void run() {
+            synchronized(b) {
+                try{
+                    System.out.println("ThreadB--a is Locked");
+                    Thread.sleep(1000);
+                    synchronized(a) {
+                        System.out.println("ThreadB--b is Locked");
                     }
-                } *catch*(InterruptedException e) {
+                } catch(InterruptedException e) {
                     e.printStackTrace();
                 }
             }
