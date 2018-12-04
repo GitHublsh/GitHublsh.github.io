@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="如果对面向对象还不太熟悉，建议先把面向对象的概念过一遍比较好。  一、简单工厂模式的概念简单工厂模式是由一个工厂对象决定创建出哪一种产品类的实例。 简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是静态(static)方法，因此简单工厂模式又被称为静态工厂方">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之路（1）-简单工厂模式">
-<meta property="og:url" content="http://yoursite.com/2017/07/17/设计模式之路（1）-简单工厂模式/index.html">
+<meta property="og:title" content="Java线程池浅析">
+<meta property="og:url" content="http://yoursite.com/2018/12/04/Java-线程池浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="如果对面向对象还不太熟悉，建议先把面向对象的概念过一遍比较好。  一、简单工厂模式的概念简单工厂模式是由一个工厂对象决定创建出哪一种产品类的实例。 简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是静态(static)方法，因此简单工厂模式又被称为静态工厂方">
-<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta property="og:description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
+<meta property="og:updated_time" content="2018-12-04T09:46:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之路（1）-简单工厂模式">
-<meta name="twitter:description" content="如果对面向对象还不太熟悉，建议先把面向对象的概念过一遍比较好。  一、简单工厂模式的概念简单工厂模式是由一个工厂对象决定创建出哪一种产品类的实例。 简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是静态(static)方法，因此简单工厂模式又被称为静态工厂方">
+<meta name="twitter:title" content="Java线程池浅析">
+<meta name="twitter:description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
 
 
 
@@ -149,13 +149,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/17/设计模式之路（1）-简单工厂模式/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/04/Java-线程池浅析/"/>
 
 
 
 
 
-  <title>设计模式之路（1）-简单工厂模式 | Neil's blog</title>
+  <title>Java线程池浅析 | Neil's blog</title>
   
 
 
@@ -284,7 +284,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/17/设计模式之路（1）-简单工厂模式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/04/Java-线程池浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -301,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式之路（1）-简单工厂模式</h1>
+          <h1 class="post-title" itemprop="name headline">Java线程池浅析</h1>
         
 
         <div class="post-meta">
@@ -313,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-17T12:48:01+08:00">
-                2017-07-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T15:59:48+08:00">
+                2018-12-04
               </time>
             
 
@@ -333,8 +333,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/07/17/设计模式之路（1）-简单工厂模式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/17/设计模式之路（1）-简单工厂模式/" itemprop="commentsCount"></span>
+                <a href="/2018/12/04/Java-线程池浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/12/04/Java-线程池浅析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -360,65 +360,36 @@
       
 
       
-        <hr>
-<p>如果对面向对象还不太熟悉，建议先把面向对象的概念过一遍比较好。</p>
-<hr>
-<h4 id="一、简单工厂模式的概念"><a href="#一、简单工厂模式的概念" class="headerlink" title="一、简单工厂模式的概念"></a>一、简单工厂模式的概念</h4><p>简单工厂模式是由一个工厂对象决定创建出哪一种产品类的实例。</p>
-<p>简单工厂模式(Simple Factory Pattern)：定义一个工厂类，它可以根据参数的不同返回不同类的实例，被创建的实例通常都具有共同的父类。因为在简单工厂模式中用于创建实例的方法是静态(static)方法，因此简单工厂模式又被称为静态工厂方法(Static Factory Method)模式，它属于类创建型模式。</p>
-<p>简单工厂模式的要点在于：当你需要什么，只需要传入一个正确的参数，就可以获取你所需要的对象，而无须知道其创建细节。</p>
-<p>show me code~</p>
-<p>举个栗子：</p>
-<p>抽象产品–汽车，汽车有很多品牌：Audi、Benz、BMW···</p>
-<p>现在有一个客户想开Benz品牌的车，那么最直接的做法就是创建Benz汽车的实例，然后开走~</p>
-<pre><code>Benz benz = new Benz();
-benz.addGPS();
-benz.addRecodes();
-benz.addWheels();
-benz.drive();
-</code></pre><p>那么再来一个客户，想开Audi品牌的车，那么我们和之前一样，</p>
-<pre><code>Audi audi = new Audi();
-audi.addGPS();
-audi.addRecodes();
-audi.addWheels();
-audi.drive();
-</code></pre><p>问题就出现了，客户和汽车的创建耦合在一起了，客户是不需要知道的创建的细节的。</p>
-<p>所以为了降低耦合，就可以把这些都放到工厂里面去做，客户只需要告诉工厂汽车的品牌和型号就可以了，所有细节交给工厂完成就可以了。这就是简单工厂模式。</p>
-<p>工厂类：</p>
-<pre><code>public class CarFactory{
-    public Benz createBenz(int type){
-        switch(type){
-            case 200 :
-                return new Benz200();
-                break;
-            case 260 :
-                return new Benz260();
-                break;
-            case 300 :
-                return new Benz300();
-                break;
-            default:
-                break;
-        }
-    }
-}
-</code></pre><p>客户类：</p>
-<pre><code>public class Customer{
-    public static viod main(String[] args){
-        CarFactory carFactory = new CarFactory();
-        Benz benz200 = carFactory.createBenz(200);//客户定制车型号
-        benz200.drive();//客户开走
-    }
-}
-</code></pre><h4 id="二、简单工厂模式中的几个角色"><a href="#二、简单工厂模式中的几个角色" class="headerlink" title="二、简单工厂模式中的几个角色"></a>二、简单工厂模式中的几个角色</h4><p>在简单工厂模式中包含如下几个角色：</p>
+        <h1 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h1><p>###一、简单介绍</p>
+<p>最简单的新建一个线程的方式就是new Thread<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Overrider</span></div><div class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">			<span class="comment">//do something</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">).start();</div></pre></td></tr></table></figure></p>
+<p>虽然简单，但是有很多缺点：</p>
+<ol>
+<li>频繁的使用new Thread 来新建线程会造成新建对象性能差</li>
+<li>新建的线程缺乏统一的管理，并且新建线程没有限制，互相竞争，可能占用系统资源导致oom</li>
+<li>功能单一</li>
+</ol>
+<p>既然不能new Thread不能满足多样的需求变化，那么Java提供的线程池就很好的解决了这些问题。Java提供四种线程池，下面一一介绍。</p>
+<h3 id="二、Java线程池"><a href="#二、Java线程池" class="headerlink" title="二、Java线程池"></a>二、Java线程池</h3><p>优点：</p>
+<ol>
+<li>重用线程池中的线程，避免因频繁创建和销毁线程带来的性能的开销</li>
+<li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致阻塞的现象</li>
+<li>能够对线程进行简单的管理，并提供定时执行及指定间隔循环执行的功能</li>
+</ol>
+<p>Java中的线程池的具体实现是在ThreadPoolExecutor，通过配置不同的参数来实现不同功能的线程池。</p>
+<p>ThreadPoolExecutor构造函数有四个，源码实现最终都是调用了</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></div><div class="line">                          <span class="keyword">int</span> maximumPoolSize,</div><div class="line">                          <span class="keyword">long</span> keepAliveTime,</div><div class="line">                          TimeUnit unit,</div><div class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                          ThreadFactory threadFactory,</div><div class="line">                          RejectedExecutionHandler <span class="keyword">handler</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (corePoolSize &lt; <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt;= <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt; corePoolSize ||</div><div class="line">        keepAliveTime &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="keyword">if</span> (workQueue == <span class="keyword">null</span> || threadFactory == <span class="keyword">null</span> || <span class="keyword">handler</span> == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">this</span>.corePoolSize = corePoolSize;</div><div class="line">    <span class="keyword">this</span>.maximumPoolSize = maximumPoolSize;</div><div class="line">    <span class="keyword">this</span>.workQueue = workQueue;</div><div class="line">    <span class="keyword">this</span>.keepAliveTime = unit.toNanos(keepAliveTime);</div><div class="line">    <span class="keyword">this</span>.threadFactory = threadFactory;</div><div class="line">    <span class="keyword">this</span>.<span class="keyword">handler</span> = <span class="keyword">handler</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 构造函数的各个参数将会影响到线程池的功能特性，</p>
 <ul>
-<li><p>Factory（工厂角色）：工厂角色即工厂类，它是简单工厂模式的核心，负责实现创建所有产品实例的内部逻辑；工厂类可以被外界直接调用，创建所需的产品对象；在工厂类中提供了静态的工厂方法factoryMethod()，它的返回类型为抽象产品类型Product。</p>
+<li>corePoolSize： 线程池中的核心线程池数量，除非设置了allowCoreThreadTimeOut为true，否则即使处于空闲状态也一直保留在线程池中。</li>
+<li>maximumPoolSize：最大线程数，当活动的线程数达到最大，后续新的任务将会被阻塞</li>
+<li>keepAliveTime：非核心线程空闲时的超时时间，空闲超过该时间将会被回收，当allowCoreThreadTimeOut为true也会作用于核心线程</li>
+<li>unit：超时时间的单位</li>
+<li><p>workQueue：线程池中的任务队列，通过线程池的execute方法提交的Runnable会存储在这个参数中在JDK中提供了如下阻塞队列：<br>1、ArrayBlockingQueue：基于数组结构的有界阻塞队列，按FIFO排序任务；<br>2、LinkedBlockingQuene：基于链表结构的阻塞队列，按FIFO排序任务，吞吐量通常要高于ArrayBlockingQuene；<br>3、SynchronousQuene：一个不存储元素的阻塞队列，每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQuene；<br>4、priorityBlockingQuene：具有优先级的无界阻塞队列；</p>
 </li>
-<li><p>Product（抽象产品角色）：它是工厂类所创建的所有对象的父类，封装了各种产品对象的公有方法，它的引入将提高系统的灵活性，使得在工厂类中只需定义一个通用的工厂方法，因为所有创建的具体产品对象都是其子类对象。</p>
+<li><p>threadFactory：线程工厂,为线程池提供创建新线程的功能</p>
 </li>
-<li><p>ConcreteProduct（具体产品角色）：它是简单工厂模式的创建目标，所有被创建的对象都充当这个角色的某个具体类的实例。每一个具体产品角色都继承了抽象产品角色，需要实现在抽象产品中声明的抽象方法。</p>
-</li>
+<li>handler：RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。以下是JDK1.5提供的四种策略。<br>1、AbortPolicy：直接抛出异常。<br>2、CallerRunsPolicy：只用调用者所在线程来运行任务。<br>3、DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。<br>4、DiscardPolicy：不处理，丢弃掉。<br>当然也可以根据应用场景需要来实现RejectedExecutionHandler接口自定义策略。如记录日志或持久化不能处理的任务。</li>
 </ul>
-<p>在简单工厂模式中，客户端通过工厂类来创建一个产品类的实例，而无须直接使用new关键字来创建对象，它是工厂模式家族中最简单的一员。</p>
 
       
     </div>
@@ -474,7 +445,7 @@ audi.drive();
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -487,8 +458,8 @@ audi.drive();
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/14/Bugsnag-监控应用程序错误，以改善客户体验和代码质量/" rel="next" title="Bugsnag:监控应用程序错误，以改善客户体验和代码质量">
-                <i class="fa fa-chevron-left"></i> Bugsnag:监控应用程序错误，以改善客户体验和代码质量
+              <a href="/2018/11/14/Java死锁浅析/" rel="next" title="Java死锁浅析">
+                <i class="fa fa-chevron-left"></i> Java死锁浅析
               </a>
             
           </div>
@@ -496,10 +467,6 @@ audi.drive();
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/18/设计模式之路（2）单一职责原则/" rel="prev" title="设计模式之路（2）单一职责原则">
-                设计模式之路（2）单一职责原则 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -632,7 +599,7 @@ audi.drive();
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、简单工厂模式的概念"><span class="nav-number">1.</span> <span class="nav-text">一、简单工厂模式的概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、简单工厂模式中的几个角色"><span class="nav-number">2.</span> <span class="nav-text">二、简单工厂模式中的几个角色</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java线程池"><span class="nav-number">1.</span> <span class="nav-text">Java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java线程池"><span class="nav-number">1.0.1.</span> <span class="nav-text">二、Java线程池</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
@@ -779,7 +746,7 @@ audi.drive();
 		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2017/07/17/设计模式之路（1）-简单工厂模式/"});
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2018/12/04/Java-线程池浅析/"});
 		
 
 		(function() {
