@@ -1,0 +1,1022 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="RxJava," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 变换操作一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test pu">
+<meta name="keywords" content="RxJava">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RxJava2.0(三)操作符简介">
+<meta property="og:url" content="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/index.html">
+<meta property="og:site_name" content="Neil&#39;s blog">
+<meta property="og:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 变换操作一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test pu">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/flatMap.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concatMap.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/concat.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/buffer.png">
+<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/filter.png">
+<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RxJava2.0(三)操作符简介">
+<meta name="twitter:description" content="了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。 RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。 变换操作一、map返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。 一对一的变换，如下图（来源：官方文档）  @Test pu">
+<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/map.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/"/>
+
+
+
+
+
+  <title>RxJava2.0(三)操作符简介 | Neil's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Neil's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Let's start from here</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RxJava2.0(三)操作符简介</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-12T15:58:33+08:00">
+                2017-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/12/RxJava2-0-三-变换操作/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/08/12/RxJava2-0-三-变换操作/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
+<p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
+<h3 id="变换操作"><a href="#变换操作" class="headerlink" title="变换操作"></a>变换操作</h3><h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<p>一对一的变换，如下图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
+<pre><code>@Test
+public void testMap() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;map&quot;);
+        }
+    }).map(new Function&lt;String, Integer&gt;() {
+        @Override
+        public Integer apply(@NonNull String s) throws Exception {
+            return getValue(s);
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer s) {
+            System.out.println(&quot;testMap:&quot; + s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>从上面的例子可以看到，map() 方法将参数中的 String 对象转换成一个 Bitmap 对象后返回，而在经过 map() 方法后，事件的参数类型也由 String 转为了 Bitmap。这种直接变换对象并返回的，是最常见的也最容易理解的变换。</p>
+<ul>
+<li><p>对上游发送的每一个事件应用一个函数, 使得每一个事件都按照指定的函数去变化</p>
+</li>
+<li><p>map是一对一的， 可以将上游发来的事件转换为任意的类型, 可以是一个Object, 也可以是一个集合</p>
+</li>
+</ul>
+<h4 id="二、flatmap"><a href="#二、flatmap" class="headerlink" title="二、flatmap"></a>二、flatmap</h4><p>更加高级的变换。如图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/flatMap.png" alt="flatmap"></p>
+<ul>
+<li><p>一个Observable它发射一个数据序列，这些数据本身也可以发射Observable。RxJava的flatMap()函数提供一种铺平序列的方式，然后合并这些Observables发射的数据，最后将合并后的结果作为最终的Observable。</p>
+</li>
+<li><p>flatMap()不能够保证在最终生成的Observable中源Observables确切的发射顺序。</p>
+</li>
+</ul>
+<p>For Example：</p>
+<pre><code> @Test
+public void testRxFlatMap() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(99);
+            e.onNext(66);
+            e.onComplete();
+        }
+    }).flatMap(new Function&lt;Integer, ObservableSource&lt;String&gt;&gt;() {
+        @Override
+        public ObservableSource&lt;String&gt; apply(@NonNull Integer s) throws Exception {
+            if (s&gt;80){
+                return Observable.just(&quot;A&quot;);
+            }
+            return Observable.just(&quot;B&quot;);
+        }
+    }).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;成绩为：&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>  从上面的代码很容易看出FlatMap将int变换为String对象，操作简单。一个操作符搞定，这样就方便多了。</p>
+<h4 id="三、concatMap"><a href="#三、concatMap" class="headerlink" title="三、concatMap"></a>三、concatMap</h4><ul>
+<li>官方文档解释：返回一个新的Observable，它会发送由应用源ObservableSource发出的每个项目提供的函数产生的项目，该函数返回一个ObservableSource，然后发出连接那些由此产生的ObservableSource产生的项目。</li>
+</ul>
+<p>通俗一点，就是和flatmap相比，concatMap是有序的。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/concatMap.png" alt="concatmap"></p>
+<h4 id="四、zip"><a href="#四、zip" class="headerlink" title="四、zip"></a>四、zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
+<p>来看一个简单的例子，加深理解。</p>
+<pre><code>/**
+ * RxJava zip变换
+ * @throws Exception
+ */
+@Test
+public void testZip() throws Exception {
+    Observable&lt;String&gt; observableHello = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;Hello&quot;);
+        }
+    });
+    Observable&lt;String&gt; observableWorld = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;World&quot;);
+        }
+    });
+    Observable.zip(observableHello, observableWorld, new BiFunction&lt;String, String, String&gt;() {
+        @Override
+        public String apply(@NonNull String s, @NonNull String s2) throws Exception {
+            return s+s2;
+        }
+    }).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;Final:&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p> 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。</p>
+<h4 id="五、concat"><a href="#五、concat" class="headerlink" title="五、concat"></a>五、concat</h4><p>Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.</p>
+<p>简单来说就是将多个数据源按序发射。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
+<p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
+<p>获取辣条制造商信息</p>
+<pre><code>@Test
+public void testConcat() throws Exception {
+    final Observable&lt;String&gt; factory = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;卫龙&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable&lt;String&gt; price = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;5&quot;);
+            e.onComplete();
+        }
+    });
+    Observable&lt;String&gt; material = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;chili&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable.concat(factory, price,material).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;result&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>结果为：</p>
+<pre><code>result：卫龙
+result：5
+result：chili
+</code></pre><p>就拿到了辣条的所有信息了。</p>
+<h3 id="过滤操作"><a href="#过滤操作" class="headerlink" title="过滤操作"></a>过滤操作</h3><h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
+<h4 id="二、filter"><a href="#二、filter" class="headerlink" title="二、filter"></a>二、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
+<p>举一个简单的例子：</p>
+<pre><code>@Test
+public void testFilter() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(1);
+            e.onNext(666);
+            e.onNext(6);
+            e.onComplete();
+        }
+    }).filter(new Predicate&lt;Integer&gt;() {
+        @Override
+        public boolean test(@NonNull Integer integer) throws Exception {
+            return integer&gt;100;
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer integer) {
+            System.out.println(&quot;result:&quot;+integer);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+</code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字，然后输出自己想要得到的数字。很容易理解。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/WechatIMG7.jpeg" alt="Neil Liu wechat" style="width: 200px; max-width: 100%;"/>
+    <div>个人微信，欢迎交流</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>让我感受下知识的力量~</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WechatIMG3.jpeg" alt="Neil Liu WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/WechatIMG5.jpeg" alt="Neil Liu Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RxJava/" rel="tag"># RxJava</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/11/RxJava2-0-二/" rel="next" title="RxJava2.0(二)线程控制">
+                <i class="fa fa-chevron-left"></i> RxJava2.0(二)线程控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/26/自定义View-一/" rel="prev" title="自定义View(一)View简介">
+                自定义View(一)View简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Neil Liu" />
+          <p class="site-author-name" itemprop="name">Neil Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">优秀不够，你是否无可替代</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/GitHublsh" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#变换操作"><span class="nav-number">1.</span> <span class="nav-text">变换操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、map"><span class="nav-number">1.1.</span> <span class="nav-text">一、map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、flatmap"><span class="nav-number">1.2.</span> <span class="nav-text">二、flatmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、concatMap"><span class="nav-number">1.3.</span> <span class="nav-text">三、concatMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、zip"><span class="nav-number">1.4.</span> <span class="nav-text">四、zip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、concat"><span class="nav-number">1.5.</span> <span class="nav-text">五、concat</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过滤操作"><span class="nav-number">2.</span> <span class="nav-text">过滤操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、buffer"><span class="nav-number">2.1.</span> <span class="nav-text">一、buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、filter"><span class="nav-number">2.2.</span> <span class="nav-text">二、filter</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Neil Liu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2017/08/12/RxJava2-0-三-变换操作/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93292/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

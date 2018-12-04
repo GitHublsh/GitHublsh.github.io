@@ -1,0 +1,1562 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.useso.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OkHttp3," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
+<meta name="keywords" content="OkHttp3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OkHttp3源码学习（3）-拦截器链详解">
+<meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
+<meta property="og:site_name" content="Neil&#39;s blog">
+<meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
+<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
+<meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/"/>
+
+
+
+
+
+  <title>OkHttp3源码学习（3）-拦截器链详解 | Neil's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Neil's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Let's start from here</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OkHttp3源码学习（3）-拦截器链详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T17:02:28+08:00">
+                2017-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/27/OkHttp3源码学习（3）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/27/OkHttp3源码学习（3）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="一、发起请求"><a href="#一、发起请求" class="headerlink" title="一、发起请求"></a>一、发起请求</h4><pre><code>OkHttpClient client = new OkHttpClient();
+    Request request = new Request.Builder()
+            .url(&quot;&quot;)
+            .build();
+    Call call = client.newCall(request);
+    try {
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(&quot;OkHttp&quot;, &quot;Call Failed:&quot; + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d(&quot;OkHttp&quot;, &quot;Call succeeded:&quot; + response.message());
+            }
+        });
+    } catch (Exception e) {
+        Log.e(&quot;OkHttp&quot;,e.getMessage());
+    }
+</code></pre><ul>
+<li><p>发起请求时：client.newCall(request)。</p>
+<pre><code>@Override public Call newCall(Request request) {
+return new RealCall(this, request, false /* for web socket */);
+  }
+</code></pre><p>实际上就是创建一个RealCall的实例。</p>
+</li>
+<li><p>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</p>
+<pre><code>@Override public void enqueue(Callback responseCallback) {
+synchronized (this) {
+  if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
+  executed = true;
+}
+captureCallStackTrace();
+client.dispatcher().enqueue(new AsyncCall(responseCallback));
+  }
+</code></pre></li>
+</ul>
+<h4 id="二、AsyncCall"><a href="#二、AsyncCall" class="headerlink" title="二、AsyncCall"></a>二、AsyncCall</h4><pre><code> @Override protected void execute() {
+  boolean signalledCallback = false;
+  try {
+    Response response = getResponseWithInterceptorChain();
+    if (retryAndFollowUpInterceptor.isCanceled()) {
+      signalledCallback = true;
+      responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));
+    } else {
+      signalledCallback = true;
+      responseCallback.onResponse(RealCall.this, response);
+    }
+  } catch (IOException e) {
+    if (signalledCallback) {
+      // Do not signal the callback twice!
+      Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);
+    } else {
+      responseCallback.onFailure(RealCall.this, e);
+    }
+  } finally {
+    client.dispatcher().finished(this);
+  }
+}
+</code></pre><p>  AsyncCall会执行execute方法。execute方法逻辑很简单：</p>
+<ul>
+<li><p>通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功</p>
+<pre><code>Response response = getResponseWithInterceptorChain();
+</code></pre></li>
+</ul>
+<ul>
+<li><p>通知任务分发器该任务结束</p>
+<pre><code>client.dispatcher().finished(this);
+</code></pre></li>
+</ul>
+<h4 id="三、构建拦截器链"><a href="#三、构建拦截器链" class="headerlink" title="三、构建拦截器链"></a>三、构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
+   // Build a full stack of interceptors.
+   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
+   interceptors.addAll(client.interceptors());
+   interceptors.add(retryAndFollowUpInterceptor);
+   interceptors.add(new BridgeInterceptor(client.cookieJar()));
+   interceptors.add(new CacheInterceptor(client.internalCache()));
+   interceptors.add(new ConnectInterceptor(client));
+   if (!forWebSocket) {
+     interceptors.addAll(client.networkInterceptors());
+   }
+   interceptors.add(new CallServerInterceptor(forWebSocket));
+
+   Interceptor.Chain chain = new RealInterceptorChain(
+       interceptors, null, null, null, 0, originalRequest);
+   return chain.proceed(originalRequest);
+ }
+</code></pre><p>从源码来看，基本逻辑就是：</p>
+<ul>
+<li>创建一系列拦截器，加到拦截器数组中。</li>
+<li>创建拦截器链RealInterceptorChain</li>
+<li>执行拦截器链中的proceed方法</li>
+</ul>
+<h4 id="四、RealInterceptorChain"><a href="#四、RealInterceptorChain" class="headerlink" title="四、RealInterceptorChain"></a>四、RealInterceptorChain</h4><pre><code>/**
+ * A concrete interceptor chain that carries the entire interceptor chain: all application
+ * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
+ */
+public final class RealInterceptorChain implements Interceptor.Chain {
+  private final List&lt;Interceptor&gt; interceptors;
+  private final StreamAllocation streamAllocation;
+  private final HttpCodec httpCodec;
+  private final RealConnection connection;
+  private final int index;
+  private final Request request;
+  private int calls;
+
+  public RealInterceptorChain(List&lt;Interceptor&gt; interceptors, StreamAllocation streamAllocation,
+      HttpCodec httpCodec, RealConnection connection, int index, Request request) {
+    this.interceptors = interceptors;
+    this.connection = connection;
+    this.streamAllocation = streamAllocation;
+    this.httpCodec = httpCodec;
+    this.index = index;
+    this.request = request;
+  }
+
+  @Override public Connection connection() {
+    return connection;
+  }
+
+  public StreamAllocation streamAllocation() {
+    return streamAllocation;
+  }
+
+  public HttpCodec httpStream() {
+    return httpCodec;
+  }
+
+  @Override public Request request() {
+    return request;
+  }
+
+  @Override public Response proceed(Request request) throws IOException {
+    return proceed(request, streamAllocation, httpCodec, connection);
+  }
+
+  public Response proceed(Request request, StreamAllocation streamAllocation, HttpCodec httpCodec,
+      RealConnection connection) throws IOException {
+    if (index &gt;= interceptors.size()) throw new AssertionError();
+
+    calls++;
+
+    // If we already have a stream, confirm that the incoming request will use it.
+    if (this.httpCodec != null &amp;&amp; !this.connection.supportsUrl(request.url())) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must retain the same host and port&quot;);
+    }
+
+    // If we already have a stream, confirm that this is the only call to chain.proceed().
+    if (this.httpCodec != null &amp;&amp; calls &gt; 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptors.get(index - 1)
+          + &quot; must call proceed() exactly once&quot;);
+    }
+
+
+
+    Interceptor interceptor = interceptors.get(index);
+    Response response = interceptor.intercept(next);
+
+    // Confirm that the next interceptor made its required call to chain.proceed().
+    if (httpCodec != null &amp;&amp; index + 1 &lt; interceptors.size() &amp;&amp; next.calls != 1) {
+      throw new IllegalStateException(&quot;network interceptor &quot; + interceptor
+          + &quot; must call proceed() exactly once&quot;);
+    }
+
+    // Confirm that the intercepted response isn&apos;t null.
+    if (response == null) {
+      throw new NullPointerException(&quot;interceptor &quot; + interceptor + &quot; returned null&quot;);
+    }
+
+    return response;
+  }
+}
+</code></pre><p>可以看到procees方法的逻辑：</p>
+<ul>
+<li><p>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。</p>
+<pre><code>// Call the next interceptor in the chain.
+RealInterceptorChain next = new RealInterceptorChain(
+            interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+</code></pre></li>
+<li><p>获取索引为index的interceptor,执行索引为index的intercept方法。</p>
+<pre><code>Interceptor interceptor = interceptors.get(index);
+Response response = interceptor.intercept(next);
+</code></pre></li>
+</ul>
+<h4 id="五、拦截器链"><a href="#五、拦截器链" class="headerlink" title="五、拦截器链"></a>五、拦截器链</h4><h5 id="1-RetryAndFollowUpInterceptor"><a href="#1-RetryAndFollowUpInterceptor" class="headerlink" title="1.RetryAndFollowUpInterceptor"></a>1.RetryAndFollowUpInterceptor</h5><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
+    Request request = chain.request();
+
+streamAllocation = new StreamAllocation(
+    client.connectionPool(), createAddress(request.url()), callStackTrace);
+
+int followUpCount = 0;
+Response priorResponse = null;
+while (true) {
+  if (canceled) {
+    streamAllocation.release();
+    throw new IOException(&quot;Canceled&quot;);
+  }
+
+  Response response = null;
+  boolean releaseConnection = true;
+  try {
+    response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
+    releaseConnection = false;
+  } catch (RouteException e) {
+    // The attempt to connect via a route failed. The request will not have been sent.
+    if (!recover(e.getLastConnectException(), false, request)) {
+      throw e.getLastConnectException();
+    }
+    releaseConnection = false;
+    continue;
+  } catch (IOException e) {
+    // An attempt to communicate with a server failed. The request may have been sent.
+    boolean requestSendStarted = !(e instanceof ConnectionShutdownException);
+    if (!recover(e, requestSendStarted, request)) throw e;
+    releaseConnection = false;
+    continue;
+  } finally {
+    // We&apos;re throwing an unchecked exception. Release any resources.
+    if (releaseConnection) {
+      streamAllocation.streamFailed(null);
+      streamAllocation.release();
+    }
+  }
+
+  // Attach the prior response if it exists. Such responses never have a body.
+  if (priorResponse != null) {
+    response = response.newBuilder()
+        .priorResponse(priorResponse.newBuilder()
+                .body(null)
+                .build())
+        .build();
+  }
+
+  Request followUp = followUpRequest(response);
+
+  if (followUp == null) {
+    if (!forWebSocket) {
+      streamAllocation.release();
+    }
+    return response;
+  }
+
+  closeQuietly(response.body());
+
+  if (++followUpCount &gt; MAX_FOLLOW_UPS) {
+    streamAllocation.release();
+    throw new ProtocolException(&quot;Too many follow-up requests: &quot; + followUpCount);
+  }
+
+  if (followUp.body() instanceof UnrepeatableRequestBody) {
+    streamAllocation.release();
+    throw new HttpRetryException(&quot;Cannot retry streamed HTTP body&quot;, response.code());
+  }
+//与当前的响应进行对比，检查是否同一个连接。通常，当发生请求重定向时，url地址将会有所不同，也就是说，
+请求的资源在这时已经被分配了新的url.当不是同一个url请求时，将原先的streamAllocation执行release销
+毁掉,再新建一个StreamAllocation连接,进行重试。
+  if (!sameConnection(response, followUp.url(s))) {
+    streamAllocation.release();
+    streamAllocation = new StreamAllocation(
+        client.connectionPool(), createAddress(followUp.url()), callStackTrace);
+  } else if (streamAllocation.codec() != null) {
+    throw new IllegalStateException(&quot;Closing the body of &quot; + response
+        + &quot; didn&apos;t close its backing stream. Bad interceptor?&quot;);
+  }
+
+  request = followUp;
+  priorResponse = response;
+}
+}
+</code></pre><ul>
+<li>发起请求前拦截器对request处理</li>
+<li>然后调用下一个拦截器，获取Response</li>
+</ul>
+<p>调用的关键：</p>
+<pre><code>try {
+        response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
+        releaseConnection = false;
+      }
+</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.</p>
+<p>下面就来对几种拦截器一一介绍。</p>
+<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p>官方注释解释：从应用程序代码到网络代码的桥梁，首先从用户的请求构建一个网络请求，然后执行访问网络，最后返回Response.</p>
+<p>整个过程就是：首先将客户端构建的Request对象信息构建成真正的网络请求;然后发起网络请求，最后就是将服务器返回的消息封装成一个Response对象。</p>
+<p>下面就看一下核心方法intercept()</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+//拿到用户的请求
+Request userRequest = chain.request();
+Request.Builder requestBuilder = userRequest.newBuilder();
+//拿到用户请求body
+RequestBody body = userRequest.body();
+//对请求头的补充
+if (body != null) {
+  MediaType contentType = body.contentType();
+  if (contentType != null) {
+    requestBuilder.header(&quot;Content-Type&quot;, contentType.toString());
+  }
+
+  long contentLength = body.contentLength();
+  if (contentLength != -1) {
+    requestBuilder.header(&quot;Content-Length&quot;, Long.toString(contentLength));
+    requestBuilder.removeHeader(&quot;Transfer-Encoding&quot;);
+  } else {
+    requestBuilder.header(&quot;Transfer-Encoding&quot;, &quot;chunked&quot;);
+    requestBuilder.removeHeader(&quot;Content-Length&quot;);
+  }
+}
+
+if (userRequest.header(&quot;Host&quot;) == null) {
+  requestBuilder.header(&quot;Host&quot;, hostHeader(userRequest.url(), false));
+}
+//默认是保持连接的（Keep-Alive）
+if (userRequest.header(&quot;Connection&quot;) == null) {
+  requestBuilder.header(&quot;Connection&quot;, &quot;Keep-Alive&quot;);
+}
+//默认GZIP压缩
+//Accept-Encoding就是告诉服务器客户端能接收的数据编码类型
+// If we add an &quot;Accept-Encoding: gzip&quot; header field we&apos;re responsible for also decompressing
+// the transfer stream.
+boolean transparentGzip = false;
+if (userRequest.header(&quot;Accept-Encoding&quot;) == null &amp;&amp; userRequest.header(&quot;Range&quot;) == null) {
+  transparentGzip = true;
+  requestBuilder.header(&quot;Accept-Encoding&quot;, &quot;gzip&quot;);
+}
+//添加cookie头
+List&lt;Cookie&gt; cookies = cookieJar.loadForRequest(userRequest.url());
+if (!cookies.isEmpty()) {
+  requestBuilder.header(&quot;Cookie&quot;, cookieHeader(cookies));
+}
+
+if (userRequest.header(&quot;User-Agent&quot;) == null) {
+  requestBuilder.header(&quot;User-Agent&quot;, Version.userAgent());
+}
+//继续执行下一个拦截器的方法
+Response networkResponse = chain.proceed(requestBuilder.build());
+//接收服务器返回的cookie
+HttpHeaders.receiveHeaders(cookieJar, userRequest.url(), networkResponse.headers());
+
+Response.Builder responseBuilder = networkResponse.newBuilder()
+    .request(userRequest);
+
+if (transparentGzip
+    &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
+    &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+  //当服务器返回的数据是GZIP压缩的，那么客户端就进行GZIP解压操作
+  GzipSource responseBody = new GzipSource(networkResponse.body().source());
+  Headers strippedHeaders = networkResponse.headers().newBuilder()
+      .removeAll(&quot;Content-Encoding&quot;)
+      .removeAll(&quot;Content-Length&quot;)
+      .build();
+  responseBuilder.headers(strippedHeaders);
+  responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
+}
+//构建一个Response
+return responseBuilder.build();
+  }
+</code></pre><p>BridgeInterceptor主要流程逻辑：</p>
+<ol>
+<li>拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求</li>
+<li>将这个符合网络请求的Request进行网络请求</li>
+<li>将网络请求返回的Response转化为用户可用的Response</li>
+</ol>
+<p>代码中构建网络Request添加的请求头信息：</p>
+<ul>
+<li>简单了解一下先，头信息</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>协议头字段名</th>
+<th>说明</th>
+<th>示例</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content-Type</td>
+<td>请求体的 多媒体类型 （用于POST和PUT请求中）</td>
+<td>Content-Type: application/x-www-form-urlencoded</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Content-Length</td>
+<td>以 八位字节数组 （8位的字节）表示的请求体的长度</td>
+<td>Content-Length: 348</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Transfer-Encoding</td>
+<td>用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity</td>
+<td>Transfer-Encoding: chunked</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>服务器的域名(用于虚拟主机 )，以及服务器所监听的传输控制协议端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本1.1（HTTP/1.1）开始便是必需字段。</td>
+<td>Host: en.wikipedia.org:80 Host: en.wikipedia.org</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Connection</td>
+<td>该浏览器想要优先使用的连接类型</td>
+<td>Connection: keep-alive      ，Connection: Upgrade</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Accept-Encoding</td>
+<td>能够接受的编码方式列表</td>
+<td>Accept-Encoding: gzip, deflate</td>
+<td>常设</td>
+</tr>
+<tr>
+<td>Cookie</td>
+<td>之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109</td>
+<td>Cookie: $Version=1; Skin=new;</td>
+<td>常设: 标准</td>
+</tr>
+</tbody>
+</table>
+<h6 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h6><ul>
+<li><p>构建完头信息后，进行网络请求</p>
+<pre><code>Response networkResponse = chain.proceed(requestBuilder.build());
+</code></pre></li>
+<li><p>获取到返回的Response,转化为客户端可用的Response</p>
+<pre><code> Response.Builder responseBuilder = networkResponse.newBuilder()
+    .request(userRequest);
+
+if (transparentGzip
+    &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
+    &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
+  GzipSource responseBody = new GzipSource(networkResponse.body().source());
+  Headers strippedHeaders = networkResponse.headers().newBuilder()
+      .removeAll(&quot;Content-Encoding&quot;)
+      .removeAll(&quot;Content-Length&quot;)
+      .build();
+  responseBuilder.headers(strippedHeaders);
+  responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
+</code></pre></li>
+</ul>
+<h5 id="3-CacheIntetceptor"><a href="#3-CacheIntetceptor" class="headerlink" title="3.CacheIntetceptor"></a>3.CacheIntetceptor</h5><p>CacheIntetceptor的职责就是负责Cache的管理</p>
+<p>看一下核心方法：</p>
+<pre><code> @Override public Response intercept(Chain chain) throws IOException {
+ //1.读取候选的缓存
+Response cacheCandidate = cache != null
+    ? cache.get(chain.request())
+    : null;
+
+long now = System.currentTimeMillis();
+//2.首先创建缓存策略，networkRequest为网络请求，cacheResponse为缓存
+CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
+Request networkRequest = strategy.networkRequest;
+Response cacheResponse = strategy.cacheResponse;
+
+if (cache != null) {
+  cache.trackResponse(strategy);
+}
+
+if (cacheCandidate != null &amp;&amp; cacheResponse == null) {
+  closeQuietly(cacheCandidate.body()); // The cache candidate wasn&apos;t applicable. Close it.
+}
+
+// If we&apos;re forbidden from using the network and the cache is insufficient, fail.
+//3.如果禁止网络访问并且本地cache缓存也不完整，那么请求失败
+if (networkRequest == null &amp;&amp; cacheResponse == null) {
+  return new Response.Builder()
+      .request(chain.request())
+      .protocol(Protocol.HTTP_1_1)
+      .code(504)
+      .message(&quot;Unsatisfiable Request (only-if-cached)&quot;)
+      .body(Util.EMPTY_RESPONSE)
+      .sentRequestAtMillis(-1L)
+      .receivedResponseAtMillis(System.currentTimeMillis())
+      .build();
+}
+
+// If we don&apos;t need the network, we&apos;re done.
+//4.不需要访问网络的情况下，取本地缓存作为结果返回。
+if (networkRequest == null) {
+  return cacheResponse.newBuilder()
+      .cacheResponse(stripBody(cacheResponse))
+      .build();
+}
+
+Response networkResponse = null;
+try {
+//5.当以上情况都没有结果返回，就读取网络结果（继续执行下一个拦截器）
+  networkResponse = chain.proceed(networkRequest);
+} finally {
+  // If we&apos;re crashing on I/O or otherwise, don&apos;t leak the cache body.
+  if (networkResponse == null &amp;&amp; cacheCandidate != null) {
+    closeQuietly(cacheCandidate.body());
+  }
+}
+
+// If we have a cache response too, then we&apos;re doing a conditional get.
+//6.接收到网络结果返回，如果我们也有缓存，那么就会进行条件对比组合
+if (cacheResponse != null) {
+  if (networkResponse.code() == HTTP_NOT_MODIFIED) {
+    Response response = cacheResponse.newBuilder()
+        .headers(combine(cacheResponse.headers(), networkResponse.headers()))//7.将缓存返回与网络返回的头信息进行组合
+        .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
+        .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
+        .cacheResponse(stripBody(cacheResponse))
+        .networkResponse(stripBody(networkResponse))
+        .build();
+    networkResponse.body().close();
+    //8.组合头后，但在剥离Content-Encoding头（由initContentStream（）执行）之前更新缓存。
+    // Update the cache after combining headers but before stripping the
+    // Content-Encoding header (as performed by initContentStream()).
+    cache.trackConditionalCacheHit();
+    cache.update(cacheResponse, response);
+    return response;
+  } else {
+    closeQuietly(cacheResponse.body());
+  }
+}
+//9.读取网络请求
+Response response = networkResponse.newBuilder()
+    .cacheResponse(stripBody(cacheResponse))
+    .networkResponse(stripBody(networkResponse))
+    .build();
+//10.对数据进行缓存
+if (cache != null) {
+  if (HttpHeaders.hasBody(response) &amp;&amp; CacheStrategy.isCacheable(response, networkRequest)) {
+    // Offer this request to the cache.
+    CacheRequest cacheRequest = cache.put(response);
+    return cacheWritingResponse(cacheRequest, response);
+  }
+
+  if (HttpMethod.invalidatesCache(networkRequest.method())) {
+    try {
+      cache.remove(networkRequest);
+    } catch (IOException ignored) {
+      // The cache cannot be written.
+    }
+  }
+}
+//11.返回网络请求的结果
+return response;
+  }
+</code></pre><p>####### 整个过程大致：</p>
+<p>CacheInterceptor主要就是负责Cache的管理</p>
+<ul>
+<li>当网络被禁止访问，缓存不完整，那么返回失败（504）</li>
+<li>缓存可用，返回缓存结果</li>
+<li>当网络访问，返回（304），更新本地缓存</li>
+<li>当Cache失效，删除缓存</li>
+</ul>
+<h5 id="4-ConnectInterceptor"><a href="#4-ConnectInterceptor" class="headerlink" title="4.ConnectInterceptor"></a>4.ConnectInterceptor</h5><p>代码不多，但包含的内容很多。</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+   RealInterceptorChain realChain = (RealInterceptorChain) chain;
+   Request request = realChain.request();
+   //拿到StreamAllocation对象。
+   StreamAllocation streamAllocation = realChain.streamAllocation();
+
+   // We need the network to satisfy this request. Possibly for validating a conditional GET.
+   boolean doExtensiveHealthChecks = !request.method().equals(&quot;GET&quot;);
+   HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+   RealConnection connection = streamAllocation.connection();
+
+   return realChain.proceed(request, streamAllocation, httpCodec, connection);
+     }
+</code></pre><p>从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化</p>
+<pre><code>streamAllocation = new StreamAllocation(
+client.connectionPool(), createAddress(request.url()), callStackTrace);
+</code></pre><p>三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用</p>
+<p>看一下StreamAllocation的构造方法</p>
+<pre><code>public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {
+this.connectionPool = connectionPool;
+this.address = address;
+this.routeSelector = new RouteSelector(address, routeDatabase());
+this.callStackTrace = callStackTrace;
+  }
+</code></pre><p>在把这个三个参数保存为内部变量的同时也创建了一个线路选择器</p>
+<p>streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。</p>
+<p>接下来继续看StreamAllocation中的newSream()方法</p>
+<pre><code>public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
+//读取从OkHttpClient配置的超时时间
+int connectTimeout = client.connectTimeoutMillis();
+//获取读写超时时间
+int readTimeout = client.readTimeoutMillis();
+int writeTimeout = client.writeTimeoutMillis();
+//连接重试
+boolean connectionRetryEnabled = client.retryOnConnectionFailure();
+
+try {
+//找到一个健康的连接（在连接池中寻找或者新创建一个连接）
+  RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
+      writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
+  //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化
+  HttpCodec resultCodec = resultConnection.newCodec(client, this);
+
+  synchronized (connectionPool) {
+    codec = resultCodec;
+    return resultCodec;
+  }
+} catch (IOException e) {
+  throw new RouteException(e);
+}
+  }
+</code></pre><p> 下面就再看一下它是如何找到一个健康的连接的</p>
+<pre><code>private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
+    int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
+    throws IOException {
+  while (true) {
+  //找到健康的连接
+    RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
+        connectionRetryEnabled);
+
+    // If this is a brand new connection, we can skip the extensive health checks.
+    synchronized (connectionPool) {
+      if (candidate.successCount == 0) {
+        return candidate;
+      }
+    }
+
+    // Do a (potentially slow) check to confirm that the pooled connection is still good. If it
+    // isn&apos;t, take it out of the pool and start again.
+    if (!candidate.isHealthy(doExtensiveHealthChecks)) {
+      noNewStreams();
+      continue;
+    }
+
+    return candidate;
+  }
+}
+</code></pre><p>从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。</p>
+<p>那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法</p>
+<pre><code>private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
+      boolean connectionRetryEnabled) throws IOException {
+    Route selectedRoute;
+    //同步线程池
+    synchronized (connectionPool) {
+      if (released) throw new IllegalStateException(&quot;released&quot;);
+      if (codec != null) throw new IllegalStateException(&quot;codec != null&quot;);
+      if (canceled) throw new IOException(&quot;Canceled&quot;);
+
+        //尝试使用现有连接，判断是否可用
+      // Attempt to use an already-allocated connection.
+      RealConnection allocatedConnection = this.connection;
+      if (allocatedConnection != null &amp;&amp; !allocatedConnection.noNewStreams) {
+        return allocatedConnection;
+      }
+        //尝试在连接池中获取一个连接，
+      // Attempt to get a connection from the pool.
+      Internal.instance.get(connectionPool, address, this, null);
+      if (connection != null) {
+        return connection;
+      }
+
+      selectedRoute = route;
+    }
+
+    // If we need a route, make one. This is a blocking operation.
+    if (selectedRoute == null) {
+      selectedRoute = routeSelector.next();
+    }
+
+    RealConnection result;
+    synchronized (connectionPool) {
+      if (canceled) throw new IOException(&quot;Canceled&quot;);
+
+      // Now that we have an IP address, make another attempt at getting a connection from the pool.
+      // This could match due to connection coalescing.
+      Internal.instance.get(connectionPool, address, this, selectedRoute);
+      if (connection != null) {
+        route = selectedRoute;
+        return connection;
+      }
+
+      // Create a connection and assign it to this allocation immediately. This makes it possible
+      // for an asynchronous cancel() to interrupt the handshake we&apos;re about to do.
+      route = selectedRoute;
+      refusedStreamCount = 0;
+      result = new RealConnection(connectionPool, selectedRoute);
+      acquire(result);
+    }
+
+    // Do TCP + TLS handshakes. This is a blocking operation.
+    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
+    routeDatabase().connected(result.route());
+
+    Socket socket = null;
+    synchronized (connectionPool) {
+      // Pool the connection.
+      Internal.instance.put(connectionPool, result);
+
+      // If another multiplexed connection to the same address was created concurrently, then
+      // release this connection and acquire that one.
+      if (result.isMultiplexed()) {
+        socket = Internal.instance.deduplicate(connectionPool, address, this);
+        result = connection;
+      }
+    }
+    closeQuietly(socket);
+
+    return result;
+  }
+</code></pre><p>这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。</p>
+<p>那么回到ConnectInterceptor,它的作用就是为当前请求找到合适的连接，可能复用已有连接也可能是重新创建的连接，返回的连接由连接池负责决定。</p>
+<h5 id="5-CallServerInterceptor"><a href="#5-CallServerInterceptor" class="headerlink" title="5.CallServerInterceptor"></a>5.CallServerInterceptor</h5><p>整个拦截器链中的最后一个拦截器，看一下源码。</p>
+<p>关键方法intercept,如下：</p>
+<pre><code>@Override public Response intercept(Chain chain) throws IOException {
+   RealInterceptorChain realChain = (RealInterceptorChain) chain;
+   HttpCodec httpCodec = realChain.httpStream();
+   StreamAllocation streamAllocation = realChain.streamAllocation();
+   RealConnection connection = (RealConnection) realChain.connection();
+   Request request = realChain.request();
+
+   long sentRequestMillis = System.currentTimeMillis();
+    //1.首先写请求头
+   realChain.eventListener().requestHeadersStart(realChain.call());
+   httpCodec.writeRequestHeaders(request);
+   realChain.eventListener().requestHeadersEnd(realChain.call(), request);
+
+   Response.Builder responseBuilder = null;
+   if (HttpMethod.permitsRequestBody(request.method()) &amp;&amp; request.body() != null) {
+     // If there&apos;s a &quot;Expect: 100-continue&quot; header on the request, wait for a &quot;HTTP/1.1 100
+     // Continue&quot; response before transmitting the request body. If we don&apos;t get that, return
+     // what we did get (such as a 4xx response) without ever transmitting the request body.
+     if (&quot;100-continue&quot;.equalsIgnoreCase(request.header(&quot;Expect&quot;))) {
+       httpCodec.flushRequest();
+       realChain.eventListener().responseHeadersStart(realChain.call());
+       responseBuilder = httpCodec.readResponseHeaders(true);
+     }
+      //2.然后写请求体
+     if (responseBuilder == null) {
+       // Write the request body if the &quot;Expect: 100-continue&quot; expectation was met.
+       realChain.eventListener().requestBodyStart(realChain.call());
+       long contentLength = request.body().contentLength();
+       CountingSink requestBodyOut =
+           new CountingSink(httpCodec.createRequestBody(request, contentLength));
+       BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+
+       request.body().writeTo(bufferedRequestBody);
+       bufferedRequestBody.close();
+       realChain.eventListener()
+           .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
+     } else if (!connection.isMultiplexed()) {
+       // If the &quot;Expect: 100-continue&quot; expectation wasn&apos;t met, prevent the HTTP/1 connection
+       // from being reused. Otherwise we&apos;re still obligated to transmit the request body to
+       // leave the connection in a consistent state.
+       streamAllocation.noNewStreams();
+     }
+   }
+
+   httpCodec.finishRequest();
+    //读取响应头
+   if (responseBuilder == null) {
+     realChain.eventListener().responseHeadersStart(realChain.call());
+     responseBuilder = httpCodec.readResponseHeaders(false);
+   }
+
+   Response response = responseBuilder
+       .request(request)
+       .handshake(streamAllocation.connection().handshake())
+       .sentRequestAtMillis(sentRequestMillis)
+       .receivedResponseAtMillis(System.currentTimeMillis())
+       .build();
+
+   realChain.eventListener()
+       .responseHeadersEnd(realChain.call(), response);
+   //判断响应码，读取响应体
+   int code = response.code();
+   if (forWebSocket &amp;&amp; code == 101) {
+     // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+     response = response.newBuilder()
+         .body(Util.EMPTY_RESPONSE)
+         .build();
+   } else {
+     response = response.newBuilder()
+         .body(httpCodec.openResponseBody(response))
+         .build();
+   }
+
+   if (&quot;close&quot;.equalsIgnoreCase(response.request().header(&quot;Connection&quot;))
+       || &quot;close&quot;.equalsIgnoreCase(response.header(&quot;Connection&quot;))) {
+     streamAllocation.noNewStreams();
+   }
+
+   if ((code == 204 || code == 205) &amp;&amp; response.body().contentLength() &gt; 0) {
+     throw new ProtocolException(
+         &quot;HTTP &quot; + code + &quot; had non-zero Content-Length: &quot; + response.body().contentLength());
+   }
+
+   return response;
+ }
+</code></pre><p>真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。</p>
+<h5 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h5><pre><code>// Call the next interceptor in the chain.
+   RealInterceptorChain next = new RealInterceptorChain(
+       interceptors, streamAllocation, httpCodec, connection, index + 1, request);
+   Interceptor interceptor = interceptors.get(index);
+   Response response = interceptor.intercept(next);
+</code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/WechatIMG7.jpeg" alt="Neil Liu wechat" style="width: 200px; max-width: 100%;"/>
+    <div>个人微信，欢迎交流</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>让我感受下知识的力量~</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WechatIMG3.jpeg" alt="Neil Liu WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/WechatIMG5.jpeg" alt="Neil Liu Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OkHttp3/" rel="tag"># OkHttp3</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/26/OkHttp3源码学习（2）/" rel="next" title="OkHttp3源码学习（2）-发起请求源码实现">
+                <i class="fa fa-chevron-left"></i> OkHttp3源码学习（2）-发起请求源码实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/28/OkHttp3源码学习（4）-Dispatcher/" rel="prev" title="OkHttp3源码学习（4）-Dispatcher">
+                OkHttp3源码学习（4）-Dispatcher <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Neil Liu" />
+          <p class="site-author-name" itemprop="name">Neil Liu</p>
+           
+              <p class="site-description motion-element" itemprop="description">优秀不够，你是否无可替代</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">53</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/GitHublsh" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、发起请求"><span class="nav-number">1.</span> <span class="nav-text">一、发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">二、AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">三、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">四、RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、拦截器链"><span class="nav-number">5.</span> <span class="nav-text">五、拦截器链</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-RetryAndFollowUpInterceptor"><span class="nav-number">5.1.</span> <span class="nav-text">1.RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-BidgeInterceptor"><span class="nav-number">5.2.</span> <span class="nav-text">2.BidgeInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#小结："><span class="nav-number">5.2.1.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-CacheIntetceptor"><span class="nav-number">5.3.</span> <span class="nav-text">3.CacheIntetceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-ConnectInterceptor"><span class="nav-number">5.4.</span> <span class="nav-text">4.ConnectInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-CallServerInterceptor"><span class="nav-number">5.5.</span> <span class="nav-text">5.CallServerInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最后"><span class="nav-number">5.6.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Neil Liu</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+		<script type="text/javascript">
+		_hcwp = window._hcwp || [];
+
+		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
+
+		
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2017/07/27/OkHttp3源码学习（3）/"});
+		
+
+		(function() {
+		if("HC_LOAD_INIT" in window)return;
+		HC_LOAD_INIT = true;
+		var lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage || "en").substr(0, 2).toLowerCase();
+		var hcc = document.createElement("script"); hcc.type = "text/javascript"; hcc.async = true;
+		hcc.src = ("https:" == document.location.protocol ? "https" : "http")+"://w.hypercomments.com/widget/hc/93292/"+lang+"/widget.js";
+		var s = document.getElementsByTagName("script")[0];
+		s.parentNode.insertBefore(hcc, s.nextSibling);
+		})();
+		</script>
+
+	
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
