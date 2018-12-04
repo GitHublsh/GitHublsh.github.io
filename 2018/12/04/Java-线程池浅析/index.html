@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
+<meta name="description" content="Java线程池合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。 一、简单介绍最简单的新建一个线程的方式就是new Thre">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java线程池浅析">
 <meta property="og:url" content="http://yoursite.com/2018/12/04/Java-线程池浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
-<meta property="og:updated_time" content="2018-12-04T10:38:15.000Z">
+<meta property="og:description" content="Java线程池合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。 一、简单介绍最简单的新建一个线程的方式就是new Thre">
+<meta property="og:updated_time" content="2018-12-04T10:45:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java线程池浅析">
-<meta name="twitter:description" content="Java线程池###一、简单介绍 最简单的新建一个线程的方式就是new Thread1234567new Thread(new Runnable() &amp;#123;		@Overrider		public void run()&amp;#123;			//do something		&amp;#125;	&amp;#125;).start(); 虽然简单，但是有很多缺点：  频繁的使用new Thread 来新建线程会造成">
+<meta name="twitter:description" content="Java线程池合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。 一、简单介绍最简单的新建一个线程的方式就是new Thre">
 
 
 
@@ -360,8 +360,8 @@
       
 
       
-        <h1 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h1><p>###一、简单介绍</p>
-<p>最简单的新建一个线程的方式就是new Thread<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Overrider</span></div><div class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">			<span class="comment">//do something</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">).start();</div></pre></td></tr></table></figure></p>
+        <h2 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h2><p>合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</p>
+<h3 id="一、简单介绍"><a href="#一、简单介绍" class="headerlink" title="一、简单介绍"></a>一、简单介绍</h3><p>最简单的新建一个线程的方式就是new Thread<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Overrider</span></div><div class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">			<span class="comment">//do something</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">).start();</div></pre></td></tr></table></figure></p>
 <p>虽然简单，但是有很多缺点：</p>
 <ol>
 <li>频繁的使用new Thread 来新建线程会造成新建对象性能差</li>
@@ -606,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java线程池"><span class="nav-number">1.</span> <span class="nav-text">Java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java线程池"><span class="nav-number">1.0.1.</span> <span class="nav-text">二、Java线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、线程池的分类"><span class="nav-number">1.0.2.</span> <span class="nav-text">三、线程池的分类</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程池"><span class="nav-number">1.</span> <span class="nav-text">Java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单介绍"><span class="nav-number">1.1.</span> <span class="nav-text">一、简单介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java线程池"><span class="nav-number">1.2.</span> <span class="nav-text">二、Java线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、线程池的分类"><span class="nav-number">1.3.</span> <span class="nav-text">三、线程池的分类</span></a></li></ol></li></ol></div>
             
 
           </div>
