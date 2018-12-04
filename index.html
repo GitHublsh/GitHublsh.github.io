@@ -394,6 +394,13 @@
 </li>
 <li>handler：RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。以下是JDK1.5提供的四种策略。<br>1、AbortPolicy：直接抛出异常。<br>2、CallerRunsPolicy：只用调用者所在线程来运行任务。<br>3、DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。<br>4、DiscardPolicy：不处理，丢弃掉。<br>当然也可以根据应用场景需要来实现RejectedExecutionHandler接口自定义策略。如记录日志或持久化不能处理的任务。</li>
 </ul>
+<h3 id="线程池的分类"><a href="#线程池的分类" class="headerlink" title="线程池的分类"></a>线程池的分类</h3><p>常见的线程池有四种:</p>
+<ol>
+<li>FixedThreadPool</li>
+<li>CachedThreadPool</li>
+<li>ScheduledThreadPool</li>
+<li>SingleThreadExecutor</li>
+</ol>
 
           
         
