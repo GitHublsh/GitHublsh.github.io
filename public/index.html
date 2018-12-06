@@ -430,6 +430,9 @@
 <li>CallerRunsPolicy（将任务分给调用线程来执行）</li>
 </ol>
 <h3 id="六、基本使用"><a href="#六、基本使用" class="headerlink" title="六、基本使用"></a>六、基本使用</h3><h4 id="向线程池提交任务"><a href="#向线程池提交任务" class="headerlink" title="向线程池提交任务"></a>向线程池提交任务</h4><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Runnable cacheThread = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="built_in">run</span>() &#123;</div><div class="line">                System.out.<span class="built_in">println</span>(<span class="string">"Test CacheThreadPool"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        ExecutorService cacheThreadPool = Executors.newCachedThreadPool();</div><div class="line">        cacheThreadPool.execute(cacheThread);</div></pre></td></tr></table></figure>
+<h3 id="七、整体分析"><a href="#七、整体分析" class="headerlink" title="七、整体分析"></a>七、整体分析</h3><p>整体流程大致如图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/005GVP9ggy1fxx47ohpfkj31be0j6wi7.jpg" alt="threadpoolpic"></p>
+<p>了解了整体流程，那么再去看源码就会很清楚明了了。</p>
 
           
         
