@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/12/04/Java-线程池浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Java线程池合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。 一、简单介绍最简单的新建一个线程的方式就是new Thre">
-<meta property="og:updated_time" content="2018-12-04T10:45:47.000Z">
+<meta property="og:updated_time" content="2018-12-05T08:41:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java线程池浅析">
 <meta name="twitter:description" content="Java线程池合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。 一、简单介绍最简单的新建一个线程的方式就是new Thre">
@@ -397,6 +397,10 @@
 <li>ScheduledThreadPool</li>
 <li>SingleThreadExecutor</li>
 </ol>
+<h4 id="1-FixedThreadPool"><a href="#1-FixedThreadPool" class="headerlink" title="1.FixedThreadPool"></a>1.FixedThreadPool</h4><p>FixedThreadPool是通过Executors的newCachedThreadPool()方法来创建的。它是一种线程数量固定的线程池。当该线程池中所有的线程都被占用了，新任务都会处于等待状态，直到有空闲线程。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">FixedThreadPool</span>(int nThreads) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(nThreads, nThreads,</div><div class="line">                                    <span class="number">0</span>L, TimeUnit.MILLISECONDS,</div><div class="line">                                    <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;());</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>可以看出FixedThreadPool里面只有核心线程，并且不会被回收。那么该线程池中的线程就可以快速响应请求的任务。</p>
+<h4 id="2-CacheThreadPool"><a href="#2-CacheThreadPool" class="headerlink" title="2.CacheThreadPool"></a>2.CacheThreadPool</h4><p>CacheThreadPool是通过Executors的newCacheThreadPool()来创建的。它是<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">CachedThreadPool</span>() &#123;</div><div class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</div><div class="line">                                     <span class="number">60</span>L, TimeUnit.SECONDS,</div><div class="line">                                     <span class="keyword">new</span> <span class="type">SynchronousQueue</span>&lt;Runnable&gt;());</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -606,7 +610,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程池"><span class="nav-number">1.</span> <span class="nav-text">Java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单介绍"><span class="nav-number">1.1.</span> <span class="nav-text">一、简单介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java线程池"><span class="nav-number">1.2.</span> <span class="nav-text">二、Java线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、线程池的分类"><span class="nav-number">1.3.</span> <span class="nav-text">三、线程池的分类</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java线程池"><span class="nav-number">1.</span> <span class="nav-text">Java线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、简单介绍"><span class="nav-number">1.1.</span> <span class="nav-text">一、简单介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Java线程池"><span class="nav-number">1.2.</span> <span class="nav-text">二、Java线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、线程池的分类"><span class="nav-number">1.3.</span> <span class="nav-text">三、线程池的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-FixedThreadPool"><span class="nav-number">1.3.1.</span> <span class="nav-text">1.FixedThreadPool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-CacheThreadPool"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.CacheThreadPool</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
