@@ -284,6 +284,229 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/11/RxJava2-0-二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/11/RxJava2-0-二/" itemprop="url">RxJava2.0(二)线程控制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-11T19:27:52+08:00">
+                2017-08-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/11/RxJava2-0-二/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/08/11/RxJava2-0-二/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>已经知道了基本使用，那就继续进阶更高级的操作-线程切换。</p>
+<p>以Android为例，一个Activity的所有动作默认都是在主线程中运行的, 比如：</p>
+<pre><code>@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+    Log.d(TAG, Thread.currentThread().getName());
+}
+</code></pre><p>结果：main.</p>
+<p>那么在使用RxJava情况下，在主线程创建Observable发射数据，那么发射源就会在主线程发射数据，在主线程创建Observer接收数据，那么接收源就会在主线程接收数据。<br>比如：</p>
+<pre><code>@Override                                                                                       
+protected void onCreate(Bundle savedInstanceState) {                                            
+    super.onCreate(savedInstanceState);                                                         
+    setContentView(R.layout.activity_main);                                                     
+
+Observable&lt;Integer&gt; observable = Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {   
+    @Override                                                                               
+    public void subscribe(ObservableEmitter&lt;Integer&gt; emitter) throws Exception {            
+        Log.d(TAG, &quot;Observable thread is : &quot; + Thread.currentThread().getName());           
+        Log.d(TAG, &quot;emit on main thread&quot;);                                                               
+        emitter.onNext(1);                                                                  
+    }                                                                                       
+});                                                                                         
+
+Consumer&lt;Integer&gt; consumer = new Consumer&lt;Integer&gt;() {                                      
+    @Override                                                                               
+    public void accept(Integer integer) throws Exception {                                  
+        Log.d(TAG, &quot;Observer thread is :&quot; + Thread.currentThread().getName());              
+        Log.d(TAG, &quot;onNext: &quot; + integer);                                                   
+    }                                                                                       
+};                                                                                          
+
+observable.subscribe(consumer);                                                             
+}
+</code></pre><p>即在主线程中创建Observable和Obsever，通过订阅关联后，打印结果显示：</p>
+<pre><code>D/TAG: Observable thread is : main
+D/TAG: emit on main thread                    
+D/TAG: Observer thread is :main   
+D/TAG: onNext: 1
+</code></pre><p>发射源和接收源都在主线程工作。</p>
+<p>然而，我们工作的实际情况是，耗时的操作我们会在子线程处理，处理完再到主线程更新UI。</p>
+<p>那么，为了达到这样的效果，首先就需要改变上游发送数据的线程，然后下游在主线程接收数据，更新UI。</p>
+<pre><code>@Override                                                                                       
+protected void onCreate(Bundle savedInstanceState) {                                            
+    super.onCreate(savedInstanceState);                                                         
+    setContentView(R.layout.activity_main);                                                     
+
+Observable&lt;Integer&gt; observable = Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {   
+    @Override                                                                               
+    public void subscribe(ObservableEmitter&lt;Integer&gt; emitter) throws Exception {            
+        Log.d(TAG, &quot;Observable thread is : &quot; + Thread.currentThread().getName());           
+        Log.d(TAG, &quot;emit on new Thread&quot;);                                                               
+        emitter.onNext(1);                                                                  
+    }                                                                                       
+});                                                                                         
+
+Consumer&lt;Integer&gt; consumer = new Consumer&lt;Integer&gt;() {                                      
+    @Override                                                                               
+    public void accept(Integer integer) throws Exception {                                  
+        Log.d(TAG, &quot;Observer thread is :&quot; + Thread.currentThread().getName());              
+        Log.d(TAG, &quot;onNext: &quot; + integer);                                                   
+    }                                                                                       
+};                                                                                          
+
+observable.subscribeOn(Schedulers.newThread())                                              
+        .observeOn(AndroidSchedulers.mainThread())                                          
+        .subscribe(consumer);                                                               
+}
+</code></pre><p>结果：</p>
+<pre><code>D/TAG: Observable thread is : RxNewThreadScheduler-2  
+D/TAG: emit on new thread                                         
+D/TAG: Observer thread is :main                       
+D/TAG: onNext: 1
+</code></pre><p>从结果就可以看出，上游发射源是在一个新的子线程进行数据的相关处理的。处理后，下游的接收源在主线程接收数据。实现主线程更新UI，子线程处理耗时操作的场景。</p>
+<p>仔细观察下，在订阅的时候多了两个操作：</p>
+<ul>
+<li>subscribeOn</li>
+<li>observeOn</li>
+</ul>
+<p>下面解释下这两个操作。</p>
+<ul>
+<li>subscribeOn：上游发射源切换发射线程，多次切换的情况仅第一次有效。</li>
+<li>observeOn:下游接收事件线程，可多次指定，没指定一次，就切换一次。</li>
+</ul>
+<ul>
+<li><p>Scheduler中内置的几种线程介绍：</p>
+<ul>
+<li><p>Schedulers.immediate()。直接在当前线程运行，相当于不指定线程。这是默认的 Scheduler。</p>
+</li>
+<li><p>Schedulers.newThread(): 总是启用新线程，并在新线程执行操作。</p>
+</li>
+<li><p>Schedulers.io(): I/O 操作（读写文件、读写数据库、网络信息交互等）所使用的 Scheduler。行为模式和 newThread() 差不多，区别在于 io() 的内部实现是是用一个无数量上限的线程池，可以重用空闲的线程，因此多数情况下 io() 比 newThread() 更有效率。不要把计算工作放在 io() 中，可以避免创建不必要的线程。</p>
+</li>
+<li><p>Schedulers.computation(): 计算所使用的 Scheduler。这个计算指的是 CPU 密集型计算，即不会被 I/O 等操作限制性能的操作，例如图形的计算。这个 Scheduler 使用的固定的线程池，大小为 CPU 核数。不要把 I/O 操作放在 computation() 中，否则 I/O 操作的等待时间会浪费 CPU。</p>
+</li>
+<li><p>AndroidSchedulers.mainThread()。它指定的操作将在 Android 主线程运行，Android专用。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/10/RxJava2-0-一/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2095,231 +2318,6 @@ AsyncCall.java
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/25/OkHttp3源码学习（1）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/25/OkHttp3源码学习（1）/" itemprop="url">OkHttp3源码学习（1）-简单实用教程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-25T10:19:43+08:00">
-                2017-07-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/25/OkHttp3源码学习（1）/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/25/OkHttp3源码学习（1）/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>背景简介：</p>
-<p>尽管Google在大部分安卓版本中推荐使用HttpURLConnection，但是这个类相比HttpClient实在是太难用，太弱爆了。<br>OkHttp是一个相对成熟的解决方案，据说Android4.4的源码中可以看到HttpURLConnection已经替换成OkHttp实现了。所以我们更有理由相信OkHttp的强大。</p>
-<p>OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中自动恢复。如果您的服务器配置了多个IP地址，当第一个IP连接失败的时候，OkHttp会自动尝试下一个IP。OkHttp还处理了代理服务器问题和SSL握手失败问题。</p>
-<p>使用 OkHttp 无需重写程序中的网络代码。OkHttp实现了几乎和java.net.HttpURLConnection一样的API。如果你用了 Apache HttpClient，则OkHttp也提供了一个对应的okhttp-apache 模块。</p>
-<p>简单来说，其他的太难用了，这个才是最好用的，不用你会后悔的~</p>
-<h3 id="一、基本使用"><a href="#一、基本使用" class="headerlink" title="一、基本使用"></a>一、基本使用</h3><p>基本步骤：</p>
-<ul>
-<li><p>创建OkHttpClient对象</p>
-<p>OkHttpClient client = new OkHttpClient();</p>
-</li>
-<li><p>创建网络请求</p>
-<p>Request request = new Request.Builder().url(url).build();</p>
-</li>
-<li><p>发送请求,得到返回</p>
-<p>Response response = client.newCall(request).excute();(或者异步)</p>
-</li>
-</ul>
-<ol>
-<li><p>GET请求</p>
-<ul>
-<li><p>同步</p>
-<pre><code>OkHttpClient client = new OkHttpClient();
-
-String run(String url) throws IOException {
-Request request = new Request.Builder()
-    .url(url)
-    .build();
-
-Response response = client.newCall(request).execute();
-return response.body().string();
-</code></pre><p>}</p>
-</li>
-<li><p>异步</p>
-<pre><code>OkHttpClient client = new OkHttpClient();
-Request request = new Request.Builder()
-    .url(url)
-    .build();
-client.newCall(request).enqueue(new CallBack(){
-    @Override
-    public void onFailure(Request request,IOException e){
-    }
-    @Override
-    public void onResponse(Response response){
-    }
-})
-</code></pre></li>
-</ul>
-</li>
-</ol>
-<ol>
-<li><p>POST请求</p>
-<ul>
-<li><p>同步请求</p>
-<pre><code>public static final MediaType JSON
-    = MediaType.parse(&quot;application/json; charset=utf-8&quot;);
-
-OkHttpClient client = new OkHttpClient();
-
-String post(String url, String json) throws IOException {
-  RequestBody body = RequestBody.create(JSON, json);
-  Request request = new Request.Builder()
-      .url(url)
-      .post(body)
-      .build();
-  Response response = client.newCall(request).execute();
-  return response.body().string();
-}
-</code></pre></li>
-<li><p>异步请求</p>
-<pre><code>public static final MediaType JSON
-    = MediaType.parse(&quot;application/json; charset=utf-8&quot;);
-
-OkHttpClient client = new OkHttpClient();
-
-  RequestBody body = RequestBody.create(JSON, json);
-  Request request = new Request.Builder()
-      .url(url)
-      .post(body)
-      .build();
-  client.newCall(request).enqueue(new CallBack(){
-          @Override
-        public void onFailure(Request request,IOException e){
-        }
-        @Override
-        public void onResponse(Response response){
-        }
-  })
-</code></pre></li>
-</ul>
-</li>
-</ol>
-<h4 id="二、架构总览"><a href="#二、架构总览" class="headerlink" title="二、架构总览"></a>二、架构总览</h4><p>借用网上的图···（侵权必删）<br><img src="http://ot29getcp.bkt.clouddn.com/images/okhttp3all.png" alt="“okhttp3整体架构”"></p>
-<h4 id="三、OkHttp的优点"><a href="#三、OkHttp的优点" class="headerlink" title="三、OkHttp的优点"></a>三、OkHttp的优点</h4><p>网上的各路大神已经总结过很多遍了，我再来一遍，加深记忆···</p>
-<ul>
-<li>支持HTTP2/SPDY黑科技</li>
-<li>socket自动选择最好路线，并支持自动重连</li>
-<li>拥有自动维护的socket连接池，减少握手次数</li>
-<li>拥有队列线程池，轻松写并发</li>
-<li>拥有Interceptors轻松处理请求与响应（比如透明GZIP压缩,LOGGING）</li>
-<li>实现基于Headers的缓存策略</li>
-</ul>
-<h4 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h4><p>首先对OkHttp有一个整体的认识，了解基本用法。熟悉整体框架结构。下篇开始进行源码的解读···</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2369,7 +2367,7 @@ OkHttpClient client = new OkHttpClient();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
