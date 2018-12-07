@@ -284,6 +284,140 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/12/Git提交index.lock问题解决/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/09/12/Git提交index.lock问题解决/" itemprop="url">Git提交index.lock问题解决</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-12T19:07:26+08:00">
+                2016-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/12/Git提交index.lock问题解决/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2016/09/12/Git提交index.lock问题解决/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Git提交或者添加时，提示index-lock文件存在，无法提交或者添加"><a href="#Git提交或者添加时，提示index-lock文件存在，无法提交或者添加" class="headerlink" title="Git提交或者添加时，提示index.lock文件存在，无法提交或者添加"></a>Git提交或者添加时，提示index.lock文件存在，无法提交或者添加</h2><h3 id="解决办法一："><a href="#解决办法一：" class="headerlink" title="解决办法一："></a>解决办法一：</h3><ol>
+<li><p>On linux/unix/gitbash/cygwin, try：</p>
+<p> rm -f .git/index.lock</p>
+</li>
+<li><p>On Windows Command Prompt, try:</p>
+<p> de &gt;del .git\index.lock    de&gt;</p>
+</li>
+</ol>
+<h3 id="解决办法二："><a href="#解决办法二：" class="headerlink" title="解决办法二："></a>解决办法二：</h3><p>de &gt;de&gt;</p>
+<p>Go to: Tools &gt; Options &gt; Source Control<br>Select Current source control plug-in as: None</p>
+<h3 id="解决办法三："><a href="#解决办法三：" class="headerlink" title="解决办法三："></a>解决办法三：</h3><p>check if the git still running (ps -ef | grep git)<br>if not, remove the locked file<br>if yes, kill the git process at first.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/10/Hexo+Github搭建个人博客（1）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -985,7 +1119,7 @@ deploy:
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
