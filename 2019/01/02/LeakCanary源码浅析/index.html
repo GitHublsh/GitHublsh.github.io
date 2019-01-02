@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Android性能优化," />
 
 
 
@@ -111,16 +111,17 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
+<meta name="description" content="原理分析首先在Application中进行初始化操作，进行监听。监听的原理在于 Application 的 registerActivityLifecycleCallbacks 方法，该方法可以对应用内所有 Activity 的生命周期做监听。 123456789/** * Creates a &amp;#123;@link RefWatcher&amp;#125; that works out of the b">
+<meta name="keywords" content="Android性能优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeakCanary源码浅析">
 <meta property="og:url" content="http://yoursite.com/2019/01/02/LeakCanary源码浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
-<meta property="og:updated_time" content="2019-01-02T09:02:41.000Z">
+<meta property="og:description" content="原理分析首先在Application中进行初始化操作，进行监听。监听的原理在于 Application 的 registerActivityLifecycleCallbacks 方法，该方法可以对应用内所有 Activity 的生命周期做监听。 123456789/** * Creates a &amp;#123;@link RefWatcher&amp;#125; that works out of the b">
+<meta property="og:updated_time" content="2019-01-02T09:06:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LeakCanary源码浅析">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:description" content="原理分析首先在Application中进行初始化操作，进行监听。监听的原理在于 Application 的 registerActivityLifecycleCallbacks 方法，该方法可以对应用内所有 Activity 的生命周期做监听。 123456789/** * Creates a &amp;#123;@link RefWatcher&amp;#125; that works out of the b">
 
 
 
@@ -359,7 +360,16 @@
       
 
       
-        
+        <h3 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h3><p>首先在Application中进行初始化操作，进行监听。监听的原理在于 Application 的 registerActivityLifecycleCallbacks 方法，该方法可以对应用内所有 Activity 的生命周期做监听。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Creates a &#123;@link RefWatcher&#125; that works out of the box, and starts watching activity</div><div class="line"> * references (on ICS+).</div><div class="line"> */</div><div class="line"><span class="selector-tag">public</span> <span class="selector-tag">static</span> @<span class="selector-tag">NonNull</span> <span class="selector-tag">RefWatcher</span> <span class="selector-tag">install</span>(<span class="variable">@NonNull</span> Application application) &#123;</div><div class="line">  <span class="selector-tag">return</span> <span class="selector-tag">refWatcher</span>(application)<span class="selector-class">.listenerServiceClass</span>(DisplayLeakService.class)</div><div class="line">      <span class="selector-class">.excludedRefs</span>(AndroidExcludedRefs.createAppDefaults().build())</div><div class="line">      <span class="selector-class">.buildAndInstall</span>();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在最后一步buildAndInstall()中实现监听操作。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public @NonNull RefWatcher <span class="keyword">buildAndInstall() </span>&#123;</div><div class="line">  if (LeakCanaryInternals.<span class="keyword">installedRefWatcher </span>!= null) &#123;</div><div class="line">    throw new UnsupportedOperationException(<span class="string">"buildAndInstall() should only be called once."</span>)<span class="comment">;</span></div><div class="line">  &#125;</div><div class="line">  RefWatcher refWatcher = <span class="keyword">build();</span></div><div class="line">  if (refWatcher != <span class="keyword">DISABLED) </span>&#123;</div><div class="line">    LeakCanaryInternals.setEnabledAsync(<span class="built_in">context</span>, <span class="keyword">DisplayLeakActivity.class, </span>true)<span class="comment">;</span></div><div class="line">    if (watchActivities) &#123;</div><div class="line">      ActivityRefWatcher.<span class="keyword">install(context, </span>refWatcher)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    if (watchFragments) &#123;</div><div class="line">      FragmentRefWatcher.Helper.<span class="keyword">install(context, </span>refWatcher)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  LeakCanaryInternals.<span class="keyword">installedRefWatcher </span>= refWatcher<span class="comment">;</span></div><div class="line">  return refWatcher<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在ActivityRefWatcher实现监听,只对onDestory进行了监听处理。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  Application application = (Application) context.getApplicationContext();</div><div class="line">  ActivityRefWatcher activityRefWatcher = <span class="keyword">new</span> ActivityRefWatcher(application, refWatcher);</div><div class="line"></div><div class="line">  application.registerActivityLifecycleCallbacks(activityRefWatcher.lifecycleCallbacks);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Application.ActivityLifecycleCallbacks lifecycleCallbacks =</div><div class="line">    <span class="keyword">new</span> ActivityLifecycleCallbacksAdapter() &#123;</div><div class="line">      <span class="meta">@Override</span> <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onActivityDestroyed</span><span class="params">(Activity activity)</span> </span>&#123;</div><div class="line">        refWatcher.watch(activity);</div><div class="line">      &#125;</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
+<p>当一个Activity销毁时，那么就会执行</p>
+<p><code>refWatcher.watch(activity);</code></p>
+<p>接着看</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Identical to &#123;@link #watch(Object, String)&#125; with an empty string reference name.</div><div class="line"> *</div><div class="line"> * @see #watch(Object, String)</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> watch(<span class="keyword">Object</span> watchedReference) &#123;</div><div class="line">  watch(watchedReference, <span class="string">""</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Watches the provided references and checks if it can be GCed. This method is non blocking,</div><div class="line"> * the check is done on the &#123;@link WatchExecutor&#125; this &#123;@link RefWatcher&#125; has been constructed</div><div class="line"> * with.</div><div class="line"> *</div><div class="line"> * @param referenceName An logical identifier for the watched object.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> watch(<span class="keyword">Object</span> watchedReference, <span class="keyword">String</span> referenceName) &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">this</span> == DISABLED) &#123;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  checkNotNull(watchedReference, <span class="string">"watchedReference"</span>);</div><div class="line">  checkNotNull(referenceName, <span class="string">"referenceName"</span>);</div><div class="line">  <span class="keyword">final</span> <span class="keyword">long</span> watchStartNanoTime = System.nanoTime();</div><div class="line">  <span class="keyword">String</span> <span class="built_in">key</span> = UUID.randomUUID().toString();</div><div class="line">  retainedKeys.<span class="built_in">add</span>(<span class="built_in">key</span>);</div><div class="line">  <span class="keyword">final</span> KeyedWeakReference reference =</div><div class="line">      <span class="keyword">new</span> KeyedWeakReference(watchedReference, <span class="built_in">key</span>, referenceName, queue);</div><div class="line"></div><div class="line">  ensureGoneAsync(watchStartNanoTime, reference);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -411,6 +421,12 @@
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android性能优化/" rel="tag"># Android性能优化</a>
+          
+        </div>
       
 
       
@@ -478,8 +494,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -543,6 +568,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#原理分析"><span class="nav-number">1.</span> <span class="nav-text">原理分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
