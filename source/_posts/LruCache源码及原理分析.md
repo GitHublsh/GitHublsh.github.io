@@ -476,29 +476,32 @@ LruCache实现的核心是LinkedHashMap，为什么会用LinkedHashMap?
 
 看一下LinkedHashMap的构造方法，
 
-	/**
-	     * Constructs a new {@code LinkedHashMap} instance with the specified
-	     * capacity, load factor and a flag specifying the ordering behavior.
-	     *
-	     * @param initialCapacity
-	     *            the initial capacity of this hash map.
-	     * @param loadFactor
-	     *            the initial load factor.
-	     * @param accessOrder
-	     *            {@code true} if the ordering should be done based on the last
-	     *            access (from least-recently accessed to most-recently
-	     *            accessed), and {@code false} if the ordering should be the
-	     *            order in which the entries were inserted.
-	     * @throws IllegalArgumentException
-	     *             when the capacity is less than zero or the load factor is
-	     *             less or equal to zero.
-	     */
-	    public LinkedHashMap(
-	            int initialCapacity, float loadFactor, boolean accessOrder) {
-	        super(initialCapacity, loadFactor);
-	        init();
-	        this.accessOrder = accessOrder;
-	    }
+```
+
+/**
+     * Constructs a new {@code LinkedHashMap} instance with the specified
+     * capacity, load factor and a flag specifying the ordering behavior.
+     *
+     * @param initialCapacity
+     *            the initial capacity of this hash map.
+     * @param loadFactor
+     *            the initial load factor.
+     * @param accessOrder
+     *            {@code true} if the ordering should be done based on the last
+     *            access (from least-recently accessed to most-recently
+     *            accessed), and {@code false} if the ordering should be the
+     *            order in which the entries were inserted.
+     * @throws IllegalArgumentException
+     *             when the capacity is less than zero or the load factor is
+     *             less or equal to zero.
+     */
+    public LinkedHashMap(
+            int initialCapacity, float loadFactor, boolean accessOrder) {
+        super(initialCapacity, loadFactor);
+        init();
+        this.accessOrder = accessOrder;
+    }
+```
 	    
 参数在LruCache中已经分析过了，再说一遍具体含义。
     

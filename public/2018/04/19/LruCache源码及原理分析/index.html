@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2018/04/19/LruCache源码及原理分析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="一、源码及解析因为源码不多，就直接全部贴出来分析。源码及分析如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878">
-<meta property="og:updated_time" content="2019-01-16T03:20:29.000Z">
+<meta property="og:updated_time" content="2019-01-16T03:22:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LruCache源码及原理分析">
 <meta name="twitter:description" content="一、源码及解析因为源码不多，就直接全部贴出来分析。源码及分析如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878">
@@ -382,30 +382,8 @@
 <p>使用还是很简单的。</p>
 <h3 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h3><p>LruCache实现的核心是LinkedHashMap，为什么会用LinkedHashMap?<br>因为LinkedHashMap是由数组+双向链表的数据结构来实现的。其中双向链表的结构可以实现访问顺序和插入顺序.那么利用这个特性就可以实现LRU了。</p>
 <p>看一下LinkedHashMap的构造方法，</p>
-<pre><code>/**
-     * Constructs a new {@code LinkedHashMap} instance with the specified
-     * capacity, load factor and a flag specifying the ordering behavior.
-     *
-     * @param initialCapacity
-     *            the initial capacity of this hash map.
-     * @param loadFactor
-     *            the initial load factor.
-     * @param accessOrder
-     *            {@code true} if the ordering should be done based on the last
-     *            access (from least-recently accessed to most-recently
-     *            accessed), and {@code false} if the ordering should be the
-     *            order in which the entries were inserted.
-     * @throws IllegalArgumentException
-     *             when the capacity is less than zero or the load factor is
-     *             less or equal to zero.
-     */
-    public LinkedHashMap(
-            int initialCapacity, float loadFactor, boolean accessOrder) {
-        super(initialCapacity, loadFactor);
-        init();
-        this.accessOrder = accessOrder;
-    }
-</code></pre><p>参数在LruCache中已经分析过了，再说一遍具体含义。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">     * Constructs a new &#123;<span class="doctag">@code</span> LinkedHashMap&#125; instance with the specified</div><div class="line">     * capacity, load factor and a flag specifying the ordering behavior.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> initialCapacity</div><div class="line">     *            the initial capacity of this hash map.</div><div class="line">     * <span class="doctag">@param</span> loadFactor</div><div class="line">     *            the initial load factor.</div><div class="line">     * <span class="doctag">@param</span> accessOrder</div><div class="line">     *            &#123;<span class="doctag">@code</span> true&#125; if the ordering should be done based on the last</div><div class="line">     *            access (from least-recently accessed to most-recently</div><div class="line">     *            accessed), and &#123;<span class="doctag">@code</span> false&#125; if the ordering should be the</div><div class="line">     *            order in which the entries were inserted.</div><div class="line">     * <span class="doctag">@throws</span> IllegalArgumentException</div><div class="line">     *             when the capacity is less than zero or the load factor is</div><div class="line">     *             less or equal to zero.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashMap</span><span class="params">(</span></span></div><div class="line">            <span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> accessOrder) &#123;</div><div class="line">        <span class="keyword">super</span>(initialCapacity, loadFactor);</div><div class="line">        init();</div><div class="line">        <span class="keyword">this</span>.accessOrder = accessOrder;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>参数在LruCache中已经分析过了，再说一遍具体含义。</p>
 <p>initialCapacity：这个哈希表的初始容量</p>
 <p>loadFactor：加载因子</p>
 <p>accessOrder：true,访问顺序；false,插入顺序。</p>
