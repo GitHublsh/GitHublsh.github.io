@@ -284,6 +284,409 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/30/Android-Gradle构建入门(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/30/Android-Gradle构建入门(一)/" itemprop="url">Android Gradle构建入门 (一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-30T17:35:50+08:00">
+                2017-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/30/Android-Gradle构建入门(一)/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/12/30/Android-Gradle构建入门(一)/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Android-Gradle入门"><a href="#Android-Gradle入门" class="headerlink" title="Android Gradle入门"></a>Android Gradle入门</h3><h5 id="本文内容来自官方文档整理"><a href="#本文内容来自官方文档整理" class="headerlink" title="本文内容来自官方文档整理"></a>本文内容来自官方文档整理</h5><h4 id="一、查看生成的Gradle文件列表"><a href="#一、查看生成的Gradle文件列表" class="headerlink" title="一、查看生成的Gradle文件列表"></a>一、查看生成的Gradle文件列表</h4><p>默认情况下，Android Studio将以“Android”模式下的“项目视图”开始，如下图所示：</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com//blog/asandroidmodel.png" alt="“asmodel”"></p>
+<p>Android项目是Gradle多项目构建，具有顶级build.gradle文件和名为app的子目录，并具有自己的build.gradle文件。 顶层构建文件在图中标记为（Project：HelloWorldGradle），并且应用程序构建文件（Module：app）附加到其中。</p>
+<p>在项目中，可能有两个名为gradle.properties的文件。 一个是本地项目。 另一个只有在主目录的.gradle子目录中具有全局gradle.properties文件的同名文件才存在。</p>
+<ul>
+<li>settings.gradle</li>
+</ul>
+<p>Gradle使用文件settings.gradle来配置多项目构建。 它应该由一行代码组成：</p>
+<pre><code>include &apos;:app&apos;
+</code></pre><p>这就是告诉Gradle，app也是一个Gradle project,当项目中还会依赖别的library，那么还需要在后面添加相应的信息。</p>
+<ul>
+<li>gradle-wrapper.properties</li>
+</ul>
+<p>gradle-wrapper.properties，它配置了所谓的Gradle Wrapper。 这使您可以构建Android项目，而无需首先安装Gradle。 该文件的内容应该类似于：</p>
+<pre><code>distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
+</code></pre><p>前四行表示当包装首次运行时，它将下载Gradle发行版并将其存储在您的主目录中的.gradle / wrapper / dists目录中。</p>
+<p>最后一行显示了distributionUrl的值，这是Gradle将下载指定分配的地址。（具体版本号可能与此处（4.1）中显示的版本号不同，并且URL可能引用二进制版本（-bin），而不是此示例中显示的完整版本（-all）。）</p>
+<h4 id="二、查看整个项目的build-gradle"><a href="#二、查看整个项目的build-gradle" class="headerlink" title="二、查看整个项目的build.gradle"></a>二、查看整个项目的build.gradle</h4><p>project的build.geadle文件：</p>
+<pre><code>// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath &apos;com.android.tools.build:gradle:3.0.0&apos;
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+</code></pre><p>各个代码块具体作用：</p>
+<ol>
+<li>buildscript - 下载插件</li>
+<li>dependencies - 标识Android插件</li>
+<li>allproject -     top-level and module projects的配置</li>
+<li>task clean - 特设任务</li>
+</ol>
+<p>Gradle定义了一种基于Groovy的DSL语言来构建，buildscript标签是DSL的一部分。 它告诉Gradle构建需要一个可能不是基线Gradle分布的一部分的插件，并告诉Gradle在哪里找到它。 在这种情况下，使用坐标语法“group：name：version”指定所需的插件，其中组为com.android.tools.build，名称为gradle，版本为3.0.1。</p>
+<p>当Gradle第一次构建这个项目时，插件将被下载并缓存，所以这个任务只执行一次。</p>
+<p>allprojects标签保存适用于顶层项目及其包含的任何子项目的配置细节。 在这种情况下，该块指定任何所需的依赖项应该从<a href="https://jcenter.bintray.com上的公共Bintray" target="_blank" rel="external">https://jcenter.bintray.com上的公共Bintray</a> Artifactory存储库的google或jcenter下载。</p>
+<p>最后，构建文件包含一个名为clean的自定义（或临时）任务。 它使用内置的任务类型Delete并对其进行配置，以便干净的任务将删除rootProject中的buildDir。 两者都是项目属性，其值默认为该应用程序驻留的项目中的构建目录。</p>
+<h4 id="三、查看app-module的build-gradle"><a href="#三、查看app-module的build-gradle" class="headerlink" title="三、查看app module的build.gradle"></a>三、查看app module的build.gradle</h4><p>看一下 build.gradle</p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId &quot;com.example.liushihan.gradletest&quot;
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName &quot;1.0&quot;
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    implementation &apos;com.android.support:appcompat-v7:26.1.0&apos;
+    implementation &apos;com.android.support.constraint:constraint-layout:1.0.2&apos;
+    testImplementation &apos;junit:junit:4.12&apos;
+    androidTestImplementation &apos;com.android.support.test:runner:1.0.1&apos;
+    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.1&apos;
+}
+</code></pre><p>第一行：</p>
+<pre><code>apply plugin: &apos;com.android.application&apos;
+</code></pre><p>应用Android插件（在项目构建文件的构建脚本部分中引用）到当前项目。Gradle中的插件可以将自定义任务，新配置，依赖关系和其他功能添加到Gradle项目中。 在这种情况下，应用Android插件会添加各种各样的任务，这些任务由接下来显示的android块配置。</p>
+<pre><code>android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId &quot;com.example.liushihan.gradletest&quot;
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName &quot;1.0&quot;
+        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+        }
+    }
+}
+</code></pre><p>对这些属性进行简单的介绍：</p>
+<ul>
+<li>compileSdkVersion：Android SDK版本</li>
+<li>defaultConfig:defaultConfig部分包含应用程序的所有变体（构建类型和产品风格的组合）共享的属性。<ul>
+<li>applicationId:applicationId基于创建应用程序时指定的域名和项目名称，并且在Google Play商店中必须是唯一的。</li>
+</ul>
+</li>
+</ul>
+<pre><code>* minSdkVersion:minSdkVersion是你愿意支持这个应用程序的最低Android API，targetSdkVersion应该是最新的Android版本。
+
+
+* versionCode:versionCode的值应该是在将新版本的应用上传到Google Play商店之前递增的整数。 这个值和applicationId一起告诉Google，这是一个现有应用程序的新版本，而不是一个新的应用程序。
+
+* versionName:版本名称值用于自己的内部版本跟踪。
+
+* testInstrumentationRunner：testInstrumentationRunner属性配置为使用为Android应用程序配置的JUnit 4测试运行器。
+</code></pre><p>在这个代码块下面，就是buildTypes.默认情况下，Android应用程序支持两种构建类型，debug和release.这里没有显示debug配置部分，即使用所有调试的默认设置。</p>
+<pre><code>buildTypes {
+      release {
+          minifyEnabled false
+          proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;
+      }
+  }
+</code></pre><p>继续往下面看，就是这个应用程序所依赖的库</p>
+<pre><code>dependencies {
+    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+    implementation &apos;com.android.support:appcompat-v7:26.1.0&apos;
+    implementation &apos;com.android.support.constraint:constraint-layout:1.0.2&apos;
+    testImplementation &apos;junit:junit:4.12&apos;
+    androidTestImplementation &apos;com.android.support.test:runner:1.0.1&apos;
+    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.1&apos;
+}
+</code></pre><p>配置依赖关系是构建Gradle应用程序的基础部分。 在这种情况下，依赖项部分显示了Implementation，testImplementation和androidTestImplementation配置的值。</p>
+<p>testImplementation依赖只包含最新的稳定的JUnit 4发行版。 JUnit类和测试注释将在编译时在src / test / java层次结构中可用。</p>
+<p>androidTestImplementation依赖项是指Espresso测试库，用于Android应用程序的集成测试。 在这种情况下，Espresso在没有通常包含的support-annotations库的情况下被请求，因为已经通过其他依赖项包含了不同的版本。 在后面的步骤中，您将看到如何找出该库的版本以及原因。</p>
+<pre><code>fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])
+</code></pre><p>是一个fileTree依赖项，它将libs文件夹中的所有jar文件添加到编译类路径中</p>
+<pre><code>com.android.support:appcompat-v7:26.1.0
+</code></pre><p>将Android兼容性库添加到项目中。 这使您可以在SDK版本7以前的任何Android应用程序中使用材质设计主题和其他功能。</p>
+<pre><code>com.android.support.constraint:constraint-layout:1.0.2
+</code></pre><p>将Android约束布局添加到项目中。 这允许您在任何像SDK版本9一样早的Android应用程序中使用ConstraintLayout布局类。</p>
+<h4 id="四、运行标准的Gradle任务"><a href="#四、运行标准的Gradle任务" class="headerlink" title="四、运行标准的Gradle任务"></a>四、运行标准的Gradle任务</h4><p>Android Studio通过IDE可以轻松构建和部署应用程序的调试版本，但最终Gradle还是参与其中。可以在Android Studio中命令行使用gradle命令构建</p>
+<pre><code>$ ./gradlew build
+</code></pre><p>构建完成，Build Successful，可以在app/build/outputs/apk目录查看生成的apk,包括debug和release版本的apk.</p>
+<ul>
+<li>可以在命令行中显示在项目中使用的support-annotations模块的版本。</li>
+</ul>
+<p>执行命令，可以看到结果：</p>
+<pre><code>$ ./gradlew :app:dependencies --configuration releaseCompileClasspath
+:app:dependencies
+
+------------------------------------------------------------
+Project :app
+------------------------------------------------------------
+
+releaseCompileClasspath - Resolved configuration for compilation for variant: release
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
+\--- com.android.support.constraint:constraint-layout:1.0.2
+     \--- com.android.support.constraint:constraint-layout-solver:1.0.2
+
+(*) - dependencies omitted (listed previously)
+
+
+BUILD SUCCESSFUL
+</code></pre><p>从命令行打印的信息可以看到support-annotations module,version 26.1.0,是appcompat-v7所依赖的一个库</p>
+<ul>
+<li>另一种方式查看所需的版本</li>
+</ul>
+<p>执行命令及结果：</p>
+<pre><code>$ ./gradlew :app:dependencyInsight --dependency support-annotations --configuration releaseCompileClasspath
+:app:dependencyInsight
+com.android.support:support-annotations:26.1.0
++--- com.android.support:appcompat-v7:26.1.0
+|    \--- releaseCompileClasspath
++--- com.android.support:support-compat:26.1.0
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:appcompat-v7:26.1.0 (*)
+|    |    \--- com.android.support:animated-vector-drawable:26.1.0
+|    |         \--- com.android.support:appcompat-v7:26.1.0 (*)
+|    +--- com.android.support:support-v4:26.1.0
+|    |    \--- com.android.support:appcompat-v7:26.1.0 (*)
+|    +--- com.android.support:support-media-compat:26.1.0
+|    |    \--- com.android.support:support-v4:26.1.0 (*)
+|    +--- com.android.support:support-fragment:26.1.0
+|    |    \--- com.android.support:support-v4:26.1.0 (*)
+|    +--- com.android.support:support-core-utils:26.1.0
+|    |    +--- com.android.support:support-v4:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0 (*)
+|    \--- com.android.support:support-core-ui:26.1.0
+|         +--- com.android.support:animated-vector-drawable:26.1.0 (*)
+|         +--- com.android.support:support-v4:26.1.0 (*)
+|         \--- com.android.support:support-fragment:26.1.0 (*)
++--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.android.support:support-core-utils:26.1.0 (*)
++--- com.android.support:support-media-compat:26.1.0 (*)
+\--- com.android.support:support-vector-drawable:26.1.0 (*)
+
+(*) - dependencies omitted (listed previously)
+
+
+BUILD SUCCESSFUL
+</code></pre><p>这两种方式都可以帮助追踪和解决与library版本冲突的任何问题。</p>
+<h4 id="五、查看Gradle窗口可执行的命令"><a href="#五、查看Gradle窗口可执行的命令" class="headerlink" title="五、查看Gradle窗口可执行的命令"></a>五、查看Gradle窗口可执行的命令</h4><p><img src="http://ot29getcp.bkt.clouddn.com//blog/gradlewindow.png" alt="&quot;gradle window&quot;"></p>
+<p>可以看一下，android-signingReport查看签名报告任务，签名报告任务不需要任何参数，可以双击执行，结果如下：</p>
+<pre><code>Executing tasks: [signingReport]
+
+Configuration on demand is an incubating feature.
+:app:signingReport
+Variant: release
+Config: none
+----------
+Variant: releaseUnitTest
+Config: none
+----------
+Variant: debug
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+Variant: debugAndroidTest
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+Variant: debugUnitTest
+Config: debug
+Store: /Users/liushihan/.android/debug.keystore
+Alias: AndroidDebugKey
+MD5: 8C:43:C9:2D:61:38:E1:AC:18:7B:93:4B:43:4B:CE:3B
+SHA1: 2A:29:82:41:7F:BA:AE:50:00:B8:DA:94:35:86:10:32:30:9C:A8:87
+Valid until: 2047年5月1日 星期三
+----------
+
+BUILD SUCCESSFUL in 14s
+1 actionable task: 1 executed
+</code></pre><p>从打印的结果可以看到，公钥存储路径（这里是用户根目录下的debug.keystore文件）</p>
+<p>下面的install，可以通过installDebug来安装应用</p>
+<p>也可用命令行来执行：</p>
+<pre><code>$ ./gradlew installDebug
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1870,171 +2273,6 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/21/自定义View-2-Canvas简介/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/21/自定义View-2-Canvas简介/" itemprop="url">自定义View(2)Canvas简介</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T10:56:35+08:00">
-                2017-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/09/21/自定义View-2-Canvas简介/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/21/自定义View-2-Canvas简介/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、Canvas简介"><a href="#一、Canvas简介" class="headerlink" title="一、Canvas简介"></a>一、Canvas简介</h3><h4 id="（1）Canvas简介"><a href="#（1）Canvas简介" class="headerlink" title="（1）Canvas简介"></a>（1）Canvas简介</h4><p>Canvas,即画布。</p>
-<h4 id="（2）Canvas详解"><a href="#（2）Canvas详解" class="headerlink" title="（2）Canvas详解"></a>（2）Canvas详解</h4><p>画布，就是我们用来绘制的载体，我们可以用画笔（Paint）在画布（Canvas）上绘制我们想要的图形。</p>
-<ul>
-<li><p>首先介绍一下画笔Paint</p>
-<ul>
-<li><p>1.三个构造函数</p>
-<ul>
-<li>Paint()    创建一个画笔</li>
-<li>Paint(int flags) 创建一个画笔，指定flag。也可在不指定flag创建后，通过setFlag指定。例如：Paint.ANTI_ALIAS_FLAG(用于绘制时抗锯齿）</li>
-<li>Paint(Paint paint)    使用已构造的Paint创建一个画笔</li>
-</ul>
-</li>
-<li><p>2.常用方法</p>
-<ul>
-<li>setAlpha(int a)    设置透明度</li>
-<li>setARGB(int a, int r, int g, int b)     设置画笔颜色，a-alpha透明度，r-red,g-green,b-blue</li>
-<li>setAntiAlias(boolean aa)    设置抗锯齿</li>
-<li>setColor(@ColorInt int color) 设置颜色</li>
-<li>setDither(boolean dither) 设置抖动，设置后线条会相对柔和一些，不那么僵硬</li>
-<li>setUnderlineText(boolean underlineText)    设置文本下划线</li>
-<li>setStyle(Style style)    设置画笔风格。FILL内部填充，STROKE描边，FILL_AND_STROKE填充内部和描边</li>
-<li>setStrikeThruText(boolean strikeThruText)    设置文本删除线</li>
-<li>setFilterBitmap(boolean filter)        对bitmap进行滤波处理，true-去除优化，加快显示</li>
-<li><p>setColorFilter(ColorFilter filter)     设置颜色过滤</p>
-<p>······</p>
-</li>
-</ul>
-</li>
-<li><p>3.ColorFilter</p>
-<p>  ColorFilter主要用来处理颜色.它有三个子类：ColorMatrixColorFilter、LightingColorFilter、PorterDuffColorFilter。下面一一进行解释。</p>
-<ol>
-<li><p>ColorMatrixColorFilter</p>
-<ul>
-<li>ColorMatrixColorFilter在Android中，图片是以一个个 RGBA 的像素点的形式加载到内存中的，所以如果需要改变图片的颜色，就需要针对这一个个像素点的RGBA的值进行修改。修改图片的RGBA值，需要ColorMatrix类支持.</li>
-<li>通过4x5颜色矩阵转换颜色的滤色镜。 该滤镜可用于改变像素的饱和度，从YUV转换为RGB等。</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2084,7 +2322,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">57</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
