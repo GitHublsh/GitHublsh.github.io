@@ -284,160 +284,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/21/Java垃圾回收机制浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/02/21/Java垃圾回收机制浅析/" itemprop="url">Java垃圾回收机制浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-21T17:06:45+08:00">
-                2019-02-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/02/21/Java垃圾回收机制浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/02/21/Java垃圾回收机制浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="JVM垃圾回收机制"><a href="#JVM垃圾回收机制" class="headerlink" title="JVM垃圾回收机制"></a>JVM垃圾回收机制</h1><h2 id="一、标记清除算法"><a href="#一、标记清除算法" class="headerlink" title="一、标记清除算法"></a>一、标记清除算法</h2><p>标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e3wlyulkj30fi0crmxm.jpg" alt="标记清除"></p>
-<p>弊端：</p>
-<p>1.效率：标记和清除的效率都不高</p>
-<p>2.空间：不需要对对象进行移动，仅对不存活的对象进行移除操作，对存活的对象不做处理，标记清除后会产生大量的不连续的内存碎片，空间碎片太多的话，当需要分配较大的对象的时候，就无法找到足够的连续的连续的内存而不得不进行另一次的垃圾回收动作。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4585udoj30jz07ljre.jpg" alt="内存碎片弊端"></p>
-<h2 id="二、复制算法"><a href="#二、复制算法" class="headerlink" title="二、复制算法"></a>二、复制算法</h2><p>复制算法将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。</p>
-<p>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这种算法适用于对象存活率低的场景，比如新生代。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。</p>
-<p>现在商用的虚拟机都采用这种算法来回收新生代。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e46smpkhj30ki02zq2t.jpg" alt="复制算法"></p>
-<p>因为研究发现，新生代中的对象每次回收都基本上只有10%左右的对象存活，所以需要复制的对象很少，效率还不错。</p>
-<p>实践中会将新生代内存分为一块较大的Eden空间和两块较小的Survivor空间。</p>
-<p>当回收时，将Eden和Survivor中还存活着的对象一次地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4a18pgdj30n109lnk7.jpg" alt="新生代回收"></p>
-<p>弊端：在对象存活率比较高的情况下，那么进行垃圾回收的时候就会进行大量的复制操作，效率比较低。</p>
-<h2 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h2><p>复制收集算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。更关键的是，如果不想浪费50%的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况</p>
-<p>所以在老年代一般不能直接选用这种算法。标记整理算法的标记过程类似标记清除算法，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存，类似于磁盘整理的过程，该垃圾回收算法适用于对象存活率高的场景（老年代）</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4sb3ru1j30gy0g7js1.jpg" alt="标记整理算法"></p>
-<p>标记整理算法与标记清除算法最显著的区别是：标记清除算法不进行对象的移动，并且仅对不存活的对象进行处理；而标记整理算法会将所有的存活对象移动到一端，并对不存活对象进行处理，因此其不会产生内存碎片，可看做标记-清除算法的进阶版。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e51dp98cj30g902x74e.jpg" alt="对存活对象进行整理"></p>
-<h2 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h2><p>对于比较大型的系统来说，当创建的对象和方法变量比较多时，堆内存中的对象也会比较多，如果逐一分析对象是否该回收，那么势必造成效率低下。分代收集算法是基于这样一个事实：不同的对象的生命周期(存活情况)是不一样的，而不同生命周期的对象位于堆中不同的区域，因此对堆内存不同区域采用不同的策略进行回收可以提高 JVM 的执行效率。当代商用虚拟机使用的都是分代收集算法：新生代对象存活率低，就采用复制算法；老年代存活率高，就用标记清除算法或者标记整理算法。Java堆内存一般可以分为新生代、老年代和永久代三个模块。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e57ul0t2j30fn08kgmb.jpg" alt="堆内存分代"></p>
-<p>1.新生代（Young Generation）</p>
-<p>新生代的目标就是尽可能快速的收集掉那些生命周期短的对象，一般情况下，所有新生成的对象首先都是放在新生代的。</p>
-<p>新生代内存按照 8:1:1 的比例分为一个eden区和两个survivor(survivor0，survivor1)区，大部分对象在Eden区中生成。<br>在进行垃圾回收时，先将eden区存活对象复制到survivor0区，然后清空eden区，当这个survivor0区也满了时，则将eden区和survivor0区存活对象复制到survivor1区，然后清空eden和这个survivor0区，此时survivor0区是空的，然后交换survivor0区和survivor1区的角色（即下次垃圾回收时会扫描Eden区和survivor1区），即保持survivor0区为空，如此往复。</p>
-<p>特别地，当survivor1区也不足以存放eden区和survivor0区的存活对象时，就将存活对象直接存放到老年代。如果老年代也满了，就会触发一次FullGC，也就是新生代、老年代都进行回收。</p>
-<p>注意，新生代发生的GC也叫做MinorGC，MinorGC发生频率比较高，不一定等 Eden区满了才触发。</p>
-<p>2.老年代（Old Generation）</p>
-<p>老年代存放的都是一些生命周期较长的对象，就像上面所叙述的那样，在新生代中经历了N次垃圾回收后仍然存活的对象就会被放到老年代中。此外，老年代的内存也比新生代大很多(大概比例是1:2)，当老年代满时会触发Major GC(Full GC)，老年代对象存活时间比较长，因此FullGC发生的频率比较低。</p>
-<p>3.永久代（Permanent Generation）</p>
-<p>永久代主要用于存放静态文件，如Java类、方法等。永久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如使用反射、动态代理、CGLib等bytecode框架时，在这种时候需要设置一个比较大的永久代空间来存放这些运行过程中新增的类。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/14/Java-ClassLoader浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1028,6 +874,143 @@
 <h3 id="七、整体分析"><a href="#七、整体分析" class="headerlink" title="七、整体分析"></a>七、整体分析</h3><p>整体流程大致如图：</p>
 <p><img src="https://ws1.sinaimg.cn/large/005GVP9ggy1fxx47ohpfkj31be0j6wi7.jpg" alt="threadpoolpic"></p>
 <p>了解了整体流程，那么再去看源码就会很清楚明了了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/07/Android-Studio3-0-Trace分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/07/Android-Studio3-0-Trace分析/" itemprop="url">Android Studio3.0+ Trace分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-07T11:04:26+08:00">
+                2018-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/07/Android-Studio3-0-Trace分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/11/07/Android-Studio3-0-Trace分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。</p>
+<h4 id="二、具体使用方法"><a href="#二、具体使用方法" class="headerlink" title="二、具体使用方法"></a>二、具体使用方法</h4><h5 id="1-使用DDMS工具来查看trace进行分析"><a href="#1-使用DDMS工具来查看trace进行分析" class="headerlink" title="1.使用DDMS工具来查看trace进行分析"></a>1.使用DDMS工具来查看trace进行分析</h5><p>在Android Studio3.0 之前，在AS IDE面板中-&gt;Tools-&gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling(为红色)按钮开始进行方法调用跟踪(点击后会变为黑色)，停止时再点击停止，即可生成trace文件进行分析。</p>
+<p>需要注意的是，在AS3.0+ DDMS从面板上移除了，官方给的说法是：</p>
+<p>However, most components of the Android Device Monitor are deprecated in favor of updated tools available in Android Studio 3.0 and higher.</p>
+<p>那就手动的去启动就OK了。（在Terminal中输入命令 monitor 启动DDMS）</p>
+<h5 id="2-通过代码进行追踪"><a href="#2-通过代码进行追踪" class="headerlink" title="2.通过代码进行追踪"></a>2.通过代码进行追踪</h5><p>在需要分析的代码中添加</p>
+<p>开始</p>
+<pre><code>Debug.startMethodTracing()
+</code></pre><p>结束</p>
+<pre><code>Debug.stopMethodTracing()
+</code></pre><p>这样就会生成.trace文件了。</p>
+<h4 id="三、分析trace文件"><a href="#三、分析trace文件" class="headerlink" title="三、分析trace文件"></a>三、分析trace文件</h4><p>在面板中会有各种数据，这个时候就需要搞清楚各个参数所代表的具体含义了。</p>
+<p>最关心的数据有：<br>很重要的指标：Calls + Recur Calls / Total , 最重要的指标： Cpu Time / Call<br>因为我们最关心的有两点，一是调用次数不多，但每次调用却需要花费很长时间的函数。这个可以从Cpu Time / Call反映出来。另外一个是那些自身占用时间不长，但调用却非常频繁的函数。这个可以从<strong>Calls + Recur Calls / Total </strong>反映出来。</p>
+<p>当体验卡顿的时候，我们可以借助TraceView来定位问题</p>
 
           
         
