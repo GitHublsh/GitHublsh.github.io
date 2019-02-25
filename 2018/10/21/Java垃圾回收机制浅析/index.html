@@ -111,13 +111,13 @@
 
 
 
-<meta name="description" content="JVM垃圾回收机制垃圾回收算法一、标记清除算法标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。  弊端： 1.效率：标记和清除的效率都不高 2.空间：不需要对对象进行移动，仅对不存活的对象进行移除操作，对存活的对象不做处理，标记清除后会产生大量的不连续的内存碎片，空间碎片太多的话，当需要分配较大的对象的时">
+<meta name="description" content="JVM垃圾回收机制背景一、为什么需要进行垃圾回收？在C++中，对象所占的内存在程序结束运行之前一直被占用，在明确释放之前不能分配给其它对象；而在Java中，当没有对象引用指向原先分配给某个对象 的内存时，该内存便成为垃圾。 垃圾回收能自动释放内存空间，减轻编程的负担，JVM的一个系统级线程会自动释放该内存块。垃圾回收意味着程序不再需要的对象是”无用信息”，这些信息将被丢弃。当一个对 象不再被引用的">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java垃圾回收机制浅析">
 <meta property="og:url" content="http://yoursite.com/2018/10/21/Java垃圾回收机制浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="JVM垃圾回收机制垃圾回收算法一、标记清除算法标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。  弊端： 1.效率：标记和清除的效率都不高 2.空间：不需要对对象进行移动，仅对不存活的对象进行移除操作，对存活的对象不做处理，标记清除后会产生大量的不连续的内存碎片，空间碎片太多的话，当需要分配较大的对象的时">
+<meta property="og:description" content="JVM垃圾回收机制背景一、为什么需要进行垃圾回收？在C++中，对象所占的内存在程序结束运行之前一直被占用，在明确释放之前不能分配给其它对象；而在Java中，当没有对象引用指向原先分配给某个对象 的内存时，该内存便成为垃圾。 垃圾回收能自动释放内存空间，减轻编程的负担，JVM的一个系统级线程会自动释放该内存块。垃圾回收意味着程序不再需要的对象是”无用信息”，这些信息将被丢弃。当一个对 象不再被引用的">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e3wlyulkj30fi0crmxm.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4585udoj30jz07ljre.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e46smpkhj30ki02zq2t.jpg">
@@ -125,10 +125,10 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4sb3ru1j30gy0g7js1.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e51dp98cj30g902x74e.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e57ul0t2j30fn08kgmb.jpg">
-<meta property="og:updated_time" content="2019-02-21T10:44:49.000Z">
+<meta property="og:updated_time" content="2019-02-25T11:03:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java垃圾回收机制浅析">
-<meta name="twitter:description" content="JVM垃圾回收机制垃圾回收算法一、标记清除算法标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。  弊端： 1.效率：标记和清除的效率都不高 2.空间：不需要对对象进行移动，仅对不存活的对象进行移除操作，对存活的对象不做处理，标记清除后会产生大量的不连续的内存碎片，空间碎片太多的话，当需要分配较大的对象的时">
+<meta name="twitter:description" content="JVM垃圾回收机制背景一、为什么需要进行垃圾回收？在C++中，对象所占的内存在程序结束运行之前一直被占用，在明确释放之前不能分配给其它对象；而在Java中，当没有对象引用指向原先分配给某个对象 的内存时，该内存便成为垃圾。 垃圾回收能自动释放内存空间，减轻编程的负担，JVM的一个系统级线程会自动释放该内存块。垃圾回收意味着程序不再需要的对象是”无用信息”，这些信息将被丢弃。当一个对 象不再被引用的">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e3wlyulkj30fi0crmxm.jpg">
 
 
@@ -368,7 +368,8 @@
       
 
       
-        <h1 id="JVM垃圾回收机制"><a href="#JVM垃圾回收机制" class="headerlink" title="JVM垃圾回收机制"></a>JVM垃圾回收机制</h1><h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="一、标记清除算法"><a href="#一、标记清除算法" class="headerlink" title="一、标记清除算法"></a>一、标记清除算法</h4><p><strong>标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。</strong></p>
+        <h1 id="JVM垃圾回收机制"><a href="#JVM垃圾回收机制" class="headerlink" title="JVM垃圾回收机制"></a>JVM垃圾回收机制</h1><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><h4 id="一、为什么需要进行垃圾回收？"><a href="#一、为什么需要进行垃圾回收？" class="headerlink" title="一、为什么需要进行垃圾回收？"></a>一、为什么需要进行垃圾回收？</h4><p>在C++中，对象所占的内存在程序结束运行之前一直被占用，在明确释放之前不能分配给其它对象；而在Java中，当没有对象引用指向原先分配给某个对象 的内存时，该内存便成为垃圾。 垃圾回收能自动释放内存空间，减轻编程的负担，JVM的一个系统级线程会自动释放该内存块。垃圾回收意味着程序不再需要的对象是”无用信息”，这些信息将被丢弃。当一个对 象不再被引用的时候，内存回收它占领的空间，以便空间被后来的新对象使用。事实上，除了释放没用的对象，垃圾回收也可以清除内存记录碎片。由于创建对象和垃圾回收器释放丢弃对象所占的内存空间，内存会出现碎片。碎片是分配给对象的内存块之间的空闲内存洞。碎片整理将所占用的堆内存移到堆的一端，JVM将整理出的内存分配给新的对象。</p>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="一、标记清除算法"><a href="#一、标记清除算法" class="headerlink" title="一、标记清除算法"></a>一、标记清除算法</h4><p><strong>标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。</strong></p>
 <p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e3wlyulkj30fi0crmxm.jpg" alt="标记清除"></p>
 <p>弊端：</p>
 <p>1.效率：标记和清除的效率都不高</p>
@@ -612,7 +613,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM垃圾回收机制"><span class="nav-number">1.</span> <span class="nav-text">JVM垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">1.0.1.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、标记清除算法"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">一、标记清除算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、复制算法"><span class="nav-number">1.0.1.2.</span> <span class="nav-text">二、复制算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、标记整理算法"><span class="nav-number">1.0.1.3.</span> <span class="nav-text">三、标记整理算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、分代收集算法"><span class="nav-number">1.0.1.4.</span> <span class="nav-text">四、分代收集算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM垃圾回收机制"><span class="nav-number">1.</span> <span class="nav-text">JVM垃圾回收机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.0.1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、为什么需要进行垃圾回收？"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">一、为什么需要进行垃圾回收？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">1.0.2.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、标记清除算法"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">一、标记清除算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、复制算法"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">二、复制算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、标记整理算法"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">三、标记整理算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、分代收集算法"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">四、分代收集算法</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>
