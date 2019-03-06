@@ -121,7 +121,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg">
-<meta property="og:updated_time" content="2019-03-06T02:45:45.000Z">
+<meta property="og:updated_time" content="2019-03-06T02:49:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP1.0与HTTP2.0的区别">
 <meta name="twitter:description" content="HTTP1.0与HTTP2.0的区别一、HTTP2.0简介HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。 HTTP 2.0 的出现，相">
@@ -366,10 +366,16 @@
       
         <h2 id="HTTP1-0与HTTP2-0的区别"><a href="#HTTP1-0与HTTP2-0的区别" class="headerlink" title="HTTP1.0与HTTP2.0的区别"></a>HTTP1.0与HTTP2.0的区别</h2><h3 id="一、HTTP2-0简介"><a href="#一、HTTP2-0简介" class="headerlink" title="一、HTTP2.0简介"></a>一、HTTP2.0简介</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
 <p>HTTP 2.0 的出现，相比于 HTTP 1.x ，大幅度的提升了 web 性能。</p>
-<h3 id="HTTP2-0与HTTP1-0的主要区别"><a href="#HTTP2-0与HTTP1-0的主要区别" class="headerlink" title="HTTP2.0与HTTP1.0的主要区别"></a>HTTP2.0与HTTP1.0的主要区别</h3><p>1.HTTP/2采用二进制格式而非文本格式</p>
-<p>2.HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</p>
-<p>3.使用报头压缩，HTTP/2降低了开销</p>
-<p>4.HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="HTTP2-0与HTTP1-0的主要区别"><a href="#HTTP2-0与HTTP1-0的主要区别" class="headerlink" title="HTTP2.0与HTTP1.0的主要区别"></a>HTTP2.0与HTTP1.0的主要区别</h3><ol>
+<li><p>HTTP/2采用二进制格式而非文本格式</p>
+</li>
+<li><p>HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</p>
+</li>
+<li><p>使用报头压缩，HTTP/2降低了开销</p>
+</li>
+<li><p>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+</li>
+</ol>
 <h3 id="为什么采用二进制格式？"><a href="#为什么采用二进制格式？" class="headerlink" title="为什么采用二进制格式？"></a>为什么采用二进制格式？</h3><p>HTTP1.x的解析是基于文本。基于文本协议的格式解析存在天然缺陷，文本的表现形式有多样性，要做到健壮性考虑的场景必然很多，二进制则不同，只认0和1的组合。基于这种考虑HTTP2.0的协议解析决定采用二进制格式，实现方便且健壮。</p>
 <h3 id="一、为什么要多路复用？"><a href="#一、为什么要多路复用？" class="headerlink" title="一、为什么要多路复用？"></a>一、为什么要多路复用？</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg" alt="多路复用"></p>
 <p>整个访问流程第一次请求index.html页面,之后浏览器会去请求style.css和scripts.js的文件。左边的图是顺序加载两个个文件的，右边则是并行加载两个文件。<br>多路复用允许单一的 HTTP/2 连接同时发起多重的请求-响应消息。</p>
@@ -386,12 +392,6 @@
 <h3 id="三、服务器推送的好处是什么？"><a href="#三、服务器推送的好处是什么？" class="headerlink" title="三、服务器推送的好处是什么？"></a>三、服务器推送的好处是什么？</h3><p>服务端推送是一种在客户端请求之前发送数据的机制。当代网页使用了许多资源:HTML、样式表、脚本、图片等等。在HTTP/1.x中这些资源每一个都必须明确地请求。这可能是一个很慢的过程。浏览器从获取HTML开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。</p>
 <p>为了改善延迟，HTTP/2引入了server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前。一个服务器经常知道一个页面需要很多附加资源，在它响应浏览器第一个请求的时候，可以开始推送这些资源。这允许服务端去完全充分地利用一个可能空闲的网络，改善页面加载时间。</p>
 <p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg" alt="服务器推送"></p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ol>
-<li>HTTP/2采用二进制格式而非文本格式</li>
-<li>HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</li>
-<li>使用报头压缩，HTTP/2降低了开销</li>
-<li>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</li>
-</ol>
 
       
     </div>
@@ -605,7 +605,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-0与HTTP2-0的区别"><span class="nav-number">1.</span> <span class="nav-text">HTTP1.0与HTTP2.0的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、HTTP2-0简介"><span class="nav-number">1.1.</span> <span class="nav-text">一、HTTP2.0简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP2-0与HTTP1-0的主要区别"><span class="nav-number">1.2.</span> <span class="nav-text">HTTP2.0与HTTP1.0的主要区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么采用二进制格式？"><span class="nav-number">1.3.</span> <span class="nav-text">为什么采用二进制格式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、为什么要多路复用？"><span class="nav-number">1.4.</span> <span class="nav-text">一、为什么要多路复用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、为什么要进行首部压缩？"><span class="nav-number">1.5.</span> <span class="nav-text">二、为什么要进行首部压缩？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、服务器推送的好处是什么？"><span class="nav-number">1.6.</span> <span class="nav-text">三、服务器推送的好处是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.7.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP1-0与HTTP2-0的区别"><span class="nav-number">1.</span> <span class="nav-text">HTTP1.0与HTTP2.0的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、HTTP2-0简介"><span class="nav-number">1.1.</span> <span class="nav-text">一、HTTP2.0简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP2-0与HTTP1-0的主要区别"><span class="nav-number">1.2.</span> <span class="nav-text">HTTP2.0与HTTP1.0的主要区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么采用二进制格式？"><span class="nav-number">1.3.</span> <span class="nav-text">为什么采用二进制格式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一、为什么要多路复用？"><span class="nav-number">1.4.</span> <span class="nav-text">一、为什么要多路复用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、为什么要进行首部压缩？"><span class="nav-number">1.5.</span> <span class="nav-text">二、为什么要进行首部压缩？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、服务器推送的好处是什么？"><span class="nav-number">1.6.</span> <span class="nav-text">三、服务器推送的好处是什么？</span></a></li></ol></li></ol></div>
             
 
           </div>
