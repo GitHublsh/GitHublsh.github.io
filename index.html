@@ -284,6 +284,157 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/06/HTTP1-0与HTTP2-0的区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/06/HTTP1-0与HTTP2-0的区别/" itemprop="url">HTTP1.0与HTTP2.0的区别</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-06T10:38:26+08:00">
+                2019-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/06/HTTP1-0与HTTP2-0的区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/06/HTTP1-0与HTTP2-0的区别/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HTTP1-0与HTTP2-0的区别"><a href="#HTTP1-0与HTTP2-0的区别" class="headerlink" title="HTTP1.0与HTTP2.0的区别"></a>HTTP1.0与HTTP2.0的区别</h2><h3 id="一、HTTP2-0简介"><a href="#一、HTTP2-0简介" class="headerlink" title="一、HTTP2.0简介"></a>一、HTTP2.0简介</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<p>HTTP 2.0 的出现，相比于 HTTP 1.x ，大幅度的提升了 web 性能。</p>
+<h3 id="HTTP2-0与HTTP1-0的主要区别"><a href="#HTTP2-0与HTTP1-0的主要区别" class="headerlink" title="HTTP2.0与HTTP1.0的主要区别"></a>HTTP2.0与HTTP1.0的主要区别</h3><p>1.HTTP/2采用二进制格式而非文本格式</p>
+<p>2.HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</p>
+<p>3.使用报头压缩，HTTP/2降低了开销</p>
+<p>4.HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+<h3 id="为什么采用二进制格式？"><a href="#为什么采用二进制格式？" class="headerlink" title="为什么采用二进制格式？"></a>为什么采用二进制格式？</h3><p>HTTP1.x的解析是基于文本。基于文本协议的格式解析存在天然缺陷，文本的表现形式有多样性，要做到健壮性考虑的场景必然很多，二进制则不同，只认0和1的组合。基于这种考虑HTTP2.0的协议解析决定采用二进制格式，实现方便且健壮。</p>
+<h3 id="一、为什么要多路复用？"><a href="#一、为什么要多路复用？" class="headerlink" title="一、为什么要多路复用？"></a>一、为什么要多路复用？</h3><p><a href="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg" target="_blank" rel="external">多路复用</a></p>
+<p>整个访问流程第一次请求index.html页面,之后浏览器会去请求style.css和scripts.js的文件。左边的图是顺序加载两个个文件的，右边则是并行加载两个文件。<br>多路复用允许单一的 HTTP/2 连接同时发起多重的请求-响应消息。</p>
+<p>HTTP 性能优化的关键并不在于高带宽，而是低延迟。</p>
+<p>首先你要知道，TCP连接相当于两根管道（一个用于服务器到客户端，一个用于客户端到服务器），管道里面数据传输是通过字节码传输，传输是有序的，每个字节都是一个一个来传输。</p>
+<p>这个时候有一个新的概念就是：二进制分帧。</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg" alt="二进制分帧"></p>
+<p>HTTP2.0通过在应用层和传输层之间增加一个二进制分帧层，突破了HTTP1.1的性能限制、改进传输性能。</p>
+<p>二进制分帧层 在 应用层(HTTP/2)和传输层(TCP or UDP)之间。HTTP/2并没有去修改TCP协议而是尽可能的利用TCP的特性。</p>
+<p>在二进制分帧层中， HTTP/2 会将所有传输的信息分割为帧（frame）,并对它们采用二进制格式的编码 ，其中 首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。</p>
+<p>多路复用技术：单连接多资源的方式，减少服务端的链接压力,内存占用更少,连接吞吐量更大；由于减少TCP 慢启动时间，提高传输的速度</p>
+<h3 id="二、为什么要进行首部压缩？"><a href="#二、为什么要进行首部压缩？" class="headerlink" title="二、为什么要进行首部压缩？"></a>二、为什么要进行首部压缩？</h3><p>为什么要压缩？在 HTTP/1 中，HTTP 请求和响应都是由「状态行、请求 / 响应头部、消息主体」三部分组成。一般而言，消息主体都会经过 gzip 压缩，或者本身传输的就是压缩过后的二进制文件（例如图片、音频），但状态行和头部却没有经过任何压缩，直接以纯文本传输。</p>
+<p>随着 Web 功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输 UserAgent、Cookie 这类不会频繁变动的内容，完全是一种浪费。<br>进行头部压缩，既避免了重复header的传输，又减小了需要传输的大小。高效的压缩算法可以很大的压缩header，减少发送包的数量从而降低延迟。</p>
+<h3 id="三、服务器推送的好处是什么？"><a href="#三、服务器推送的好处是什么？" class="headerlink" title="三、服务器推送的好处是什么？"></a>三、服务器推送的好处是什么？</h3><p>服务端推送是一种在客户端请求之前发送数据的机制。当代网页使用了许多资源:HTML、样式表、脚本、图片等等。在HTTP/1.x中这些资源每一个都必须明确地请求。这可能是一个很慢的过程。浏览器从获取HTML开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。</p>
+<p>为了改善延迟，HTTP/2引入了server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前。一个服务器经常知道一个页面需要很多附加资源，在它响应浏览器第一个请求的时候，可以开始推送这些资源。这允许服务端去完全充分地利用一个可能空闲的网络，改善页面加载时间。</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg" alt="服务器推送"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ol>
+<li>HTTP/2采用二进制格式而非文本格式</li>
+<li>HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</li>
+<li>使用报头压缩，HTTP/2降低了开销</li>
+<li>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/04/TCP-IP三次握手和四次挥手浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -849,203 +1000,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/04/Java-线程池浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/04/Java-线程池浅析/" itemprop="url">Java线程池浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T15:59:48+08:00">
-                2018-12-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/12/04/Java-线程池浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/12/04/Java-线程池浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h2><p>合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</p>
-<h3 id="一、简单介绍"><a href="#一、简单介绍" class="headerlink" title="一、简单介绍"></a>一、简单介绍</h3><p>最简单的新建一个线程的方式就是new Thread<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Overrider</span></div><div class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">			<span class="comment">//do something</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">).start();</div></pre></td></tr></table></figure></p>
-<p>虽然简单，但是有很多缺点：</p>
-<ol>
-<li>频繁的使用new Thread 来新建线程会造成新建对象性能差</li>
-<li>新建的线程缺乏统一的管理，并且新建线程没有限制，互相竞争，可能占用系统资源导致oom</li>
-<li>功能单一</li>
-</ol>
-<p>既然不能new Thread不能满足多样的需求变化，那么Java提供的线程池就很好的解决了这些问题。Java提供四种线程池，下面一一介绍。</p>
-<h3 id="二、Java线程池"><a href="#二、Java线程池" class="headerlink" title="二、Java线程池"></a>二、Java线程池</h3><p>优点：</p>
-<ol>
-<li>重用线程池中的线程，避免因频繁创建和销毁线程带来的性能的开销</li>
-<li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致阻塞的现象</li>
-<li>能够对线程进行简单的管理，并提供定时执行及指定间隔循环执行的功能</li>
-</ol>
-<p>Java中的线程池的具体实现是在ThreadPoolExecutor，通过配置不同的参数来实现不同功能的线程池。</p>
-<p>ThreadPoolExecutor构造函数有四个，源码实现最终都是调用了</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></div><div class="line">                          <span class="keyword">int</span> maximumPoolSize,</div><div class="line">                          <span class="keyword">long</span> keepAliveTime,</div><div class="line">                          TimeUnit unit,</div><div class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                          ThreadFactory threadFactory,</div><div class="line">                          RejectedExecutionHandler <span class="keyword">handler</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (corePoolSize &lt; <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt;= <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt; corePoolSize ||</div><div class="line">        keepAliveTime &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="keyword">if</span> (workQueue == <span class="keyword">null</span> || threadFactory == <span class="keyword">null</span> || <span class="keyword">handler</span> == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">this</span>.corePoolSize = corePoolSize;</div><div class="line">    <span class="keyword">this</span>.maximumPoolSize = maximumPoolSize;</div><div class="line">    <span class="keyword">this</span>.workQueue = workQueue;</div><div class="line">    <span class="keyword">this</span>.keepAliveTime = unit.toNanos(keepAliveTime);</div><div class="line">    <span class="keyword">this</span>.threadFactory = threadFactory;</div><div class="line">    <span class="keyword">this</span>.<span class="keyword">handler</span> = <span class="keyword">handler</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 构造函数的各个参数将会影响到线程池的功能特性，</p>
-<ul>
-<li>corePoolSize： 线程池中的核心线程池数量，除非设置了allowCoreThreadTimeOut为true，否则即使处于空闲状态也一直保留在线程池中。</li>
-<li>maximumPoolSize：最大线程数，当活动的线程数达到最大，后续新的任务将会被阻塞</li>
-<li>keepAliveTime：非核心线程空闲时的超时时间，空闲超过该时间将会被回收，当allowCoreThreadTimeOut为true也会作用于核心线程</li>
-<li>unit：超时时间的单位</li>
-<li><p>workQueue：线程池中的任务队列，通过线程池的execute方法提交的Runnable会存储在这个参数中在JDK中提供了如下阻塞队列：<br>1、ArrayBlockingQueue：基于数组结构的有界阻塞队列，按FIFO排序任务；<br>2、LinkedBlockingQuene：基于链表结构的阻塞队列，按FIFO排序任务，吞吐量通常要高于ArrayBlockingQuene；<br>3、SynchronousQuene：一个不存储元素的阻塞队列，每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQuene；<br>4、priorityBlockingQuene：具有优先级的无界阻塞队列；</p>
-</li>
-<li><p>threadFactory：线程工厂,为线程池提供创建新线程的功能</p>
-</li>
-<li>handler：RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。以下是JDK1.5提供的四种策略。<br>1、AbortPolicy：直接抛出异常。<br>2、CallerRunsPolicy：只用调用者所在线程来运行任务。<br>3、DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。<br>4、DiscardPolicy：不处理，丢弃掉。<br>当然也可以根据应用场景需要来实现RejectedExecutionHandler接口自定义策略。如记录日志或持久化不能处理的任务。</li>
-</ul>
-<h3 id="三、线程池的分类"><a href="#三、线程池的分类" class="headerlink" title="三、线程池的分类"></a>三、线程池的分类</h3><p>常见的线程池有四种:</p>
-<ol>
-<li>FixedThreadPool</li>
-<li>CachedThreadPool</li>
-<li>ScheduledThreadPool</li>
-<li>SingleThreadExecutor</li>
-</ol>
-<h4 id="1-FixedThreadPool"><a href="#1-FixedThreadPool" class="headerlink" title="1.FixedThreadPool"></a>1.FixedThreadPool</h4><p>FixedThreadPool是通过Executors的newCachedThreadPool()方法来创建的。它是一种线程数量固定的线程池，并且全都是核心线程。当该线程池中所有的线程都被占用了，新任务都会处于等待状态，直到有空闲线程。FixedThreadPool只有核心线程，并且没有超时机制，任务队列无限大。</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">FixedThreadPool</span>(int nThreads) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(nThreads, nThreads,</div><div class="line">                                    <span class="number">0</span>L, TimeUnit.MILLISECONDS,</div><div class="line">                                    <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;());</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<h4 id="2-CacheThreadPool"><a href="#2-CacheThreadPool" class="headerlink" title="2.CacheThreadPool"></a>2.CacheThreadPool</h4><p>CacheThreadPool是通过Executors的newCacheThreadPool()来创建的。它是线程数量不定的线程池，最大数量可达到Integer.MAX_VALUE，当该线程池中的线程都被占用了，有新的任务将会新建线程来处理，该线程池中的线程有超时机制，超时时长为60s，任务队列与FixedThreadPool不同的是该任务队列相当于一个空集合，那么任务将会马上执行，在这种情况下，SynchronousQueue可以理解为无法插入任务。从这些特性看来，CacheThreadPool是比较适合执行大量的耗时较少的任务的。</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">CachedThreadPool</span>() &#123;</div><div class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</div><div class="line">                                     <span class="number">60</span>L, TimeUnit.SECONDS,</div><div class="line">                                     <span class="keyword">new</span> <span class="type">SynchronousQueue</span>&lt;Runnable&gt;());</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="3-ScheduledThreadPool"><a href="#3-ScheduledThreadPool" class="headerlink" title="3.ScheduledThreadPool"></a>3.ScheduledThreadPool</h4><p>ScheduledThreadPool是通过Executors的newScheduledThreadPool(int corePoolSize)来创建，核心线程是固定的，非核心线程是无限制的，超时时间默认10s，这类线程池主要用于执行定时任务和具有固定周期的重复任务。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</div><div class="line">     <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</div><div class="line">           DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</div><div class="line">           <span class="keyword">new</span> DelayedWorkQueue());</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
-<h4 id="4-SingleThreadExecutor"><a href="#4-SingleThreadExecutor" class="headerlink" title="4.SingleThreadExecutor"></a>4.SingleThreadExecutor</h4><p>SingleThreadExecutor是通过newSingleThreadExecutor（）来创建的，该线程池中只有一个核心线程，没有超时时间，它确保所有的任务都在同一线程中按顺序执行。会统一所有外界的任务到同一个线程按序执行，这些任务不需考虑同步的问题。</p>
-<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">SingleThreadExecutor</span>() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">FinalizableDelegatedExecutorService</span></div><div class="line">        (<span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">1</span>, <span class="number">1</span>,</div><div class="line">                                <span class="number">0</span>L, TimeUnit.MILLISECONDS,</div><div class="line">                                <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;()));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="四、任务队列"><a href="#四、任务队列" class="headerlink" title="四、任务队列"></a>四、任务队列</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">BlockingQueue&lt;Runnable&gt; </span>workQueue</div></pre></td></tr></table></figure>
-<p>即用于保存等待执行的任务的阻塞队列。</p>
-<p>BlockingQueue是个接口，有如下实现类：</p>
-<ol>
-<li><p>ArrayBlockQueue：一个由数组支持的有界阻塞队列。此队列按 FIFO（先进先出）原则对元素进行排序。创建其对象必须明确大小，像数组一样。最大的特点是可以防止资源被耗尽。</p>
-</li>
-<li><p>LinkedBlockQueue：一个可改变大小的阻塞队列。此队列按 FIFO（先进先出）原则对元素进行排序。创建其对象如果没有明确大小，默认值是Integer.MAX_VALUE。链接队列的吞吐量通常要高于基于数组的队列，但是在大多数并发应用程序中，其可预知的性能要低。</p>
-</li>
-<li><p>PriorityBlockingQueue：类似于LinkedBlockingQueue，但其所含对象的排序不是FIFO，而是依据对象的自然排序顺序或者是构造函数所带的Comparator决定的顺序。</p>
-</li>
-<li><p>SynchronousQueue：同步队列。同步队列没有任何容量，每个插入必须等待另一个线程移除，反之亦然。一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQueue</p>
-</li>
-</ol>
-<h3 id="五、饱和策略"><a href="#五、饱和策略" class="headerlink" title="五、饱和策略"></a>五、饱和策略</h3><p>RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。</p>
-<p>RejectedExecutionHandler提供了四种方式来处理任务拒绝策略：</p>
-<ol>
-<li>DiscardPolicy（直接丢弃）</li>
-<li>DiscardOldestPolicy（丢弃队列中最老的任务）</li>
-<li>ABortPolicy(抛异常)</li>
-<li>CallerRunsPolicy（将任务分给调用线程来执行）</li>
-</ol>
-<h3 id="六、基本使用"><a href="#六、基本使用" class="headerlink" title="六、基本使用"></a>六、基本使用</h3><h4 id="向线程池提交任务"><a href="#向线程池提交任务" class="headerlink" title="向线程池提交任务"></a>向线程池提交任务</h4><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Runnable cacheThread = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="built_in">run</span>() &#123;</div><div class="line">                System.out.<span class="built_in">println</span>(<span class="string">"Test CacheThreadPool"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        ExecutorService cacheThreadPool = Executors.newCachedThreadPool();</div><div class="line">        cacheThreadPool.execute(cacheThread);</div></pre></td></tr></table></figure>
-<h3 id="七、整体分析"><a href="#七、整体分析" class="headerlink" title="七、整体分析"></a>七、整体分析</h3><p>整体流程大致如图：</p>
-<p><img src="https://ws1.sinaimg.cn/large/005GVP9ggy1fxx47ohpfkj31be0j6wi7.jpg" alt="threadpoolpic"></p>
-<p>了解了整体流程，那么再去看源码就会很清楚明了了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1090,7 +1049,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -284,6 +284,157 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/19/LruCache源码及原理分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/19/LruCache源码及原理分析/" itemprop="url">LruCache源码及原理分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-19T17:02:25+08:00">
+                2018-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/04/19/LruCache源码及原理分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/04/19/LruCache源码及原理分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、源码及解析"><a href="#一、源码及解析" class="headerlink" title="一、源码及解析"></a>一、源码及解析</h3><p>因为源码不多，就直接全部贴出来分析。源码及分析如下：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * Copyright (C) 2011 The Android Open Source Project</div><div class="line"> *</div><div class="line"> * Licensed under the Apache License, Version 2.0 (the "License");</div><div class="line"> * you may not use this file except in compliance with the License.</div><div class="line"> * You may obtain a copy of the License at</div><div class="line"> *</div><div class="line"> *      http://www.apache.org/licenses/LICENSE-2.0</div><div class="line"> *</div><div class="line"> * Unless required by applicable law or agreed to in writing, software</div><div class="line"> * distributed under the License is distributed on an "AS IS" BASIS,</div><div class="line"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</div><div class="line"> * See the License for the specific language governing permissions and</div><div class="line"> * limitations under the License.</div><div class="line"> */</div><div class="line">	</div><div class="line"><span class="keyword">package</span> android.util;</div><div class="line">	</div><div class="line"><span class="keyword">import</span> java.util.LinkedHashMap;</div><div class="line"><span class="keyword">import</span> java.util.Map;</div><div class="line">	</div><div class="line"><span class="comment">/**</span></div><div class="line"> * BEGIN LAYOUTLIB CHANGE</div><div class="line"> * This is a custom version that doesn't use the non standard LinkedHashMap#eldest.</div><div class="line"> * END LAYOUTLIB CHANGE</div><div class="line"> *</div><div class="line"> * A cache that holds strong references to a limited number of values. Each time</div><div class="line"> * a value is accessed, it is moved to the head of a queue. When a value is</div><div class="line"> * added to a full cache, the value at the end of that queue is evicted and may</div><div class="line"> * become eligible for garbage collection.</div><div class="line"> *</div><div class="line"> * &lt;p&gt;If your cached values hold resources that need to be explicitly released,</div><div class="line"> * override &#123;@link #entryRemoved&#125;.</div><div class="line"> *</div><div class="line"> * &lt;p&gt;If a cache miss should be computed on demand for the corresponding keys,</div><div class="line"> * override &#123;@link #create&#125;. This simplifies the calling code, allowing it to</div><div class="line"> * assume a value will always be returned, even when there's a cache miss.</div><div class="line"> *</div><div class="line"> * &lt;p&gt;By default, the cache size is measured in the number of entries. Override</div><div class="line"> * &#123;@link #sizeOf&#125; to size the cache in different units. For example, this cache</div><div class="line"> * is limited to 4MiB of bitmaps:</div><div class="line"> * &lt;pre&gt;   &#123;@code</div><div class="line"> *   int cacheSize = 4 * 1024 * 1024; // 4MiB</div><div class="line"> *   LruCache&lt;String, Bitmap&gt; bitmapCache = new LruCache&lt;String, Bitmap&gt;(cacheSize) &#123;</div><div class="line"> *       protected int sizeOf(String key, Bitmap value) &#123;</div><div class="line"> *           return value.getByteCount();</div><div class="line"> *       &#125;</div><div class="line"> *   &#125;&#125;&lt;/pre&gt;</div><div class="line"> *</div><div class="line"> * &lt;p&gt;This class is thread-safe. Perform multiple cache operations atomically by</div><div class="line"> * synchronizing on the cache: &lt;pre&gt;   &#123;@code</div><div class="line"> *   synchronized (cache) &#123;</div><div class="line"> *     if (cache.get(key) == null) &#123;</div><div class="line"> *         cache.put(key, value);</div><div class="line"> *     &#125;</div><div class="line"> *   &#125;&#125;&lt;/pre&gt;</div><div class="line"> *</div><div class="line"> * &lt;p&gt;This class does not allow null to be used as a key or value. A return</div><div class="line"> * value of null from &#123;@link #get&#125;, &#123;@link #put&#125; or &#123;@link #remove&#125; is</div><div class="line"> * unambiguous: the key was not in the cache.</div><div class="line"> *</div><div class="line"> * &lt;p&gt;This class appeared in Android 3.1 (Honeycomb MR1); it's available as part</div><div class="line"> * of &lt;a href="http://developer.android.com/sdk/compatibility-library.html"&gt;Android's</div><div class="line"> * Support Package&lt;/a&gt; for earlier releases.</div><div class="line"> */</div><div class="line"><span class="comment">// note: ssh </span></div><div class="line"><span class="comment">//date: 20170418</span></div><div class="line"><span class="keyword">public</span> class LruCache&lt;K, V&gt; &#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LinkedHashMap&lt;K, V&gt; <span class="built_in">map</span>;<span class="comment">//存放数据的集合</span></div><div class="line">	</div><div class="line">    <span class="comment">/** Size of this cache in units. Not necessarily the number of elements. */</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> <span class="built_in">size</span>;<span class="comment">//当前LruCache的内存占用的大小</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> maxSize;<span class="comment">//Lrucache的最大容量</span></div><div class="line">	</div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> putCount;<span class="comment">//put的次数</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> createCount;<span class="comment">//create的次数</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> evictionCount;<span class="comment">//回收的次数</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> hitCount;<span class="comment">//命中的次数</span></div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> missCount;<span class="comment">//丢失的次数</span></div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param maxSize for caches that do not override &#123;@link #sizeOf&#125;, this is</div><div class="line">     *     the maximum number of entries in the cache. For all other caches,</div><div class="line">     *     this is the maximum sum of the sizes of the entries in this cache.</div><div class="line">     */</div><div class="line">    <span class="comment">//构造函数，在这里设置maxsize,并且实例化一个LinkedHashMap.LinkedHashMap是LruCache的核心。</span></div><div class="line">    <span class="keyword">public</span> LruCache(<span class="built_in">int</span> maxSize) &#123;</div><div class="line">        <span class="keyword">if</span> (maxSize &lt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"maxSize &lt;= 0"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">this</span>.maxSize = maxSize;</div><div class="line">        <span class="comment">//初始容量为0，加载因子是0.75f即当容量达到最大容量的0.75时会把内存增加一半，accessOrder 为true：访问顺序，false:插入顺序</span></div><div class="line">        <span class="keyword">this</span>.<span class="built_in">map</span> = <span class="keyword">new</span> LinkedHashMap&lt;K, V&gt;(<span class="number">0</span>, <span class="number">0.75</span>f, <span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Sets the size of the cache.</div><div class="line">     * @param maxSize The new maximum size.</div><div class="line">     *</div><div class="line">     * @hide</div><div class="line">     */</div><div class="line">    <span class="comment">//重置最大容量，调用trimToSize来实现</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> resize(<span class="built_in">int</span> maxSize) &#123;</div><div class="line">        <span class="keyword">if</span> (maxSize &lt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"maxSize &lt;= 0"</span>);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.maxSize = maxSize;</div><div class="line">        &#125;</div><div class="line">        trimToSize(maxSize);</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the value for &#123;@code key&#125; if it exists in the cache or can be</div><div class="line">     * created by &#123;@code #create&#125;. If a value was returned, it is moved to the</div><div class="line">     * head of the queue. This returns null if a value is not cached and cannot</div><div class="line">     * be created.</div><div class="line">     */</div><div class="line">    <span class="comment">//通过key获取元素值，如果缓存中存在的话</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> V <span class="built_in">get</span>(K <span class="built_in">key</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">key</span> == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        V mapValue;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            mapValue = <span class="built_in">map</span>.<span class="built_in">get</span>(<span class="built_in">key</span>);</div><div class="line">            <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</div><div class="line">                hitCount++;</div><div class="line">                <span class="keyword">return</span> mapValue;</div><div class="line">            &#125;</div><div class="line">            missCount++;</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * Attempt to create a value. This may take a long time, and the map</div><div class="line">         * may be different when create() returns. If a conflicting value was</div><div class="line">         * added to the map while create() was working, we leave that value in</div><div class="line">         * the map and release the created value.</div><div class="line">         */</div><div class="line">        <span class="comment">//如果值不存在，那么就通过create（key）来创建一个，create(key)默认是返回null.如果需要自定义可重写这个方法</span></div><div class="line">        V createdValue = create(<span class="built_in">key</span>);</div><div class="line">        <span class="keyword">if</span> (createdValue == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//如果重写了create(key)，返回并不为null,即创建了新的数据，那么就会将数据放进缓存中</span></div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            createCount++;</div><div class="line">            mapValue = <span class="built_in">map</span>.put(<span class="built_in">key</span>, createdValue);</div><div class="line">	</div><div class="line">            <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// There was a conflict so undo that last put</span></div><div class="line">                <span class="built_in">map</span>.put(<span class="built_in">key</span>, mapValue);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="built_in">size</span> += safeSizeOf(<span class="built_in">key</span>, createdValue);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="keyword">if</span> (mapValue != <span class="keyword">null</span>) &#123;</div><div class="line">            entryRemoved(<span class="keyword">false</span>, <span class="built_in">key</span>, createdValue, mapValue);</div><div class="line">            <span class="keyword">return</span> mapValue;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            trimToSize(maxSize);</div><div class="line">            <span class="keyword">return</span> createdValue;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Caches &#123;@code value&#125; for &#123;@code key&#125;. The value is moved to the head of</div><div class="line">     * the queue.</div><div class="line">     *</div><div class="line">     * @return the previous value mapped by &#123;@code key&#125;.</div><div class="line">     */</div><div class="line">    <span class="comment">//向缓存中添加数据</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> V put(K <span class="built_in">key</span>, V value) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">key</span> == <span class="keyword">null</span> || value == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null || value == null"</span>);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        V previous;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            putCount++;</div><div class="line">            <span class="built_in">size</span> += safeSizeOf(<span class="built_in">key</span>, value);<span class="comment">//safeSizeOf(key, value)会调用SizeOf(key, value)，返回的值为1</span></div><div class="line">            previous = <span class="built_in">map</span>.put(<span class="built_in">key</span>, value);<span class="comment">//Hashmap.put()</span></div><div class="line">            <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;<span class="comment">//如果不为null,即添加失败，需要在缓存中减去这个元素，重置大小</span></div><div class="line">                <span class="built_in">size</span> -= safeSizeOf(<span class="built_in">key</span>, previous);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</div><div class="line">            entryRemoved(<span class="keyword">false</span>, <span class="built_in">key</span>, previous, value);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        trimToSize(maxSize);</div><div class="line">        <span class="keyword">return</span> previous;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * @param maxSize the maximum size of the cache before returning. May be -1</div><div class="line">     *     to evict even 0-sized elements.</div><div class="line">     */</div><div class="line">    <span class="keyword">private</span> <span class="keyword">void</span> trimToSize(<span class="built_in">int</span> maxSize) &#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;<span class="comment">//开启死循环</span></div><div class="line">            K <span class="built_in">key</span>;</div><div class="line">            V value;</div><div class="line">            <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">                <span class="keyword">if</span> (<span class="built_in">size</span> &lt; <span class="number">0</span> || (<span class="built_in">map</span>.isEmpty() &amp;&amp; <span class="built_in">size</span> != <span class="number">0</span>)) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(getClass().getName()</div><div class="line">                            + <span class="string">".sizeOf() is reporting inconsistent results!"</span>);</div><div class="line">                &#125;</div><div class="line">	</div><div class="line">                <span class="keyword">if</span> (<span class="built_in">size</span> &lt;= maxSize) &#123;</div><div class="line">                    <span class="keyword">break</span>;<span class="comment">//当已用的缓存小于最大缓存时，推出循环</span></div><div class="line">                &#125;</div><div class="line">	</div><div class="line">                <span class="comment">// BEGIN LAYOUTLIB CHANGE</span></div><div class="line">                <span class="comment">// get the last item in the linked list.</span></div><div class="line">                <span class="comment">// This is not efficient, the goal here is to minimize the changes</span></div><div class="line">                <span class="comment">// compared to the platform version.</span></div><div class="line">                <span class="comment">//否则就在缓存中找到最近最少使用的元素</span></div><div class="line">                Map.Entry&lt;K, V&gt; toEvict = <span class="keyword">null</span>;</div><div class="line">                <span class="keyword">for</span> (Map.Entry&lt;K, V&gt; entry : <span class="built_in">map</span>.entrySet()) &#123;</div><div class="line">                    toEvict = entry;</div><div class="line">                &#125;</div><div class="line">                <span class="comment">// END LAYOUTLIB CHANGE</span></div><div class="line">	</div><div class="line">                <span class="keyword">if</span> (toEvict == <span class="keyword">null</span>) &#123;</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">	</div><div class="line">                <span class="built_in">key</span> = toEvict.getKey();</div><div class="line">                value = toEvict.getValue();</div><div class="line">                <span class="built_in">map</span>.remove(<span class="built_in">key</span>);<span class="comment">//然后删掉找到的最近最少使用的元素</span></div><div class="line">                <span class="built_in">size</span> -= safeSizeOf(<span class="built_in">key</span>, value);<span class="comment">//减少了已使用的缓存空间</span></div><div class="line">                evictionCount++;</div><div class="line">            &#125;</div><div class="line">	</div><div class="line">            entryRemoved(<span class="keyword">true</span>, <span class="built_in">key</span>, value, <span class="keyword">null</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Removes the entry for &#123;@code key&#125; if it exists.</div><div class="line">     *</div><div class="line">     * @return the previous value mapped by &#123;@code key&#125;.</div><div class="line">     */</div><div class="line">    <span class="comment">//删除元素</span></div><div class="line">    <span class="comment">//删去元素，缩减已使用缓存值</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> V remove(K <span class="built_in">key</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">key</span> == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"key == null"</span>);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        V previous;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            previous = <span class="built_in">map</span>.remove(<span class="built_in">key</span>);</div><div class="line">            <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="built_in">size</span> -= safeSizeOf(<span class="built_in">key</span>, previous);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="keyword">if</span> (previous != <span class="keyword">null</span>) &#123;</div><div class="line">            entryRemoved(<span class="keyword">false</span>, <span class="built_in">key</span>, previous, <span class="keyword">null</span>);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="keyword">return</span> previous;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Called for entries that have been evicted or removed. This method is</div><div class="line">     * invoked when a value is evicted to make space, removed by a call to</div><div class="line">     * &#123;@link #remove&#125;, or replaced by a call to &#123;@link #put&#125;. The default</div><div class="line">     * implementation does nothing.</div><div class="line">     *</div><div class="line">     * &lt;p&gt;The method is called without synchronization: other threads may</div><div class="line">     * access the cache while this method is executing.</div><div class="line">     *</div><div class="line">     * @param evicted true if the entry is being removed to make space, false</div><div class="line">     *     if the removal was caused by a &#123;@link #put&#125; or &#123;@link #remove&#125;.</div><div class="line">     * @param newValue the new value for &#123;@code key&#125;, if it exists. If non-null,</div><div class="line">     *     this removal was caused by a &#123;@link #put&#125;. Otherwise it was caused by</div><div class="line">     *     an eviction or a &#123;@link #remove&#125;.</div><div class="line">     */</div><div class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> entryRemoved(<span class="built_in">boolean</span> evicted, K <span class="built_in">key</span>, V oldValue, V newValue) &#123;&#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Called after a cache miss to compute a value for the corresponding key.</div><div class="line">     * Returns the computed value or null if no value can be computed. The</div><div class="line">     * default implementation returns null.</div><div class="line">     *</div><div class="line">     * &lt;p&gt;The method is called without synchronization: other threads may</div><div class="line">     * access the cache while this method is executing.</div><div class="line">     *</div><div class="line">     * &lt;p&gt;If a value for &#123;@code key&#125; exists in the cache when this method</div><div class="line">     * returns, the created value will be released with &#123;@link #entryRemoved&#125;</div><div class="line">     * and discarded. This can occur when multiple threads request the same key</div><div class="line">     * at the same time (causing multiple values to be created), or when one</div><div class="line">     * thread calls &#123;@link #put&#125; while another is creating a value for the same</div><div class="line">     * key.</div><div class="line">     */</div><div class="line">    <span class="keyword">protected</span> V create(K <span class="built_in">key</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="keyword">private</span> <span class="built_in">int</span> safeSizeOf(K <span class="built_in">key</span>, V value) &#123;</div><div class="line">        <span class="built_in">int</span> result = sizeOf(<span class="built_in">key</span>, value);</div><div class="line">        <span class="keyword">if</span> (result &lt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Negative size: "</span> + <span class="built_in">key</span> + <span class="string">"="</span> + value);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the size of the entry for &#123;@code key&#125; and &#123;@code value&#125; in</div><div class="line">     * user-defined units.  The default implementation returns 1 so that size</div><div class="line">     * is the number of entries and max size is the maximum number of entries.</div><div class="line">     *</div><div class="line">     * &lt;p&gt;An entry's size must not change while it is in the cache.</div><div class="line">     */</div><div class="line">    <span class="keyword">protected</span> <span class="built_in">int</span> sizeOf(K <span class="built_in">key</span>, V value) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Clear the cache, calling &#123;@link #entryRemoved&#125; on each removed entry.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> evictAll() &#123;</div><div class="line">        trimToSize(<span class="number">-1</span>); <span class="comment">// -1 will evict 0-sized elements</span></div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * For caches that do not override &#123;@link #sizeOf&#125;, this returns the number</div><div class="line">     * of entries in the cache. For all other caches, this returns the sum of</div><div class="line">     * the sizes of the entries in this cache.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> <span class="built_in">size</span>() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="built_in">size</span>;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * For caches that do not override &#123;@link #sizeOf&#125;, this returns the maximum</div><div class="line">     * number of entries in the cache. For all other caches, this returns the</div><div class="line">     * maximum sum of the sizes of the entries in this cache.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> maxSize() &#123;</div><div class="line">        <span class="keyword">return</span> maxSize;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the number of times &#123;@link #get&#125; returned a value that was</div><div class="line">     * already present in the cache.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> hitCount() &#123;</div><div class="line">        <span class="keyword">return</span> hitCount;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the number of times &#123;@link #get&#125; returned null or required a new</div><div class="line">     * value to be created.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> missCount() &#123;</div><div class="line">        <span class="keyword">return</span> missCount;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the number of times &#123;@link #create(Object)&#125; returned a value.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> createCount() &#123;</div><div class="line">        <span class="keyword">return</span> createCount;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the number of times &#123;@link #put&#125; was called.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> putCount() &#123;</div><div class="line">        <span class="keyword">return</span> putCount;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns the number of values that have been evicted.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="built_in">int</span> evictionCount() &#123;</div><div class="line">        <span class="keyword">return</span> evictionCount;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * Returns a copy of the current contents of the cache, ordered from least</div><div class="line">     * recently accessed to most recently accessed.</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> Map&lt;K, V&gt; snapshot() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LinkedHashMap&lt;K, V&gt;(<span class="built_in">map</span>);</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">    @Override <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">final</span> <span class="keyword">String</span> toString() &#123;</div><div class="line">        <span class="built_in">int</span> accesses = hitCount + missCount;</div><div class="line">        <span class="built_in">int</span> hitPercent = accesses != <span class="number">0</span> ? (<span class="number">100</span> * hitCount / accesses) : <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">String</span>.format(<span class="string">"LruCache[maxSize=%d,hits=%d,misses=%d,hitRate=%d%%]"</span>,</div><div class="line">                maxSize, hitCount, missCount, hitPercent);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上就是全部源码和分析注释。</p>
+<h3 id="二、简单使用"><a href="#二、简单使用" class="headerlink" title="二、简单使用"></a>二、简单使用</h3><p>举个例子，图片缓存：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">BitmapLruCache</span> <span class="keyword">extends</span> <span class="title">LruCache</span>&lt;<span class="title">String</span>, <span class="title">Bitmap</span>&gt; </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">BitmapLruCache</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="comment">// 构造方法传入当前应用可用最大内存的八分之一</span></div><div class="line">            <span class="keyword">super</span>((<span class="keyword">int</span>) (Runtime.getRuntime().maxMemory() / <span class="number">1024</span> / <span class="number">8</span>));</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="comment">// 重写sizeOf方法，并计算返回每个Bitmap对象占用的内存，必须重写</span></div><div class="line">        <span class="keyword">protected</span> <span class="function"><span class="keyword">int</span> <span class="title">sizeOf</span><span class="params">(String key, Bitmap value)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> value.getByteCount() / <span class="number">1024</span>;</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="comment">// 当缓存被移除时调用，第一个参数是表明缓存移除的原因，true表示被LruCache移除，false表示被主动remove移除，可不重写</span></div><div class="line">        <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">entryRemoved</span><span class="params">(<span class="keyword">boolean</span> evicted, String key, Bitmap oldValue, Bitmap</span></span></div><div class="line">                newValue) &#123;</div><div class="line">            <span class="keyword">super</span>.entryRemoved(evicted, key, oldValue, newValue);</div><div class="line">        &#125;</div><div class="line">	</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="comment">// 当get方法获取不到缓存的时候调用，如果需要创建自定义默认缓存，可以在这里添加逻辑，可不重写。可在取不到缓存图片的时候自定义操作</span></div><div class="line">        <span class="keyword">protected</span> <span class="function">Bitmap <span class="title">create</span><span class="params">(String key)</span> </span>&#123;</div><div class="line">            <span class="function"><span class="keyword">return</span> <span class="keyword">super</span>.<span class="title">create</span><span class="params">(key)</span></span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>1.初始化</p>
+<pre><code>LruCache&lt;String, Bitmap&gt; mLruCache = new BitmapLruCache();
+</code></pre></li>
+<li><p>2.将图片写入缓存中</p>
+<pre><code>mLruCache.put(key, bitmap);
+</code></pre></li>
+<li><p>3.从缓存中读取图片</p>
+<pre><code>mLruCache.get(key, bitmap);
+</code></pre></li>
+<li><p>4.将图片从缓存中删除</p>
+<pre><code>mLruCache.remove(key);
+</code></pre></li>
+</ul>
+<p>使用还是很简单的。</p>
+<h3 id="三、小结"><a href="#三、小结" class="headerlink" title="三、小结"></a>三、小结</h3><p>LruCache实现的核心是LinkedHashMap，为什么会用LinkedHashMap?<br>因为LinkedHashMap是由数组+双向链表的数据结构来实现的。其中双向链表的结构可以实现访问顺序和插入顺序.那么利用这个特性就可以实现LRU了。</p>
+<p>看一下LinkedHashMap的构造方法，</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line">     * Constructs a new &#123;<span class="doctag">@code</span> LinkedHashMap&#125; instance with the specified</div><div class="line">     * capacity, load factor and a flag specifying the ordering behavior.</div><div class="line">     *</div><div class="line">     * <span class="doctag">@param</span> initialCapacity</div><div class="line">     *            the initial capacity of this hash map.</div><div class="line">     * <span class="doctag">@param</span> loadFactor</div><div class="line">     *            the initial load factor.</div><div class="line">     * <span class="doctag">@param</span> accessOrder</div><div class="line">     *            &#123;<span class="doctag">@code</span> true&#125; if the ordering should be done based on the last</div><div class="line">     *            access (from least-recently accessed to most-recently</div><div class="line">     *            accessed), and &#123;<span class="doctag">@code</span> false&#125; if the ordering should be the</div><div class="line">     *            order in which the entries were inserted.</div><div class="line">     * <span class="doctag">@throws</span> IllegalArgumentException</div><div class="line">     *             when the capacity is less than zero or the load factor is</div><div class="line">     *             less or equal to zero.</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LinkedHashMap</span><span class="params">(</span></span></div><div class="line">            <span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor, <span class="keyword">boolean</span> accessOrder) &#123;</div><div class="line">        <span class="keyword">super</span>(initialCapacity, loadFactor);</div><div class="line">        init();</div><div class="line">        <span class="keyword">this</span>.accessOrder = accessOrder;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>参数在LruCache中已经分析过了，再说一遍具体含义。</p>
+<p>initialCapacity：这个哈希表的初始容量</p>
+<p>loadFactor：加载因子</p>
+<p>accessOrder：true,访问顺序；false,插入顺序。</p>
+<p>其实很简单。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/Android四大组件之Service/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1029,328 +1180,11 @@ decodeResource调用过程：即finishDecode之后，调用额外的Java层的cr
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/IPC基础概念介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/22/IPC基础概念介绍/" itemprop="url">IPC基础概念介绍</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T09:09:50+08:00">
-                2018-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/03/22/IPC基础概念介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/03/22/IPC基础概念介绍/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="IPC基础概念介绍"><a href="#IPC基础概念介绍" class="headerlink" title="IPC基础概念介绍"></a>IPC基础概念介绍</h2><h4 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h4><ul>
-<li><p>IPC是 Inter-Process Communication的缩写，意为进程间通信或跨进程通信，是指两个进程之间进行数据交换的过程。</p>
-</li>
-<li><p>线程是CPU调度的最小单元，同时线程是一种有限的系统资源。进程一般指一个执行单元，在PC和移动设备上指一个程序或者一个应用。一个进程可以包含多个线程，因此进程和线程是包含与被包含的关系。最简单的情况下，一个进程中只可以有一个线程，即主线程，在Android中也叫UI线程。</p>
-</li>
-</ul>
-<h4 id="二、Android中的多进程模式"><a href="#二、Android中的多进程模式" class="headerlink" title="二、Android中的多进程模式"></a>二、Android中的多进程模式</h4><p> Android中开启多进程的方法：</p>
-<pre><code>&lt;activity android:name=&quot;.BinderOneActivity&quot;
-           android:process=&quot;com.neil.binder.one&quot;/&gt;
-&lt;activity android:name=&quot;.BinderTwoActivity&quot;
-           android:process=&quot;com.neil.binder.two&quot;/&gt;
-&lt;activity android:name=&quot;.BinderThreeActivity&quot;
-           android:process=&quot;com.neil.binder.three&quot;/&gt;
-</code></pre><p>在AndroidManifest.xml指定android:process属性，若没有指定process属性，默认的进程中，默认进程的进程名是包名。</p>
-<p>日志输出：</p>
-<pre><code>u0_a60    4080  1207  1255464 42888 ffffffff b74c94f5 S com.example.liushihan.glidedemo
-u0_a60    4113  1207  1256320 42124 ffffffff b74c94f5 S com.neil.binder.one
-u0_a60    4144  1207  1254256 42088 ffffffff b74c94f5 S com.neil.binder.two
-u0_a60    4170  1207  1254256 41744 ffffffff b74c94f5 S com.neil.binder.three
-</code></pre><p>Android系统为每个应用分配一个唯一的UID，具有相同UID的应用才能共享数据。两个应用通过ShareUID跑在同一个进程中是有要求的，需要这两个应用有相同的ShareUID并且签名相同才可以。在这种情况下，它们可以互相访问对方的私有数据，比如data目录，组件信息等。</p>
-<h4 id="三、序列化和反序列化"><a href="#三、序列化和反序列化" class="headerlink" title="三、序列化和反序列化"></a>三、序列化和反序列化</h4><ol>
-<li>序列化</li>
-</ol>
-<p>由于存在于内存中的对象都是暂时的，无法长期驻存，为了把对象的状态保持下来，这时需要把对象写入到磁盘或者其他介质中，这个过程就叫做序列化。</p>
-<p>指把堆内存中的 Java 对象数据，通过某种方式把对象存储到磁盘文件中或者传递给其他网络节点（在网络上传输）。这个过程称为序列化。通俗来说就是将数据结构或对象转换成二进制串的过程</p>
-<ol>
-<li>反序列化</li>
-</ol>
-<p>反序列化恰恰是序列化的反向操作，也就是说，把已存在在磁盘或者其他介质中的对象，反序列化（读取）到内存中，以便后续操作，而这个过程就叫做反序列化。</p>
-<p>  概括性来说序列化是指将对象实例的状态存储到存储媒体（磁盘或者其他介质）的过程。在此过程中，先将对象的公共字段和私有字段以及类的名称（包括类所在的程序集）转换为字节流，然后再把字节流写入数据流。在随后对对象进行反序列化时，将创建出与原对象完全相同的副本。<br>  <br>  把磁盘文件中的对象数据或者把网络节点上的对象数据，恢复成Java对象模型的过程。也就是将在序列化过程中所生成的二进制串转换成数据结构或者对象的过程
-  </p>
-<h4 id="四、Serializable-VS-Parcelable"><a href="#四、Serializable-VS-Parcelable" class="headerlink" title="四、Serializable VS  Parcelable"></a>四、Serializable VS  Parcelable</h4><h5 id="1-Serializable"><a href="#1-Serializable" class="headerlink" title="1. Serializable"></a>1. Serializable</h5><p>Serializable是java提供的一个序列化接口，它是一个空接口，专门为对象提供标准的序列化和反序列化操作，使用Serializable实现类的序列化比较简单，只要在类声明中实现Serializable接口即可。</p>
-<p>举个例子：</p>
-<pre><code>import java.io.Serializable;
-
-public class Person implements Serializable {
-
-    **
-     * 生成序列号标识
-     */
-    private static final long serialVersionUID = -2083503801443301445L;
-
-    private String firstName;
-    private String lastName;
-    private int age;
-
-
-    public Person(String firstName, String lastName, int age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-    }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-}
-</code></pre><p>实现的Serializable接口并声明了序列化标识serialVersionUID。</p>
-<p>那么serialVersionUID有什么作用呢？</p>
-<p>实际上我们不声明serialVersionUID也是可以的，因为在序列化过程中会自动生成一个serialVersionUID来标识序列化对象。</p>
-<p>那么既然自动生成我们是不是可以不写？</p>
-<p>由于serialVersionUID是用来辅助序列化和反序列化过程的，原则上序列化后的对象中serialVersionUID只有和当前类的serialVersionUID相同才能够正常被反序列化，也就是说序列化与反序列化的serialVersionUID必须相同才能够使序列化操作成功。具体过程是这样的：序列化操作的时候系统会把当前类的serialVersionUID写入到序列化文件中，当反序列化时系统会去检测文件中的serialVersionUID，判断它是否与当前类的serialVersionUID一致，如果一致就说明序列化类的版本与当前类版本是一样的，可以反序列化成功，否则失败。不指定的话在反序列化会报错。</p>
-<p>例子的实现很简单，当然也是有弊端的，如果在此过程中使用反射，可能会创建大量其他对象，这就可能会导致很多垃圾回收。造成的结果是性能差和电池耗尽。</p>
-<h5 id="2-Parcelable"><a href="#2-Parcelable" class="headerlink" title="2. Parcelable"></a>2. Parcelable</h5><p>Parcelable是Android SDK中接口。鉴于Serializable在内存序列化上开销比较大，而内存资源属于android系统中的稀有资源（android系统分配给每个应用的内存开销都是有限的），为此android中提供了Parcelable接口来实现序列化操作，Parcelable的性能比Serializable好，在内存开销方面较小，所以在内存间数据传输时推荐使用Parcelable，如通过Intent在activity间传输数据，而Parcelable的缺点就使用起来比较麻烦。</p>
-<p>举个例子：</p>
-<pre><code>import android.os.Parcel;
-import android.os.Parcelable;
-
-public class Person implements Parcelable {
-
-    private String firstName;
-    private String lastName;
-    private int age;
-
-
-    public Person(String firstName, String lastName, int age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-    }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.firstName);
-        dest.writeString(this.lastName);
-        dest.writeInt(this.age);
-    }
-
-    protected Person(Parcel in) {
-            this.firstName = in.readString();
-            this.lastName = in.readString();
-            this.age = in.readInt();
-        }
-
-    public static final Parcelable.Creator&lt;Person&gt; CREATOR = new Parcelable.Creator&lt;Person&gt;() {
-        @Override
-        public Person createFromParcel(Parcel source) {
-            return new Person(source);
-        }
-
-        @Override
-        public Person[] newArray(int size) {
-            return new Person[size];
-        }
-    };
-}
-</code></pre><p>相对Serializable稍显复杂。</p>
-<ul>
-<li><p>Parcelable.Creator</p>
-<ul>
-<li>必须实现的接口。</li>
-</ul>
-</li>
-<li><p>T createFromParcel (Parcel source)</p>
-<ul>
-<li>创建序列化的实例，实现从Parcel容器中读取传递数据值,封装成Parcelable对象返回逻辑层</li>
-</ul>
-</li>
-<li><p>T[] newArray (int size)</p>
-<ul>
-<li>创建一个类型为T，长度为size的数组，供外部类反序列化本类数组使用。</li>
-</ul>
-</li>
-<li><p>void writeToParcel (Parcel dest, </p>
-<pre><code>int flags)
-</code></pre></li>
-</ul>
-<pre><code>* 将当前对象写入序列化结构中
-</code></pre><p>简单概括下：</p>
-<p> 序列化过程中，需要实现序列化和反序列化以及内容描述。</p>
-<p> writeToParcel实现序列化，通过CREATOR内部对象来实现反序列化，其内部通过createFromParcel方法来创建序列化对象并通过newArray方法创建数组，最终利用Parcel的一系列read方法完成反序列化，最后由describeContents完成内容描述功能，该方法一般返回0，仅当对象中存在文件描述符时返回1。</p>
-<p> 一句话概括，就是通过writeToParcel将我们的对象映射成Parcel对象，再通过createFromParcel将Parcel对象映射成我们的对象。</p>
-<h5 id="3-Serializable-和-Parcelable-异同"><a href="#3-Serializable-和-Parcelable-异同" class="headerlink" title="3. Serializable 和 Parcelable 异同"></a>3. Serializable 和 Parcelable 异同</h5><ul>
-<li><p>都能序列化，都可用于Intent传递数据</p>
-</li>
-<li><p>Serializable是Java中的序列化接口，使用简单但是内存开销大，序列化和反序列化需要大量的I/O操作。</p>
-</li>
-<li><p>Parcelable是Android SDK中的序列化接口，更适用Android平台，使用起来稍显复杂，但是效率很高。内存开销较小。</p>
-</li>
-<li><p>Parcelable主要用于内存序列化上，因此在序列化到存储设备或者网络传输方面还是尽量选择Serializable接口</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1395,7 +1229,7 @@ public class Person implements Parcelable {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
