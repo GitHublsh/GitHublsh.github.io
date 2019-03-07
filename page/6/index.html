@@ -284,6 +284,234 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/11/Glide4.x源码解析(1)-基本使用/" itemprop="url">Glide4.x源码解析(1)-基本使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-11T16:41:28+08:00">
+                2017-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/11/Glide4.x源码解析(1)-基本使用/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/12/11/Glide4.x源码解析(1)-基本使用/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、关于Glide"><a href="#一、关于Glide" class="headerlink" title="一、关于Glide"></a>一、关于Glide</h3><ul>
+<li><p>官方定义：</p>
+<ul>
+<li><p>Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。</p>
+<ul>
+<li>Glide 支持拉取，解码和展示视频快照，图片，和GIF动画。Glide的Api是如此的灵活，开发者甚至可以插入和替换成自己喜爱的任何网络栈。默认情况下，Glide使用的是一个定制化的基于HttpUrlConnection的栈，但同时也提供了与Google Volley和Square OkHttp快速集成的工具库。</li>
+</ul>
+</li>
+<li><p>虽然Glide 的主要目标是让任何形式的图片列表的滚动尽可能地变得更快、更平滑，但实际上，Glide几乎能满足你对远程图片的拉取/缩放/显示的一切需求。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>性能</p>
+<p>  两个关键点：</p>
+<ul>
+<li><p>图片的解码速度</p>
+</li>
+<li><p>解码图片带来的资源压力也就是内存消耗</p>
+<p>Glide使用了多个步骤来确保在Android上加载图片尽可能的快速和平滑：</p>
+</li>
+<li><p>自动、智能地下采样(downsampling)和缓存(caching)，以最小化存储开销和解码次数；</p>
+</li>
+<li>积极的资源重用，例如字节数组和Bitmap，以最小化昂贵的垃圾回收和堆碎片影响；</li>
+<li>深度的生命周期集成，以确保仅优先处理活跃的Fragment和Activity的请求，并有利于应用在必要时释放资源以避免在后台时被杀掉。</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、使用配置"><a href="#二、使用配置" class="headerlink" title="二、使用配置"></a>二、使用配置</h3><h4 id="1-依赖"><a href="#1-依赖" class="headerlink" title="1.依赖"></a>1.依赖</h4><h5 id="Gradle"><a href="#Gradle" class="headerlink" title="Gradle"></a>Gradle</h5><p>使用 Gradle，可从 Maven Central 或 JCenter 中添加对 Glide 的依赖。还需要添加 Android 支持库的依赖</p>
+<pre><code>repositories {
+  mavenCentral()
+  maven { url &apos;https://maven.google.com&apos; }
+}
+
+dependencies {
+    compile &apos;com.github.bumptech.glide:glide:4.4.0&apos;
+    annotationProcessor &apos;com.github.bumptech.glide:compiler:4.4.0&apos;
+}
+</code></pre><h5 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h5><p>使用 Maven，同样可以添加对 Glide 的依赖。同样需要添加Android支持库的依赖</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;com.github.bumptech.glide&lt;/groupId&gt;
+  &lt;artifactId&gt;glide&lt;/artifactId&gt;
+  &lt;version&gt;4.4.0&lt;/version&gt;
+  &lt;type&gt;aar&lt;/type&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.google.android&lt;/groupId&gt;
+  &lt;artifactId&gt;support-v4&lt;/artifactId&gt;
+  &lt;version&gt;r7&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.github.bumptech.glide&lt;/groupId&gt;
+  &lt;artifactId&gt;compiler&lt;/artifactId&gt;
+  &lt;version&gt;4.4.0&lt;/version&gt;
+  &lt;optional&gt;true&lt;/optional&gt;
+&lt;/dependency&gt;
+</code></pre><h4 id="2-相关设置"><a href="#2-相关设置" class="headerlink" title="2.相关设置"></a>2.相关设置</h4><h5 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h5><ul>
+<li>网络</li>
+</ul>
+<p>当需要的图片是需要网络的情况，需在AndroidManifest添加网络权限。</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot;/&gt;
+</code></pre><ul>
+<li>连接状态</li>
+</ul>
+<p>如果你正在从 URL 加载图片，Glide 可以自动帮助你处理片状网络连接：它可以监听用户的连接状态并在用户重新连接到网络时重启之前失败的请求。如果 Glide 检测到你的应用拥有 ACCESS_NETWORK_STATUS 权限，Glide 将自动监听连接状态而不需要额外的改动。</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;/&gt;
+</code></pre><ul>
+<li>本地存储</li>
+</ul>
+<p>要从本地文件夹或 DCIM 或图库中加载图片，你将需要添加 READ_EXTERNAL_STORAGE 权限。</p>
+<pre><code>&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;
+</code></pre><h3 id="三、基本使用"><a href="#三、基本使用" class="headerlink" title="三、基本使用"></a>三、基本使用</h3><p>Glide的基本使用很简单：</p>
+<pre><code>Glide.with(fragment)
+    .load(myUrl)
+    .into(imageView);
+</code></pre><p>一行就可以搞定从网络加载图片，丝柔顺滑。</p>
+<p>具体实现：</p>
+<pre><code>public class MainActivity extends AppCompatActivity {
+
+    Button mBtn;
+    ImageView imageView;
+    String myUrl = &quot;http://ot29getcp.bkt.clouddn.com/map.png&quot;;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mBtn = (Button)findViewById(R.id.downloadimage);
+        imageView = (ImageView) findViewById(R.id.image);
+        mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Glide.with(getApplicationContext())
+                        .load(myUrl)
+                        .into(imageView);
+            }
+        });
+
+    }
+}
+</code></pre><p>核心代码：</p>
+<p>就这一行。</p>
+<pre><code>Glide.with(getApplicationContext())
+                            .load(myUrl)
+                            .into(imageView);
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/08/Java并发编程：volatile关键字解析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1807,138 +2035,6 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/11/设计模式之路（7）里氏替换原则/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/11/设计模式之路（7）里氏替换原则/" itemprop="url">设计模式之路（7）里氏替换原则</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-11T22:49:50+08:00">
-                2017-09-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/09/11/设计模式之路（7）里氏替换原则/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/09/11/设计模式之路（7）里氏替换原则/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>里氏替换原则（LSP）</p>
-<h4 id="一、基本概念："><a href="#一、基本概念：" class="headerlink" title="一、基本概念："></a>一、基本概念：</h4><p>一个软件实体如果使用的是一个父类的话，那么一定适用于其子类，而且它察觉不出父类对象和子类对象的 区别，也就是说，在软件程序里面，把父类都替换成它的子类，程序的行为没有变化。简单地说，子类型必须能够替换掉它们的父类型。</p>
-<h4 id="二、例证"><a href="#二、例证" class="headerlink" title="二、例证"></a>二、例证</h4><p>只有当子类可以替换掉父类，软件单位的功能不受到影响时，父类才能真正被复用，而子类也能够在父类的基础上增加新的行为特性。</p>
-<p>举个例子：</p>
-<p>小狗具备动物的基本行为：吃、喝等行为，当需要小猫、小猪也有类似的行为时，由于它们都是继承动物，所以只需要更改实例化的地方，程序的其他地方不要更改。</p>
-<pre><code>Animal animal = new Cat();//只需要修改实例化即可，如：new Dog()
-
-animal.eat();
-animal.drink();
-</code></pre>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1988,7 +2084,7 @@ animal.drink();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-count">62</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

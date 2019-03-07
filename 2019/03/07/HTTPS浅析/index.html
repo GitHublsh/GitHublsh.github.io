@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Glide," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -111,17 +111,16 @@
 
 
 
-<meta name="description" content="一、关于Glide 官方定义：  Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。  Glide 支持拉取，解码和展示视频快照，图片，和GIF动画。Glide的Api是如此的灵活，开发者甚至可以插入和替换成自己喜爱的任何网络栈。默认情况下，Glide使用的是一个">
-<meta name="keywords" content="Glide">
+<meta name="description" content="优秀不够，你是否无可替代">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Glide4.x源码解析(1)-基本使用">
-<meta property="og:url" content="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/index.html">
+<meta property="og:title" content="HTTPS浅析">
+<meta property="og:url" content="http://yoursite.com/2019/03/07/HTTPS浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="一、关于Glide 官方定义：  Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。  Glide 支持拉取，解码和展示视频快照，图片，和GIF动画。Glide的Api是如此的灵活，开发者甚至可以插入和替换成自己喜爱的任何网络栈。默认情况下，Glide使用的是一个">
-<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta property="og:description" content="优秀不够，你是否无可替代">
+<meta property="og:updated_time" content="2019-03-07T03:11:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Glide4.x源码解析(1)-基本使用">
-<meta name="twitter:description" content="一、关于Glide 官方定义：  Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。  Glide 支持拉取，解码和展示视频快照，图片，和GIF动画。Glide的Api是如此的灵活，开发者甚至可以插入和替换成自己喜爱的任何网络栈。默认情况下，Glide使用的是一个">
+<meta name="twitter:title" content="HTTPS浅析">
+<meta name="twitter:description" content="优秀不够，你是否无可替代">
 
 
 
@@ -149,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/03/07/HTTPS浅析/"/>
 
 
 
 
 
-  <title>Glide4.x源码解析(1)-基本使用 | Neil's blog</title>
+  <title>HTTPS浅析 | Neil's blog</title>
   
 
 
@@ -284,7 +283,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/11/Glide4.x源码解析(1)-基本使用/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/HTTPS浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -301,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Glide4.x源码解析(1)-基本使用</h1>
+          <h1 class="post-title" itemprop="name headline">HTTPS浅析</h1>
         
 
         <div class="post-meta">
@@ -313,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-11T16:41:28+08:00">
-                2017-12-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T11:11:17+08:00">
+                2019-03-07
               </time>
             
 
@@ -333,8 +332,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/12/11/Glide4.x源码解析(1)-基本使用/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/12/11/Glide4.x源码解析(1)-基本使用/" itemprop="commentsCount"></span>
+                <a href="/2019/03/07/HTTPS浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/07/HTTPS浅析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -360,112 +359,7 @@
       
 
       
-        <h3 id="一、关于Glide"><a href="#一、关于Glide" class="headerlink" title="一、关于Glide"></a>一、关于Glide</h3><ul>
-<li><p>官方定义：</p>
-<ul>
-<li><p>Glide是一个快速高效的Android图片加载库，注重于平滑的滚动。Glide提供了易用的API，高性能、可扩展的图片解码管道（decode pipeline），以及自动的资源池技术。</p>
-<ul>
-<li>Glide 支持拉取，解码和展示视频快照，图片，和GIF动画。Glide的Api是如此的灵活，开发者甚至可以插入和替换成自己喜爱的任何网络栈。默认情况下，Glide使用的是一个定制化的基于HttpUrlConnection的栈，但同时也提供了与Google Volley和Square OkHttp快速集成的工具库。</li>
-</ul>
-</li>
-<li><p>虽然Glide 的主要目标是让任何形式的图片列表的滚动尽可能地变得更快、更平滑，但实际上，Glide几乎能满足你对远程图片的拉取/缩放/显示的一切需求。</p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><p>性能</p>
-<p>  两个关键点：</p>
-<ul>
-<li><p>图片的解码速度</p>
-</li>
-<li><p>解码图片带来的资源压力也就是内存消耗</p>
-<p>Glide使用了多个步骤来确保在Android上加载图片尽可能的快速和平滑：</p>
-</li>
-<li><p>自动、智能地下采样(downsampling)和缓存(caching)，以最小化存储开销和解码次数；</p>
-</li>
-<li>积极的资源重用，例如字节数组和Bitmap，以最小化昂贵的垃圾回收和堆碎片影响；</li>
-<li>深度的生命周期集成，以确保仅优先处理活跃的Fragment和Activity的请求，并有利于应用在必要时释放资源以避免在后台时被杀掉。</li>
-</ul>
-</li>
-</ul>
-<h3 id="二、使用配置"><a href="#二、使用配置" class="headerlink" title="二、使用配置"></a>二、使用配置</h3><h4 id="1-依赖"><a href="#1-依赖" class="headerlink" title="1.依赖"></a>1.依赖</h4><h5 id="Gradle"><a href="#Gradle" class="headerlink" title="Gradle"></a>Gradle</h5><p>使用 Gradle，可从 Maven Central 或 JCenter 中添加对 Glide 的依赖。还需要添加 Android 支持库的依赖</p>
-<pre><code>repositories {
-  mavenCentral()
-  maven { url &apos;https://maven.google.com&apos; }
-}
-
-dependencies {
-    compile &apos;com.github.bumptech.glide:glide:4.4.0&apos;
-    annotationProcessor &apos;com.github.bumptech.glide:compiler:4.4.0&apos;
-}
-</code></pre><h5 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h5><p>使用 Maven，同样可以添加对 Glide 的依赖。同样需要添加Android支持库的依赖</p>
-<pre><code>&lt;dependency&gt;
-  &lt;groupId&gt;com.github.bumptech.glide&lt;/groupId&gt;
-  &lt;artifactId&gt;glide&lt;/artifactId&gt;
-  &lt;version&gt;4.4.0&lt;/version&gt;
-  &lt;type&gt;aar&lt;/type&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-  &lt;groupId&gt;com.google.android&lt;/groupId&gt;
-  &lt;artifactId&gt;support-v4&lt;/artifactId&gt;
-  &lt;version&gt;r7&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-  &lt;groupId&gt;com.github.bumptech.glide&lt;/groupId&gt;
-  &lt;artifactId&gt;compiler&lt;/artifactId&gt;
-  &lt;version&gt;4.4.0&lt;/version&gt;
-  &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;
-</code></pre><h4 id="2-相关设置"><a href="#2-相关设置" class="headerlink" title="2.相关设置"></a>2.相关设置</h4><h5 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h5><ul>
-<li>网络</li>
-</ul>
-<p>当需要的图片是需要网络的情况，需在AndroidManifest添加网络权限。</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot;/&gt;
-</code></pre><ul>
-<li>连接状态</li>
-</ul>
-<p>如果你正在从 URL 加载图片，Glide 可以自动帮助你处理片状网络连接：它可以监听用户的连接状态并在用户重新连接到网络时重启之前失败的请求。如果 Glide 检测到你的应用拥有 ACCESS_NETWORK_STATUS 权限，Glide 将自动监听连接状态而不需要额外的改动。</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;/&gt;
-</code></pre><ul>
-<li>本地存储</li>
-</ul>
-<p>要从本地文件夹或 DCIM 或图库中加载图片，你将需要添加 READ_EXTERNAL_STORAGE 权限。</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.READ_EXTERNAL_STORAGE&quot; /&gt;
-</code></pre><h3 id="三、基本使用"><a href="#三、基本使用" class="headerlink" title="三、基本使用"></a>三、基本使用</h3><p>Glide的基本使用很简单：</p>
-<pre><code>Glide.with(fragment)
-    .load(myUrl)
-    .into(imageView);
-</code></pre><p>一行就可以搞定从网络加载图片，丝柔顺滑。</p>
-<p>具体实现：</p>
-<pre><code>public class MainActivity extends AppCompatActivity {
-
-    Button mBtn;
-    ImageView imageView;
-    String myUrl = &quot;http://ot29getcp.bkt.clouddn.com/map.png&quot;;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mBtn = (Button)findViewById(R.id.downloadimage);
-        imageView = (ImageView) findViewById(R.id.image);
-        mBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Glide.with(getApplicationContext())
-                        .load(myUrl)
-                        .into(imageView);
-            }
-        });
-
-    }
-}
-</code></pre><p>核心代码：</p>
-<p>就这一行。</p>
-<pre><code>Glide.with(getApplicationContext())
-                            .load(myUrl)
-                            .into(imageView);
-</code></pre>
+        
       
     </div>
 
@@ -518,12 +412,6 @@ dependencies {
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Glide/" rel="tag"># Glide</a>
-          
-        </div>
-      
 
       
       
@@ -533,8 +421,8 @@ dependencies {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/08/Java并发编程：volatile关键字解析/" rel="next" title="Java并发编程：volatile关键字解析">
-                <i class="fa fa-chevron-left"></i> Java并发编程：volatile关键字解析
+              <a href="/2019/03/04/TCP-IP三次握手和四次挥手浅析/" rel="next" title="TCP/IP三次握手和四次挥手浅析">
+                <i class="fa fa-chevron-left"></i> TCP/IP三次握手和四次挥手浅析
               </a>
             
           </div>
@@ -542,10 +430,6 @@ dependencies {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/12/30/Android-Gradle构建入门(一)/" rel="prev" title="Android Gradle构建入门 (一)">
-                Android Gradle构建入门 (一) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -594,17 +478,8 @@ dependencies {
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -668,22 +543,6 @@ dependencies {
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、关于Glide"><span class="nav-number">1.</span> <span class="nav-text">一、关于Glide</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、使用配置"><span class="nav-number">2.</span> <span class="nav-text">二、使用配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-依赖"><span class="nav-number">2.1.</span> <span class="nav-text">1.依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Gradle"><span class="nav-number">2.1.1.</span> <span class="nav-text">Gradle</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Maven"><span class="nav-number">2.1.2.</span> <span class="nav-text">Maven</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-相关设置"><span class="nav-number">2.2.</span> <span class="nav-text">2.相关设置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#权限"><span class="nav-number">2.2.1.</span> <span class="nav-text">权限</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、基本使用"><span class="nav-number">3.</span> <span class="nav-text">三、基本使用</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -825,7 +684,7 @@ dependencies {
 		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2017/12/11/Glide4.x源码解析(1)-基本使用/"});
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2019/03/07/HTTPS浅析/"});
 		
 
 		(function() {
