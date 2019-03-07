@@ -284,6 +284,147 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/24/BlockCanry源码浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/24/BlockCanry源码浅析/" itemprop="url">BlockCanry源码浅析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-24T15:50:42+08:00">
+                2018-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/24/BlockCanry源码浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/12/24/BlockCanry源码浅析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="BlockCanary"><a href="#BlockCanary" class="headerlink" title="BlockCanary"></a>BlockCanary</h1><p>#Android/BlockCanary</p>
+<h2 id="一、基本使用"><a href="#一、基本使用" class="headerlink" title="一、基本使用"></a>一、基本使用</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">implementation</span> ‘<span class="selector-tag">com</span><span class="selector-class">.github</span><span class="selector-class">.markzhai</span><span class="selector-pseudo">:blockcanary-android</span><span class="selector-pseudo">:1.5.0</span>’</div></pre></td></tr></table></figure>
+<figure class="highlight pony"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="type">BlockCanary</span>.install(<span class="literal">this</span>, <span class="function"><span class="keyword">new</span> <span class="title">BlockCanaryContext</span>()).<span class="title">start</span>();</span></div></pre></td></tr></table></figure>
+<h2 id="二、BlockCanary原理"><a href="#二、BlockCanary原理" class="headerlink" title="二、BlockCanary原理"></a>二、BlockCanary原理</h2><p>计算主线程中消息分发耗时，超出阈值则提醒卡顿</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Run the message queue in this thread. Be sure to call</div><div class="line"> * &#123;<span class="doctag">@link</span> #quit()&#125; to end the loop.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">final</span> Looper me = myLooper();</div><div class="line">    <span class="keyword">if</span> (me == <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"No Looper; Looper.prepare() wasn't called on this thread."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">final</span> MessageQueue queue = me.mQueue;</div><div class="line"></div><div class="line">    <span class="comment">// Make sure the identity of this thread is that of the local process,</span></div><div class="line">    <span class="comment">// and keep track of what that identity token actually is.</span></div><div class="line">    Binder.clearCallingIdentity();</div><div class="line">    <span class="keyword">final</span> <span class="keyword">long</span> ident = Binder.clearCallingIdentity();</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        Message msg = queue.next(); <span class="comment">// might block</span></div><div class="line">        <span class="keyword">if</span> (msg == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">// No message indicates that the message queue is quitting.</span></div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// This must be in a local variable, in case a UI event sets the logger</span></div><div class="line">        <span class="keyword">final</span> Printer logging = me.mLogging;</div><div class="line">        <span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</div><div class="line">            logging.println(<span class="string">"&gt;&gt;&gt;&gt;&gt; Dispatching to "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span> +</div><div class="line">                    msg.callback + <span class="string">": "</span> + msg.what);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> slowDispatchThresholdMs = me.mSlowDispatchThresholdMs;</div><div class="line"></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> traceTag = me.mTraceTag;</div><div class="line">        <span class="keyword">if</span> (traceTag != <span class="number">0</span> &amp;&amp; Trace.isTagEnabled(traceTag)) &#123;</div><div class="line">            Trace.traceBegin(traceTag, msg.<span class="keyword">target</span>.getTraceName(msg));</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> start = (slowDispatchThresholdMs == <span class="number">0</span>) ? <span class="number">0</span> : SystemClock.uptimeMillis();</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> end;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            msg.<span class="keyword">target</span>.dispatchMessage(msg);</div><div class="line">            end = (slowDispatchThresholdMs == <span class="number">0</span>) ? <span class="number">0</span> : SystemClock.uptimeMillis();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">if</span> (traceTag != <span class="number">0</span>) &#123;</div><div class="line">                Trace.traceEnd(traceTag);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (slowDispatchThresholdMs &gt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">final</span> <span class="keyword">long</span> time = end - start;</div><div class="line">            <span class="keyword">if</span> (time &gt; slowDispatchThresholdMs) &#123;</div><div class="line">                Slog.w(TAG, <span class="string">"Dispatch took "</span> + time + <span class="string">"ms on "</span></div><div class="line">                        + Thread.currentThread().getName() + <span class="string">", h="</span> +</div><div class="line">                        msg.<span class="keyword">target</span> + <span class="string">" cb="</span> + msg.callback + <span class="string">" msg="</span> + msg.what);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</div><div class="line">            logging.println(<span class="string">"&lt;&lt;&lt;&lt;&lt; Finished to "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span> + msg.callback);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// Make sure that during the course of dispatching the</span></div><div class="line">        <span class="comment">// identity of the thread wasn't corrupted.</span></div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> newIdent = Binder.clearCallingIdentity();</div><div class="line">        <span class="keyword">if</span> (ident != newIdent) &#123;</div><div class="line">            Log.wtf(TAG, <span class="string">"Thread identity changed from 0x"</span></div><div class="line">                    + Long.toHexString(ident) + <span class="string">" to 0x"</span></div><div class="line">                    + Long.toHexString(newIdent) + <span class="string">" while dispatching to "</span></div><div class="line">                    + msg.<span class="keyword">target</span>.getClass().getName() + <span class="string">" "</span></div><div class="line">                    + msg.callback + <span class="string">" what="</span> + msg.what);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        msg.recycleUnchecked();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>检测UI卡顿，Android更新UI都是在主线程操作，那么所有的更新都会到loop()方法中来。那么计算dispatchMessage耗时就可以了。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</div><div class="line">           logging.println(<span class="string">"&gt;&gt;&gt;&gt;&gt; Dispatching to "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span> +</div><div class="line">                   msg.callback + <span class="string">": "</span> + msg.what);</div><div class="line">       &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (logging != <span class="keyword">null</span>) &#123;</div><div class="line">    logging.println(<span class="string">"&lt;&lt;&lt;&lt;&lt; Finished to "</span> + msg.<span class="keyword">target</span> + <span class="string">" "</span> + msg.callback);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过两个时间差来判断，简单粗暴。通过Looper中<code>public void setMessageLogging(Printer printer)</code>来设置自己自定义的Printer,重写<code>void println(String x);</code>方法即可实现方法耗时统计了。</p>
+<p>BlockCanary 中的具体实现是<code>LooperMonitor</code>，具体实现：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">println</span><span class="params">(String x)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (mStopWhenDebugging &amp;&amp; Debug.isDebuggerConnected()) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (!mPrintingStarted) &#123;</div><div class="line">        mStartTimestamp = System.currentTimeMillis();</div><div class="line">        mStartThreadTimestamp = SystemClock.currentThreadTimeMillis();</div><div class="line">        mPrintingStarted = <span class="keyword">true</span>;</div><div class="line">        startDump();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">long</span> endTime = System.currentTimeMillis();</div><div class="line">        mPrintingStarted = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">if</span> (isBlock(endTime)) &#123;</div><div class="line">            notifyBlockEvent(endTime);</div><div class="line">        &#125;</div><div class="line">        stopDump();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isBlock</span><span class="params">(<span class="keyword">long</span> endTime)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> endTime - mStartTimestamp &gt; mBlockThresholdMillis;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>计算时间差来判断是否卡顿了，默认卡顿阈值3S.</p>
+<p>明白了原理，再来看看实现。<br>通过start()开启。那么start()中做了什么？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Start monitoring.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (!mMonitorStarted) &#123;</div><div class="line">        mMonitorStarted = <span class="literal">true</span>;</div><div class="line">        Looper.getMainLooper().setMessageLogging(mBlockCanaryCore.monitor);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很简单，打开监控。这个<code>mBlockCanaryCore.monitor</code>就是自己自定义实现的Printer.</p>
+<h2 id="三、整体流程"><a href="#三、整体流程" class="headerlink" title="三、整体流程"></a>三、整体流程</h2><p>BlockCanary: <a href="https://github.com/markzhai/AndroidPerformanceMonitor" target="_blank" rel="external">传送门</a></p>
+<p>github原图如下：</p>
+<p><img src="https://ws1.sinaimg.cn/large/005GVP9ggy1fyhvv3mhxjj30jr0jemyt.jpg" alt="BlockCanary"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/04/Java-线程池浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -912,234 +1053,6 @@ public String getType(Uri) 用于返回指定的Uri中的数据的MIME类型
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/17/Android四大组件之BroadCast/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/17/Android四大组件之BroadCast/" itemprop="url">Android四大组件之BroadCast</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-17T13:40:28+08:00">
-                2018-09-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/09/17/Android四大组件之BroadCast/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/09/17/Android四大组件之BroadCast/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Android四大组件之BroadCast"><a href="#Android四大组件之BroadCast" class="headerlink" title="Android四大组件之BroadCast"></a>Android四大组件之BroadCast</h3><h4 id="一、广播概述"><a href="#一、广播概述" class="headerlink" title="一、广播概述"></a>一、广播概述</h4><p>Android应用可以从Android系统和其他Android应用发送或接收广播消息，是观察者设计模式，即一对多的关系。例如，应用程序还可以发送自定义广播，以通知其他应用程序可能感兴趣的内容（例如，已下载了一些新数据）。</p>
-<p>广播是一种广泛运用的在应用程序之间传输信息的机制。而BroadcastReceiver是对发送出来的广播进行过滤接收并响应的一类组件；</p>
-<p>BroadcastReceiver自身并不实现图形用户界面，但是当它收到某个通知后，BroadcastReceiver可以启动Activity作为响应，或者通过NotificationMananger提醒用户，或者启动Service等等。</p>
-<p>经常说”发送广播“和”接收广播“，表面上看广播作为Android广播机制中的实体，实际上这一实体本身是并不是以所谓的”广播“对象存在的，而是以”意图“（Intent）去表示。定义广播的定义过程，实际就是相应广播”意图“的定义过程，然后通过广播发送者将此”意图“发送出去。被相应的BroadcastReceiver接收后将会回调onReceive()函数。</p>
-<h4 id="二、广播分类"><a href="#二、广播分类" class="headerlink" title="二、广播分类"></a>二、广播分类</h4><p>Android中的BroadCast类型主要分为5类:</p>
-<ul>
-<li>Normal BroadCast(普通广播)</li>
-<li>System BroadCast(系统广播)</li>
-<li>Ordered BroadCast(有序广播)</li>
-<li>Sticky BroadCast(粘性广播)</li>
-<li>Local BroadCast(App应用内广播)</li>
-</ul>
-<h4 id="三、广播的注册和接收"><a href="#三、广播的注册和接收" class="headerlink" title="三、广播的注册和接收"></a>三、广播的注册和接收</h4><p>广播的注册分为两种：静态注册和动态注册</p>
-<h5 id="1-静态注册"><a href="#1-静态注册" class="headerlink" title="1.静态注册"></a>1.静态注册</h5><p>静态注册就是在AndroidManifest中注册，</p>
-<pre><code>&lt;receiver 
-//此广播接收者类是MyBroadCastReceiver
-android:name=&quot;.MyBroadCastReceiver&quot; &gt;
-//用于接收网络状态改变时发出的广播
-&lt;intent-filter&gt;
-    &lt;action android:name=&quot;com.test.mybroadcast&quot; /&gt;
-&lt;/intent-filter&gt;
-&lt;/receiver&gt;
-</code></pre><h5 id="2-动态注册"><a href="#2-动态注册" class="headerlink" title="2.动态注册"></a>2.动态注册</h5><p>需要在代码中实现</p>
-<pre><code>IntentFilter intentFilter = new IntentFilter();
-intentFilter.addAction(&quot;com.action.myreceiver&quot;);
-myReceiver = new MyReceiver();
-registerReceiver(myReceiver, intentFilter);
-</code></pre><p>注意：动态注册后记得解绑注册。</p>
-<h4 id="四、常用广播的简单使用"><a href="#四、常用广播的简单使用" class="headerlink" title="四、常用广播的简单使用"></a>四、常用广播的简单使用</h4><h5 id="1-普通广播"><a href="#1-普通广播" class="headerlink" title="1.普通广播"></a>1.普通广播</h5><p>普通广播的使用，在第三点中已举例说明，不再重复。</p>
-<h5 id="2-系统广播"><a href="#2-系统广播" class="headerlink" title="2.系统广播"></a>2.系统广播</h5><p>Android中内置了一些系统广播。常见的有开关机、网络、电话短信、拍照等等。</p>
-<p>例如：</p>
-<ul>
-<li><p>监听网络变化    android.net.conn.CONNECTIVITY_CHANGE</p>
-</li>
-<li><p>关闭或打开飞行模式    Intent.ACTION_AIRPLANE_MODE_CHANGED</p>
-</li>
-<li><p>充电时或电量发生变化    Intent.ACTION_BATTERY_CHANGED</p>
-</li>
-<li><p>电池电量低    Intent.ACTION_BATTERY_LOW</p>
-</li>
-<li><p>电池电量充足（即从电量低变化到饱满时会发出广播    Intent.ACTION_BATTERY_OKAY</p>
-</li>
-<li><p>系统启动完成后(仅广播一次)    Intent.ACTION_BOOT_COMPLETED</p>
-</li>
-<li><p>按下照相时的拍照按键(硬件按键)时    Intent.ACTION_CAMERA_BUTTON</p>
-</li>
-<li><p>屏幕锁屏    Intent.ACTION_CLOSE_SYSTEM_DIALOGS</p>
-</li>
-<li><p>设备当前设置被改变时(界面语言、设备方向等)    Intent.ACTION_CONFIGURATION_CHANGED</p>
-</li>
-<li><p>插入耳机时    Intent.ACTION_HEADSET_PLUG</p>
-</li>
-<li><p>插入外部储存装置（如SD卡）    Intent.ACTION_MEDIA_CHECKING</p>
-</li>
-<li><p>成功安装APK    Intent.ACTION_PACKAGE_ADDED</p>
-</li>
-<li><p>成功删除APK    Intent.ACTION_PACKAGE_REMOVED</p>
-</li>
-<li><p>重启设备    Intent.ACTION_REBOOT</p>
-</li>
-<li><p>屏幕被关闭    Intent.ACTION_SCREEN_OFF</p>
-</li>
-<li><p>屏幕被打开    Intent.ACTION_SCREEN_ON</p>
-</li>
-<li><p>关闭系统时    Intent.ACTION_SHUTDOWN</p>
-</li>
-<li><p>重启设备    Intent.ACTION_REBOOT</p>
-</li>
-</ul>
-<h5 id="3-有序广播"><a href="#3-有序广播" class="headerlink" title="3.有序广播"></a>3.有序广播</h5><p>有序广播，也比较常用。发送广播和普通广播的区别是有序广播 通过sendOrderedBroadCast发送广播。<br>有序广播的顺序，体现在广播接收者中，是按照广播接收者的优先顺序来的，优先级在清单文件中广播接收者的intent-filter中通过设置priority属性来定义。<br>例如：</p>
-<pre><code>&lt;intent-filter android:priority=&quot;2000&quot;&gt;
-</code></pre><p>priority值越大，表示优先级越高</p>
-<p>当优先级最高的广播接收者接收到广播后，可以通过setResult继续传递广播，也可以通过abortBroadcast()中断广播的继续传播</p>
-<p>代码示例：</p>
-<pre><code>&lt;receiver
-    android:name=&quot;.MyOrderedReceiver&quot;
-    android:enabled=&quot;true&quot;
-    android:exported=&quot;true&quot;&gt;
-    &lt;intent-filter android:priority=&quot;1000&quot;&gt;
-        &lt;action android:name=&quot;com.neil.ordered&quot; /&gt;
-    &lt;/intent-filter&gt;
-&lt;/receiver&gt;
-&lt;receiver
-    android:name=&quot;.MySecondOrderedReceiver&quot;
-    android:enabled=&quot;true&quot;
-    android:exported=&quot;true&quot;&gt;
-    &lt;intent-filter android:priority=&quot;500&quot;&gt;
-        &lt;action android:name=&quot;com.neil.ordered&quot; /&gt;
-    &lt;/intent-filter&gt;
-&lt;/receiver&gt;
-</code></pre><p> 发送广播：</p>
-<pre><code>void sendOrderedBroadcast (Intent intent, 
-                String receiverPermission)
-</code></pre><p>接收广播和普通广播一样，只是按照优先级有接收的先后顺序。</p>
-<h5 id="4-粘性广播"><a href="#4-粘性广播" class="headerlink" title="4.粘性广播"></a>4.粘性广播</h5><p>注册与接收和普通广播是一样的，但是需要添加权限，否则会抛出异常。</p>
-<pre><code>&lt;uses-permission android:name=&quot;android.permission.BROADCAST_STICKY&quot; /&gt;
-</code></pre><p>和普通广播的区别是，sendStickyBroadcast它将发出的广播保存起来，一旦发现有人注册这条广播，则立即能接收到。比较简单，就不举例说明了。</p>
-<h5 id="5-应用内广播"><a href="#5-应用内广播" class="headerlink" title="5.应用内广播"></a>5.应用内广播</h5><p>应用内广播更加安全。用法基本一样，只是应用内广播是通过LocalBroadcastManager来实现的。示例如下：</p>
-<p>首先还是注册和解绑的操作，</p>
-<pre><code>LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastDemo,intentFilter);
-
-LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
-</code></pre><p>组装好Intent后，发送广播。</p>
-<pre><code>LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
-</code></pre><p>广播接收者和普通广播一样。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1189,7 +1102,7 @@ LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-count">62</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
