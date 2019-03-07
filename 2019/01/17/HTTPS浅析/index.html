@@ -111,17 +111,20 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
+<meta name="description" content="什么是HTTPS?HTTPS,即HTTP+SSL_TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL_TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
 <meta name="keywords" content="HTTP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTPS浅析">
 <meta property="og:url" content="http://yoursite.com/2019/01/17/HTTPS浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
-<meta property="og:updated_time" content="2019-03-07T03:13:46.000Z">
+<meta property="og:description" content="什么是HTTPS?HTTPS,即HTTP+SSL_TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL_TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg">
+<meta property="og:updated_time" content="2019-03-07T06:31:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTPS浅析">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:description" content="什么是HTTPS?HTTPS,即HTTP+SSL_TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL_TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg">
 
 
 
@@ -360,7 +363,46 @@
       
 
       
-        
+        <h3 id="什么是HTTPS"><a href="#什么是HTTPS" class="headerlink" title="什么是HTTPS?"></a>什么是HTTPS?</h3><p>HTTPS,即HTTP+SSL_TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL_TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。</p>
+<p>HTTPS的特点如下，</p>
+<ol>
+<li>内容加密：采用混合加密技术，中间者无法直接查看明文内容</li>
+<li>验证身份：通过证书认证客户端访问的是自己的服务器</li>
+<li>保护数据完整性：防止传输的内容被中间人冒充或者篡改</li>
+</ol>
+<p>PS:</p>
+<p>混合加密：结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。 </p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg" alt="流程"></p>
+<ol>
+<li>client向server发送请求<a href="https://baidu.com，然后连接到server的443端口。" target="_blank" rel="external">https://baidu.com，然后连接到server的443端口。</a></li>
+</ol>
+<p>服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。</p>
+<ol>
+<li><p>传送证书<br>这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间、服务端的公钥，第三方证书认证机构(CA)的签名，服务端的域名信息等内容。</p>
+</li>
+<li><p>客户端解析证书<br>这部分工作是由客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值（秘钥）。然后用证书对该随机值进行加密。</p>
+</li>
+<li><p>传送加密信息<br>这部分传送的是用证书加密后的秘钥，目的就是让服务端得到这个秘钥，以后客户端和服务端的通信就可以通过这个随机值来进行加密解密了。</p>
+</li>
+<li><p>服务端加密信息<br>服务端用私钥解密秘密秘钥，得到了客户端传过来的私钥，然后把内容通过该值进行对称加密。</p>
+</li>
+<li><p>传输加密后的信息<br>这部分信息是服务端用私钥加密后的信息，可以在客户端被还原。</p>
+</li>
+<li><p>客户端解密信息<br>客户端用之前生成的私钥解密服务端传过来的信息，于是获取了解密后的内容。</p>
+</li>
+</ol>
+<h3 id="如何保证证书安全，没有被替换？"><a href="#如何保证证书安全，没有被替换？" class="headerlink" title="如何保证证书安全，没有被替换？"></a>如何保证证书安全，没有被替换？</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg" alt="大致流程"></p>
+<p>如上图所示，在第 ② 步时服务器发送了一个SSL证书给客户端，SSL 证书中包含的具体内容有证书的颁发机构、有效期、公钥、证书持有者、签名，通过第三方的校验保证了身份的合法，解决了公钥获取的安全性</p>
+<p>以浏览器为例说明如下整个的校验过程：</p>
+<p>（1）首先浏览器读取证书中的证书所有者、有效期等信息进行一一校验</p>
+<p>（2）浏览器开始查找操作系统中已内置的受信任的证书发布机构CA，与服务器发来的证书中的颁发者CA比对，用于校验证书是否为合法机构颁发 </p>
+<p>（3）如果找不到，浏览器就会报错，说明服务器发来的证书是不可信任的。</p>
+<p>（4）如果找到，那么浏览器就会从操作系统中取出  颁发者CA  的公钥，然后对服务器发来的证书里面的签名进行解密</p>
+<p>（5）浏览器使用相同的hash算法计算出服务器发来的证书的hash值，将这个计算的hash值与证书中签名做对比</p>
+<p>（6）对比结果一致，则证明服务器发来的证书合法，没有被冒充</p>
+<p>（7）此时浏览器就可以读取证书中的公钥，用于后续加密了</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>HTTPS要使客户端与服务器端的通信过程得到安全保证，必须使用的对称加密算法，但是协商对称加密算法的过程，需要使用非对称加密算法来保证安全，然而直接使用非对称加密的过程本身也不安全，会有中间人篡改公钥的可能性，所以客户端与服务器不直接使用公钥，而是使用数字证书签发机构颁发的证书来保证非对称加密过程本身的安全。这样通过这些机制协商出一个对称加密算法，就此双方使用该算法进行加密解密。从而解决了客户端与服务器端之间的通信安全问题。</p>
+
       
     </div>
 
@@ -489,8 +531,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -554,6 +605,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是HTTPS"><span class="nav-number">1.</span> <span class="nav-text">什么是HTTPS?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现原理"><span class="nav-number">2.</span> <span class="nav-text">实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何保证证书安全，没有被替换？"><span class="nav-number">3.</span> <span class="nav-text">如何保证证书安全，没有被替换？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
