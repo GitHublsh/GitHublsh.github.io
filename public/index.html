@@ -496,7 +496,7 @@
       
         
           
-            <h3 id="什么是HTTPS"><a href="#什么是HTTPS" class="headerlink" title="什么是HTTPS?"></a>什么是HTTPS?</h3><p>HTTPS,即HTTP+SSL_TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL_TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。</p>
+            <h3 id="什么是HTTPS"><a href="#什么是HTTPS" class="headerlink" title="什么是HTTPS?"></a>什么是HTTPS?</h3><p>HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。</p>
 <p>HTTPS的特点如下，</p>
 <ol>
 <li>内容加密：采用混合加密技术，中间者无法直接查看明文内容</li>
@@ -507,7 +507,7 @@
 <p>混合加密：结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。 </p>
 <h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg" alt="流程"></p>
 <ol>
-<li>client向server发送请求<a href="https://baidu.com，然后连接到server的443端口。" target="_blank" rel="external">https://baidu.com，然后连接到server的443端口。</a></li>
+<li>client向server发送请求，然后连接到server的443端口。</li>
 </ol>
 <p>服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。</p>
 <ol>
