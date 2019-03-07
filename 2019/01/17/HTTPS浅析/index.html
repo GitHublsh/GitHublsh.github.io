@@ -120,7 +120,8 @@
 <meta property="og:description" content="什么是HTTPS?HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg">
-<meta property="og:updated_time" content="2019-03-07T06:38:22.000Z">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u8dymy5aj30pq0evgpr.jpg">
+<meta property="og:updated_time" content="2019-03-07T06:50:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTPS浅析">
 <meta name="twitter:description" content="什么是HTTPS?HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
@@ -401,6 +402,7 @@
 <p>（5）浏览器使用相同的hash算法计算出服务器发来的证书的hash值，将这个计算的hash值与证书中签名做对比</p>
 <p>（6）对比结果一致，则证明服务器发来的证书合法，没有被冒充</p>
 <p>（7）此时浏览器就可以读取证书中的公钥，用于后续加密了</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u8dymy5aj30pq0evgpr.jpg" alt="证书摘要对比"></p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>HTTPS要使客户端与服务器端的通信过程得到安全保证，必须使用的对称加密算法，但是协商对称加密算法的过程，需要使用非对称加密算法来保证安全，然而直接使用非对称加密的过程本身也不安全，会有中间人篡改公钥的可能性，所以客户端与服务器不直接使用公钥，而是使用数字证书签发机构颁发的证书来保证非对称加密过程本身的安全。这样通过这些机制协商出一个对称加密算法，就此双方使用该算法进行加密解密。从而解决了客户端与服务器端之间的通信安全问题。</p>
 
       
