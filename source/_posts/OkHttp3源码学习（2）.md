@@ -6,7 +6,9 @@ tags: [OkHttp3]
 
 #### 上一节对OkHttp3做了一个简单的介绍及科普了一下使用。
 
-![“整体流程“](http://ot29getcp.bkt.clouddn.com/images/okhttp3second.png)
+整体流程：
+
+![整体流程](https://ws1.sinaimg.cn/large/0068AzoVgy1g0vimeltgnj30nx0pl0ud.jpg)
 
 那么，从这一节开始，进行源码分析解读···
 

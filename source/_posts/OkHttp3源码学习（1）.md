@@ -109,8 +109,8 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 			  
 #### 二、架构总览
 借用网上的图···（侵权必删）
-![“okhttp3整体架构”](http://ot29getcp.bkt.clouddn.com/images/okhttp3all.png)
 
+![整体架构](https://ws1.sinaimg.cn/large/0068AzoVgy1g0vijgeezyj30k10ubtbe.jpg)
 
 #### 三、OkHttp的优点
 
