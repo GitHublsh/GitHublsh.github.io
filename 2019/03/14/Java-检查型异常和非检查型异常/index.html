@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="设计模式," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -111,19 +111,19 @@
 
 
 
-<meta name="description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta name="keywords" content="设计模式">
+<meta name="description" content="Java检查型异常和非检查型异常关系图  粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。  蓝色异常是运行时异常(runtime e">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式之路（5）代理模式">
-<meta property="og:url" content="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/index.html">
+<meta property="og:title" content="Java 检查型异常和非检查型异常">
+<meta property="og:url" content="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta property="og:image" content="http://ot29getcp.bkt.clouddn.com/images/proxy.png">
-<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta property="og:description" content="Java检查型异常和非检查型异常关系图  粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。  蓝色异常是运行时异常(runtime e">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g124tey8e5j30oj1eegp7.jpg">
+<meta property="og:updated_time" content="2019-03-14T02:53:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式之路（5）代理模式">
-<meta name="twitter:description" content="一、基本概念简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。 二、代理模式结构图借用大话中的结构图，如下：">
-<meta name="twitter:image" content="http://ot29getcp.bkt.clouddn.com/images/proxy.png">
+<meta name="twitter:title" content="Java 检查型异常和非检查型异常">
+<meta name="twitter:description" content="Java检查型异常和非检查型异常关系图  粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。  蓝色异常是运行时异常(runtime e">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g124tey8e5j30oj1eegp7.jpg">
 
 
 
@@ -151,13 +151,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/"/>
 
 
 
 
 
-  <title>设计模式之路（5）代理模式 | Neil's blog</title>
+  <title>Java 检查型异常和非检查型异常 | Neil's blog</title>
   
 
 
@@ -286,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/24/设计模式之路（5）代理模式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -303,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">设计模式之路（5）代理模式</h1>
+          <h1 class="post-title" itemprop="name headline">Java 检查型异常和非检查型异常</h1>
         
 
         <div class="post-meta">
@@ -315,8 +315,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T15:06:52+08:00">
-                2017-07-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T10:49:56+08:00">
+                2019-03-14
               </time>
             
 
@@ -335,8 +335,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/07/24/设计模式之路（5）代理模式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/24/设计模式之路（5）代理模式/" itemprop="commentsCount"></span>
+                <a href="/2019/03/14/Java-检查型异常和非检查型异常/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/14/Java-检查型异常和非检查型异常/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -362,9 +362,16 @@
       
 
       
-        <h3 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h3><p>简单来说，代理模式（Proxy），为其他对象提供一种代理以控制对这个对象的访问。</p>
-<h3 id="二、代理模式结构图"><a href="#二、代理模式结构图" class="headerlink" title="二、代理模式结构图"></a>二、代理模式结构图</h3><p>借用大话中的结构图，如下：</p>
-<p><img src="http://ot29getcp.bkt.clouddn.com/images/proxy.png" alt="“代理模式”"></p>
+        <h3 id="Java检查型异常和非检查型异常"><a href="#Java检查型异常和非检查型异常" class="headerlink" title="Java检查型异常和非检查型异常"></a>Java检查型异常和非检查型异常</h3><h4 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h4><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g124tey8e5j30oj1eegp7.jpg" alt="异常"></p>
+<ol>
+<li><p>粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。</p>
+</li>
+<li><p>蓝色异常是运行时异常(runtime exceptions),需要程序员自己分析代码决定是否捕获和处理,比如 空指针,被0除…</p>
+</li>
+</ol>
+<ol>
+<li>而声明为Error的，则属于严重错误，如系统崩溃、虚拟机错误、动态链接失败等，这些错误无法恢复或者不可能捕捉，将导致应用程序中断，Error不需要捕捉。</li>
+</ol>
 
       
     </div>
@@ -420,7 +427,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -433,8 +440,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/20/Android屏幕适配解决方案(1)/" rel="next" title="Android屏幕适配解决方案(1)">
-                <i class="fa fa-chevron-left"></i> Android屏幕适配解决方案(1)
+              <a href="/2019/02/14/Java-ClassLoader浅析/" rel="next" title="Java ClassLoader浅析">
+                <i class="fa fa-chevron-left"></i> Java ClassLoader浅析
               </a>
             
           </div>
@@ -442,10 +449,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/25/OkHttp3源码学习（1）/" rel="prev" title="OkHttp3源码学习（1）-简单实用教程">
-                OkHttp3源码学习（1）-简单实用教程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -578,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、基本概念"><span class="nav-number">1.</span> <span class="nav-text">一、基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、代理模式结构图"><span class="nav-number">2.</span> <span class="nav-text">二、代理模式结构图</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java检查型异常和非检查型异常"><span class="nav-number">1.</span> <span class="nav-text">Java检查型异常和非检查型异常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关系图"><span class="nav-number">1.1.</span> <span class="nav-text">关系图</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -725,7 +728,7 @@
 		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
 		
-		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2017/07/24/设计模式之路（5）代理模式/"});
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2019/03/14/Java-检查型异常和非检查型异常/"});
 		
 
 		(function() {

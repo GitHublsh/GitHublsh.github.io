@@ -284,6 +284,139 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/14/Java-检查型异常和非检查型异常/" itemprop="url">Java 检查型异常和非检查型异常</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T10:49:56+08:00">
+                2019-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/14/Java-检查型异常和非检查型异常/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/14/Java-检查型异常和非检查型异常/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Java检查型异常和非检查型异常"><a href="#Java检查型异常和非检查型异常" class="headerlink" title="Java检查型异常和非检查型异常"></a>Java检查型异常和非检查型异常</h3><h4 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h4><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g124tey8e5j30oj1eegp7.jpg" alt="异常"></p>
+<ol>
+<li><p>粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。</p>
+</li>
+<li><p>蓝色异常是运行时异常(runtime exceptions),需要程序员自己分析代码决定是否捕获和处理,比如 空指针,被0除…</p>
+</li>
+</ol>
+<ol>
+<li>而声明为Error的，则属于严重错误，如系统崩溃、虚拟机错误、动态链接失败等，这些错误无法恢复或者不可能捕捉，将导致应用程序中断，Error不需要捕捉。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/14/Java-ClassLoader浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -859,174 +992,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/LeakCanary源码浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/02/LeakCanary源码浅析/" itemprop="url">LeakCanary源码浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-02T17:02:41+08:00">
-                2019-01-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/02/LeakCanary源码浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/01/02/LeakCanary源码浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="一、原理分析"><a href="#一、原理分析" class="headerlink" title="一、原理分析"></a>一、原理分析</h4><p>首先在Application中进行初始化操作，进行监听。监听的原理在于 Application 的 registerActivityLifecycleCallbacks 方法，该方法可以对应用内所有 Activity 的生命周期做监听。</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Creates a &#123;@link RefWatcher&#125; that works out of the box, and starts watching activity</div><div class="line"> * references (on ICS+).</div><div class="line"> */</div><div class="line"><span class="selector-tag">public</span> <span class="selector-tag">static</span> @<span class="selector-tag">NonNull</span> <span class="selector-tag">RefWatcher</span> <span class="selector-tag">install</span>(<span class="variable">@NonNull</span> Application application) &#123;</div><div class="line">  <span class="selector-tag">return</span> <span class="selector-tag">refWatcher</span>(application)<span class="selector-class">.listenerServiceClass</span>(DisplayLeakService.class)</div><div class="line">      <span class="selector-class">.excludedRefs</span>(AndroidExcludedRefs.createAppDefaults().build())</div><div class="line">      <span class="selector-class">.buildAndInstall</span>();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在最后一步buildAndInstall()中实现监听操作。</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">public @NonNull RefWatcher <span class="keyword">buildAndInstall() </span>&#123;</div><div class="line">  if (LeakCanaryInternals.<span class="keyword">installedRefWatcher </span>!= null) &#123;</div><div class="line">    throw new UnsupportedOperationException(<span class="string">"buildAndInstall() should only be called once."</span>)<span class="comment">;</span></div><div class="line">  &#125;</div><div class="line">  RefWatcher refWatcher = <span class="keyword">build();</span></div><div class="line">  if (refWatcher != <span class="keyword">DISABLED) </span>&#123;</div><div class="line">    LeakCanaryInternals.setEnabledAsync(<span class="built_in">context</span>, <span class="keyword">DisplayLeakActivity.class, </span>true)<span class="comment">;</span></div><div class="line">    if (watchActivities) &#123;</div><div class="line">      ActivityRefWatcher.<span class="keyword">install(context, </span>refWatcher)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    if (watchFragments) &#123;</div><div class="line">      FragmentRefWatcher.Helper.<span class="keyword">install(context, </span>refWatcher)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  LeakCanaryInternals.<span class="keyword">installedRefWatcher </span>= refWatcher<span class="comment">;</span></div><div class="line">  return refWatcher<span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在ActivityRefWatcher实现监听,只对onDestory进行了监听处理。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">  Application application = (Application) context.getApplicationContext();</div><div class="line">  ActivityRefWatcher activityRefWatcher = <span class="keyword">new</span> ActivityRefWatcher(application, refWatcher);</div><div class="line"></div><div class="line">  application.registerActivityLifecycleCallbacks(activityRefWatcher.lifecycleCallbacks);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">final</span> Application.ActivityLifecycleCallbacks lifecycleCallbacks =</div><div class="line">    <span class="keyword">new</span> ActivityLifecycleCallbacksAdapter() &#123;</div><div class="line">      <span class="meta">@Override</span> <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onActivityDestroyed</span><span class="params">(Activity activity)</span> </span>&#123;</div><div class="line">        refWatcher.watch(activity);</div><div class="line">      &#125;</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
-<p>当一个Activity销毁时，那么就会执行</p>
-<p><code>refWatcher.watch(activity);</code></p>
-<p>接着看</p>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Identical to &#123;@link #watch(Object, String)&#125; with an empty string reference name.</div><div class="line"> *</div><div class="line"> * @see #watch(Object, String)</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> watch(<span class="keyword">Object</span> watchedReference) &#123;</div><div class="line">  watch(watchedReference, <span class="string">""</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Watches the provided references and checks if it can be GCed. This method is non blocking,</div><div class="line"> * the check is done on the &#123;@link WatchExecutor&#125; this &#123;@link RefWatcher&#125; has been constructed</div><div class="line"> * with.</div><div class="line"> *</div><div class="line"> * @param referenceName An logical identifier for the watched object.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> watch(<span class="keyword">Object</span> watchedReference, <span class="keyword">String</span> referenceName) &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">this</span> == DISABLED) &#123;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">  checkNotNull(watchedReference, <span class="string">"watchedReference"</span>);</div><div class="line">  checkNotNull(referenceName, <span class="string">"referenceName"</span>);</div><div class="line">  <span class="keyword">final</span> <span class="keyword">long</span> watchStartNanoTime = System.nanoTime();</div><div class="line">  <span class="keyword">String</span> <span class="built_in">key</span> = UUID.randomUUID().toString();</div><div class="line">  retainedKeys.<span class="built_in">add</span>(<span class="built_in">key</span>);</div><div class="line">  <span class="keyword">final</span> KeyedWeakReference reference =</div><div class="line">      <span class="keyword">new</span> KeyedWeakReference(watchedReference, <span class="built_in">key</span>, referenceName, queue);</div><div class="line"></div><div class="line">  ensureGoneAsync(watchStartNanoTime, reference);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里会把待检测的对象构造成<code>KeyedWeakReference</code>,其实就是<code>WeakReference</code>,只是添加了key和name.构造时传入<code>ReferenceQueue</code><br>,<code>WeakReference</code>构造函数会传入<code>ReferenceQueue</code>，当WeakReference指向的对象被垃圾回收时，会把WeakReference放入ReferenceQueue。</p>
-<p>在构造时我们需要传入一个ReferenceQueue，这个ReferenceQueue是直接传入了WeakReference中的.</p>
-<p>WeakReference源码:</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">public <span class="built_in">class</span> WeakReference&lt;T&gt; extends Reference&lt;T&gt; &#123;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Creates a new weak <span class="keyword">reference</span> <span class="keyword">that</span> refers <span class="keyword">to</span> <span class="keyword">the</span> <span class="keyword">given</span> object.  The new</div><div class="line">     * <span class="keyword">reference</span> <span class="keyword">is</span> <span class="keyword">not</span> registered <span class="keyword">with</span> any queue.</div><div class="line">     *</div><div class="line">     * @param referent object <span class="keyword">the</span> new weak <span class="keyword">reference</span> will refer <span class="keyword">to</span></div><div class="line">     */</div><div class="line">    public WeakReference(T referent) &#123;</div><div class="line">        super(referent);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Creates a new weak <span class="keyword">reference</span> <span class="keyword">that</span> refers <span class="keyword">to</span> <span class="keyword">the</span> <span class="keyword">given</span> object <span class="keyword">and</span> <span class="keyword">is</span></div><div class="line">     * registered <span class="keyword">with</span> <span class="keyword">the</span> <span class="keyword">given</span> queue.</div><div class="line">     *</div><div class="line">     * @param referent object <span class="keyword">the</span> new weak <span class="keyword">reference</span> will refer <span class="keyword">to</span></div><div class="line">     * @param q <span class="keyword">the</span> queue <span class="keyword">with</span> which <span class="keyword">the</span> <span class="keyword">reference</span> <span class="keyword">is</span> <span class="keyword">to</span> be registered,</div><div class="line">     *          <span class="keyword">or</span> &lt;tt&gt;null&lt;/tt&gt; <span class="keyword">if</span> registration <span class="keyword">is</span> <span class="keyword">not</span> required</div><div class="line">     */</div><div class="line">    public WeakReference(T referent, ReferenceQueue&lt;? super T&gt; q) &#123;</div><div class="line">        super(referent, q);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里需要明白一件事件，就是为什么每次WeakReference所指向的对象被GC后，这个弱引用都会被放入这个与之相关联的ReferenceQueue队列中。看下源码</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">    * Try handle pending &#123;<span class="doctag">@link</span> Reference&#125; if there is one.&lt;p&gt;</div><div class="line">    * Return &#123;<span class="doctag">@code</span> true&#125; as a hint that there might be another</div><div class="line">    * &#123;<span class="doctag">@link</span> Reference&#125; pending or &#123;<span class="doctag">@code</span> false&#125; when there are no more pending</div><div class="line">    * &#123;<span class="doctag">@link</span> Reference&#125;s at the moment and the program can do some other</div><div class="line">    * useful work instead of looping.</div><div class="line">    *</div><div class="line">    * <span class="doctag">@param</span> waitForNotify if &#123;<span class="doctag">@code</span> true&#125; and there was no pending</div><div class="line">    *                      &#123;<span class="doctag">@link</span> Reference&#125;, wait until notified from VM</div><div class="line">    *                      or interrupted; if &#123;<span class="doctag">@code</span> false&#125;, return immediately</div><div class="line">    *                      when there is no pending &#123;<span class="doctag">@link</span> Reference&#125;.</div><div class="line">    * <span class="doctag">@return</span> &#123;<span class="doctag">@code</span> true&#125; if there was a &#123;<span class="doctag">@link</span> Reference&#125; pending and it</div><div class="line">    *         was processed, or we waited for notification and either got it</div><div class="line">    *         or thread was interrupted before being notified;</div><div class="line">    *         &#123;<span class="doctag">@code</span> false&#125; otherwise.</div><div class="line">    */</div><div class="line">   <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">tryHandlePending</span><span class="params">(<span class="keyword">boolean</span> waitForNotify)</span> </span>&#123;</div><div class="line">       Reference&lt;Object&gt; r;</div><div class="line">       Cleaner c;</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           <span class="keyword">synchronized</span> (lock) &#123;</div><div class="line">               <span class="keyword">if</span> (pending != <span class="keyword">null</span>) &#123;</div><div class="line">                   r = pending;</div><div class="line">                   <span class="comment">// 'instanceof' might throw OutOfMemoryError sometimes</span></div><div class="line">                   <span class="comment">// so do this before un-linking 'r' from the 'pending' chain...</span></div><div class="line">                   c = r <span class="keyword">instanceof</span> Cleaner ? (Cleaner) r : <span class="keyword">null</span>;</div><div class="line">                   <span class="comment">// unlink 'r' from 'pending' chain</span></div><div class="line">                   pending = r.discovered;</div><div class="line">                   r.discovered = <span class="keyword">null</span>;</div><div class="line">               &#125; <span class="keyword">else</span> &#123;</div><div class="line">                   <span class="comment">// The waiting on the lock may cause an OutOfMemoryError</span></div><div class="line">                   <span class="comment">// because it may try to allocate exception objects.</span></div><div class="line">                   <span class="keyword">if</span> (waitForNotify) &#123;</div><div class="line">                       lock.wait();</div><div class="line">                   &#125;</div><div class="line">                   <span class="comment">// retry if waited</span></div><div class="line">                   <span class="keyword">return</span> waitForNotify;</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">       &#125; <span class="keyword">catch</span> (OutOfMemoryError x) &#123;</div><div class="line">           <span class="comment">// Give other threads CPU time so they hopefully drop some live references</span></div><div class="line">           <span class="comment">// and GC reclaims some space.</span></div><div class="line">           <span class="comment">// Also prevent CPU intensive spinning in case 'r instanceof Cleaner' above</span></div><div class="line">           <span class="comment">// persistently throws OOME for some time...</span></div><div class="line">           Thread.yield();</div><div class="line">           <span class="comment">// retry</span></div><div class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">       &#125; <span class="keyword">catch</span> (InterruptedException x) &#123;</div><div class="line">           <span class="comment">// retry</span></div><div class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="comment">// Fast path for cleaners</span></div><div class="line">       <span class="keyword">if</span> (c != <span class="keyword">null</span>) &#123;</div><div class="line">           c.clean();</div><div class="line">           <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       ReferenceQueue&lt;? <span class="keyword">super</span> Object&gt; q = r.queue;</div><div class="line">       <span class="keyword">if</span> (q != ReferenceQueue.NULL) q.enqueue(r);</div><div class="line">       <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="keyword">static</span> &#123;</div><div class="line">       ThreadGroup tg = Thread.currentThread().getThreadGroup();</div><div class="line">       <span class="keyword">for</span> (ThreadGroup tgn = tg;</div><div class="line">            tgn != <span class="keyword">null</span>;</div><div class="line">            tg = tgn, tgn = tg.getParent());</div><div class="line">       Thread <span class="keyword">handler</span> = <span class="keyword">new</span> ReferenceHandler(tg, <span class="string">"Reference Handler"</span>);</div><div class="line">       <span class="comment">/* If there were a special system-only priority greater than</span></div><div class="line">        * MAX_PRIORITY, it would be used here</div><div class="line">        */</div><div class="line">       <span class="keyword">handler</span>.setPriority(Thread.MAX_PRIORITY);</div><div class="line">       <span class="keyword">handler</span>.setDaemon(<span class="keyword">true</span>);</div><div class="line">       <span class="keyword">handler</span>.start();</div><div class="line"></div><div class="line">       <span class="comment">// provide access in SharedSecrets</span></div><div class="line">       SharedSecrets.setJavaLangRefAccess(<span class="keyword">new</span> JavaLangRefAccess() &#123;</div><div class="line">           <span class="meta">@Override</span></div><div class="line">           <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">tryHandlePendingReference</span><span class="params">()</span> </span>&#123;</div><div class="line">               <span class="function"><span class="keyword">return</span> <span class="title">tryHandlePending</span><span class="params">(<span class="keyword">false</span>)</span></span>;</div><div class="line">           &#125;</div><div class="line">       &#125;);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>然后进入  <code>ensureGoneAsync(watchStartNanoTime, reference);</code>进行检测。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">ensureGoneAsync</span><span class="params">(<span class="keyword">final</span> <span class="keyword">long</span> watchStartNanoTime, <span class="keyword">final</span> KeyedWeakReference reference)</span> </span>&#123;</div><div class="line">  watchExecutor.execute(<span class="keyword">new</span> Retryable() &#123;</div><div class="line">    <span class="meta">@Override</span> <span class="keyword">public</span> Retryable.<span class="function">Result <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="function"><span class="keyword">return</span> <span class="title">ensureGone</span><span class="params">(reference, watchStartNanoTime)</span></span>;</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"ReferenceEquality"</span>) <span class="comment">// Explicitly checking for named null.</span></div><div class="line">Retryable.<span class="function">Result <span class="title">ensureGone</span><span class="params">(<span class="keyword">final</span> KeyedWeakReference reference, <span class="keyword">final</span> <span class="keyword">long</span> watchStartNanoTime)</span> </span>&#123;</div><div class="line">  <span class="keyword">long</span> gcStartNanoTime = System.nanoTime();</div><div class="line">  <span class="keyword">long</span> watchDurationMs = NANOSECONDS.toMillis(gcStartNanoTime - watchStartNanoTime);</div><div class="line"></div><div class="line">  removeWeaklyReachableReferences();</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (debuggerControl.isDebuggerAttached()) &#123;</div><div class="line">    <span class="comment">// The debugger can create false leaks.</span></div><div class="line">    <span class="keyword">return</span> RETRY;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">if</span> (gone(reference)) &#123;<span class="comment">//如果确认移除，则判定为未泄漏</span></div><div class="line">    <span class="keyword">return</span> DONE;</div><div class="line">  &#125;</div><div class="line">  gcTrigger.runGc();<span class="comment">//再次执行GC,避免误判</span></div><div class="line">  removeWeaklyReachableReferences();<span class="comment">//再次移除，二次确认</span></div><div class="line">  <span class="keyword">if</span> (!gone(reference)) &#123;<span class="comment">//仍没有移除，判断为泄露了，执行分析泄漏操作</span></div><div class="line">    <span class="keyword">long</span> startDumpHeap = System.nanoTime();</div><div class="line">    <span class="keyword">long</span> gcDurationMs = NANOSECONDS.toMillis(startDumpHeap - gcStartNanoTime);</div><div class="line"></div><div class="line">    File heapDumpFile = heapDumper.dumpHeap();</div><div class="line">    <span class="keyword">if</span> (heapDumpFile == RETRY_LATER) &#123;</div><div class="line">      <span class="comment">// Could not dump the heap.</span></div><div class="line">      <span class="keyword">return</span> RETRY;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">long</span> heapDumpDurationMs = NANOSECONDS.toMillis(System.nanoTime() - startDumpHeap);</div><div class="line"></div><div class="line">    HeapDump heapDump = heapDumpBuilder.heapDumpFile(heapDumpFile).referenceKey(reference.key)</div><div class="line">        .referenceName(reference.name)</div><div class="line">        .watchDurationMs(watchDurationMs)</div><div class="line">        .gcDurationMs(gcDurationMs)</div><div class="line">        .heapDumpDurationMs(heapDumpDurationMs)</div><div class="line">        .build();</div><div class="line"></div><div class="line">    heapdumpListener.analyze(heapDump);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> DONE;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">boolean</span> <span class="title">gone</span><span class="params">(KeyedWeakReference reference)</span> </span>&#123;</div><div class="line"><span class="comment">// 如果retainedKeys中key仍存在，说明对象未被垃圾回收。反之则已经垃圾回收。</span></div><div class="line">  <span class="keyword">return</span> !retainedKeys.contains(reference.key);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">removeWeaklyReachableReferences</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="comment">// WeakReferences are enqueued as soon as the object to which they point to becomes weakly</span></div><div class="line">  <span class="comment">// reachable. This is before finalization or garbage collection has actually happened.</span></div><div class="line">  KeyedWeakReference ref;</div><div class="line">  <span class="keyword">while</span> ((ref = (KeyedWeakReference) queue.poll()) != <span class="keyword">null</span>) &#123;</div><div class="line">    retainedKeys.remove(ref.key);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过<code>Runtime.gc()</code>和<code>System.runFinalization()</code>进行GC操作。<br>System.gc()只在System.runFinalization()后才会调用Runtime().getRuntime().gc()操作。否则在System.runFinalization()才会调用Runtime().getRuntime().gc()操作。</p>
-<p>System.runFinalization()调用Runtime().getRuntime().runFinalization()。</p>
-<p>由于System.gc()无法保证一定会调用gc，所以LeakCanary直接调用Runtime().getRuntime().gc()。</p>
-<p>System类的gc()和runFinalization()</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GcTrigger</span> </span>&#123;</div><div class="line">  GcTrigger DEFAULT = <span class="keyword">new</span> GcTrigger() &#123;</div><div class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">runGc</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// Code taken from AOSP FinalizationTest:</span></div><div class="line">      <span class="comment">// https://android.googlesource.com/platform/libcore/+/master/support/src/test/java/libcore/</span></div><div class="line">      <span class="comment">// java/lang/ref/FinalizationTester.java</span></div><div class="line">      <span class="comment">// System.gc() does not garbage collect every time. Runtime.gc() is</span></div><div class="line">      <span class="comment">// more likely to perform a gc.</span></div><div class="line">      Runtime.getRuntime().gc();</div><div class="line">      enqueueReferences();</div><div class="line">      System.runFinalization();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">enqueueReferences</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="comment">// Hack. We don't have a programmatic way to wait for the reference queue daemon to move</span></div><div class="line">      <span class="comment">// references to the appropriate queues.</span></div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        Thread.sleep(<span class="number">100</span>);</div><div class="line">      &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AssertionError();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">runGc</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>首先通过<code>removeWeaklyReachableReferences()</code>手动移除<code>KeyedWeakReference</code>,具体操作是通过<code>queue.poll()</code>    取出<code>KeyedWeakReference</code>然后在retainedKeys中移除该<code>KeyedWeakReference</code>,然后再进行一次<code>gcTrigger.runGc();</code>操作二次确认<code>retainedKeys</code>中是否已经移除了key.如果仍然没有移除，那么确定是内存泄漏了，然后进行内存泄漏分析。</p>
-<h4 id="二、小结"><a href="#二、小结" class="headerlink" title="二、小结"></a>二、小结</h4><p>判断泄漏实现基本步骤</p>
-<ol>
-<li><p>LeakCanary.install()返回了一个RefWatcher。会注册对应用内所有 Activity 生命周期的监听。RefWatcher.queue是一个ReferenceQueue实例。</p>
-</li>
-<li><p>在Activity销毁时，进行泄漏判断<code>void onActivityDestroyed(Activity activity) {
- refWatcher.watch(activity);
-}</code></p>
-</li>
-<li><p>这里会把检测到的 activity 实例关联包装为一个自定义的弱引用（KeyedWeakReference），但是这里在指定弱引用时，LeakCanary 同时还为这个弱引用指定了一个 ReferenceQueue 队列。</p>
-</li>
-<li><p>通过继承自WeakReference的KeyedWeakReference，增加了key+name字段从而支持对象的唯一起名（通过UUID）和名字获取。</p>
-</li>
-<li><p>在RefWatcher.watch()时把UUID放入RefWatcher.retainedKeys，并把对象跟RefWatcher.queue关联。</p>
-</li>
-<li><p>通过Runtime.gc()和System.runFinalization()进行GC操作。</p>
-</li>
-<li><p>在RefWatcher.removeWeaklyReachableReferences()调用queue.poll()取出KeyedWeakReference，并从retainedKeys中删除。所以，如果retainedKeys中key仍存在，说明对象未被垃圾回收。反之则已经垃圾回收。</p>
-</li>
-<li><p>如果对象未被垃圾回收，则执行分析</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1076,7 +1041,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-count">63</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
