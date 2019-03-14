@@ -119,7 +119,7 @@
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="Java检查型异常和非检查型异常关系图  粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。  蓝色异常是运行时异常(runtime e">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g124tey8e5j30oj1eegp7.jpg">
-<meta property="og:updated_time" content="2019-03-14T02:53:11.000Z">
+<meta property="og:updated_time" content="2019-03-14T02:59:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 检查型异常和非检查型异常">
 <meta name="twitter:description" content="Java检查型异常和非检查型异常关系图  粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。  蓝色异常是运行时异常(runtime e">
@@ -366,11 +366,10 @@
 <ol>
 <li><p>粉红色的是受检查的异常(checked exceptions),其必须被 try{}catch语句块所捕获,或者在方法签名里通过throws子句声明.受检查的异常必须在编译时被捕捉处理,命名为 Checked Exception 是因为Java编译器要进行检查,Java虚拟机也要进行检查,以确保这个规则得到遵守。</p>
 </li>
-<li><p>蓝色异常是运行时异常(runtime exceptions),需要程序员自己分析代码决定是否捕获和处理,比如 空指针,被0除…</p>
+<li><p>蓝色异常是运行时异常(runtime exceptions),需要程序员自己分析代码决定是否捕获和处理,比如 空指针,被0除等</p>
 </li>
-</ol>
-<ol>
-<li>而声明为Error的，则属于严重错误，如系统崩溃、虚拟机错误、动态链接失败等，这些错误无法恢复或者不可能捕捉，将导致应用程序中断，Error不需要捕捉。</li>
+<li><p>而声明为Error的，则属于严重错误，如系统崩溃、虚拟机错误、动态链接失败等，这些错误无法恢复或者不可能捕捉，将导致应用程序中断，Error不需要捕捉。</p>
+</li>
 </ol>
 
       
