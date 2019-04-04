@@ -39,7 +39,6 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 1. GET请求
 	* 同步
 
-	
 		```
 		OkHttpClient client = new OkHttpClient();
 		
@@ -55,7 +54,6 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 		
 	* 异步
 
-	
 		```
 		OkHttpClient client = new OkHttpClient();
 		Request request = new Request.Builder()
