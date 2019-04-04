@@ -118,21 +118,15 @@ Response getResponseWithInterceptorChain() throws IOException {
 
 从源码来看，基本逻辑就是：
 
-* 创建一系列拦截器，加到拦截器数组中。
-* 创建拦截器链RealInterceptorChain
-* 执行拦截器链中的proceed方法
-
-
+1.创建一系列拦截器，加到拦截器数组中。
+2.创建拦截器链RealInterceptorChain
+3.执行拦截器链中的proceed方法
 
 #### 四、RealInterceptorChain
 
 
 ```
-/**
-	 * A concrete interceptor chain that carries the entire interceptor chain: all application
-	 * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
-	 */
-	public final class RealInterceptorChain implements Interceptor.Chain {
+public final class RealInterceptorChain implements Interceptor.Chain {
 	  private final List<Interceptor> interceptors;
 	  private final StreamAllocation streamAllocation;
 	  private final HttpCodec httpCodec;
@@ -212,12 +206,11 @@ Response getResponseWithInterceptorChain() throws IOException {
 
 可以看到procees方法的逻辑：
 
-* 创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
+创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
 
 
 ```
-// Call the next interceptor in the chain.
-		RealInterceptorChain next = new RealInterceptorChain(
+RealInterceptorChain next = new RealInterceptorChain(
 			        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
 ```
 		        
@@ -235,7 +228,8 @@ Response response = interceptor.intercept(next);
 ##### 1.RetryAndFollowUpInterceptor
 
 ```
-@Override public Response intercept(Chain chain) throws IOException {
+@Override 
+public Response intercept(Chain chain) throws IOException {
 	    Request request = chain.request();
 	
     streamAllocation = new StreamAllocation(
@@ -323,8 +317,8 @@ Response response = interceptor.intercept(next);
 ```	
 	
 	
-* 发起请求前拦截器对request处理
-* 然后调用下一个拦截器，获取Response
+1.发起请求前拦截器对request处理
+2.然后调用下一个拦截器，获取Response
 
 调用的关键：
 
@@ -352,7 +346,8 @@ try {
 下面就看一下核心方法intercept()
 
 ```
-@Override public Response intercept(Chain chain) throws IOException {
+@Override 
+public Response intercept(Chain chain) throws IOException {
 	//拿到用户的请求
     Request userRequest = chain.request();
     Request.Builder requestBuilder = userRequest.newBuilder();
@@ -427,9 +422,9 @@ try {
 
 BridgeInterceptor主要流程逻辑：
 
-1. 拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求
-2. 将这个符合网络请求的Request进行网络请求
-3. 将网络请求返回的Response转化为用户可用的Response
+1.拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求
+2.将这个符合网络请求的Request进行网络请求
+3.将网络请求返回的Response转化为用户可用的Response
 	
 	
 代码中构建网络Request添加的请求头信息：
@@ -448,13 +443,13 @@ Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 �
 
 ###### 小结：
 
-* 构建完头信息后，进行网络请求
+构建完头信息后，进行网络请求
 
 ```
 Response networkResponse = chain.proceed(requestBuilder.build());
 ```
 		
-* 获取到返回的Response,转化为客户端可用的Response
+获取到返回的Response,转化为客户端可用的Response
 
 ```
 Response.Builder responseBuilder = networkResponse.newBuilder()
@@ -584,10 +579,10 @@ CacheIntetceptor的职责就是负责Cache的管理
 
 CacheInterceptor主要就是负责Cache的管理
 
-   * 当网络被禁止访问，缓存不完整，那么返回失败（504）
-   * 缓存可用，返回缓存结果
-   * 当网络访问，返回（304），更新本地缓存
-   * 当Cache失效，删除缓存
+1.当网络被禁止访问，缓存不完整，那么返回失败（504）
+2.缓存可用，返回缓存结果
+3.当网络访问，返回（304），更新本地缓存
+4.当Cache失效，删除缓存
 
   
 ##### 4.ConnectInterceptor
@@ -595,7 +590,8 @@ CacheInterceptor主要就是负责Cache的管理
 代码不多，但包含的内容很多。
 
 ```
-@Override public Response intercept(Chain chain) throws IOException {
+@Override
+public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
 	    Request request = realChain.request();
 	    //拿到StreamAllocation对象。
@@ -781,7 +777,8 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
 关键方法intercept,如下：
 
 ```
-@Override public Response intercept(Chain chain) throws IOException {
+@Override 
+public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
 	    HttpCodec httpCodec = realChain.httpStream();
 	    StreamAllocation streamAllocation = realChain.streamAllocation();
