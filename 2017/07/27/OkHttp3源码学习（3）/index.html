@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
+<meta name="description" content="一、发起请求1234567891011121314151617181920OkHttpClient client = new OkHttpClient();        Request request = new Request.Builder()                .url(&quot;&quot;)                .build();        Call call = client">
 <meta name="keywords" content="OkHttp3">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OkHttp3源码学习（3）-拦截器链详解">
 <meta property="og:url" content="http://yoursite.com/2017/07/27/OkHttp3源码学习（3）/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
-<meta property="og:updated_time" content="2018-12-04T09:15:25.000Z">
+<meta property="og:description" content="一、发起请求1234567891011121314151617181920OkHttpClient client = new OkHttpClient();        Request request = new Request.Builder()                .url(&quot;&quot;)                .build();        Call call = client">
+<meta property="og:updated_time" content="2019-04-04T02:55:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OkHttp3源码学习（3）-拦截器链详解">
-<meta name="twitter:description" content="一、发起请求OkHttpClient client = new OkHttpClient();     Request request = new Request.Builder()             .url(&amp;quot;&amp;quot;)             .build();     Call call = client.newCall(request);     try {">
+<meta name="twitter:description" content="一、发起请求1234567891011121314151617181920OkHttpClient client = new OkHttpClient();        Request request = new Request.Builder()                .url(&quot;&quot;)                .build();        Call call = client">
 
 
 
@@ -360,102 +360,27 @@
       
 
       
-        <h4 id="一、发起请求"><a href="#一、发起请求" class="headerlink" title="一、发起请求"></a>一、发起请求</h4><pre><code>OkHttpClient client = new OkHttpClient();
-    Request request = new Request.Builder()
-            .url(&quot;&quot;)
-            .build();
-    Call call = client.newCall(request);
-    try {
-        call.enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d(&quot;OkHttp&quot;, &quot;Call Failed:&quot; + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.d(&quot;OkHttp&quot;, &quot;Call succeeded:&quot; + response.message());
-            }
-        });
-    } catch (Exception e) {
-        Log.e(&quot;OkHttp&quot;,e.getMessage());
-    }
-</code></pre><ul>
-<li><p>发起请求时：client.newCall(request)。</p>
-<pre><code>@Override public Call newCall(Request request) {
-return new RealCall(this, request, false /* for web socket */);
-  }
-</code></pre><p>实际上就是创建一个RealCall的实例。</p>
-</li>
-<li><p>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</p>
-<pre><code>@Override public void enqueue(Callback responseCallback) {
-synchronized (this) {
-  if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);
-  executed = true;
+        <h4 id="一、发起请求"><a href="#一、发起请求" class="headerlink" title="一、发起请求"></a>一、发起请求</h4><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line">        <span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()</div><div class="line">                .url(<span class="string">""</span>)</div><div class="line">                .build();</div><div class="line">        <span class="keyword">Call</span> <span class="keyword">call</span> = client.newCall(<span class="built_in">request</span>);</div><div class="line">        try &#123;</div><div class="line">            <span class="keyword">call</span>.enqueue(<span class="keyword">new</span> okhttp3.Callback() &#123;</div><div class="line">                @Override</div><div class="line">                <span class="keyword">public</span> void onFailure(<span class="keyword">Call</span> <span class="keyword">call</span>, IOException e) &#123;</div><div class="line">                    <span class="built_in">Log</span>.d(<span class="string">"OkHttp"</span>, <span class="string">"Call Failed:"</span> + e.getMessage());</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                @Override</div><div class="line">                <span class="keyword">public</span> void onResponse(<span class="keyword">Call</span> <span class="keyword">call</span>, <span class="built_in">Response</span> <span class="built_in">response</span>) throws IOException &#123;</div><div class="line">                    <span class="built_in">Log</span>.d(<span class="string">"OkHttp"</span>, <span class="string">"Call succeeded:"</span> + <span class="built_in">response</span>.message());</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">        &#125; catch (Exception e) &#123;</div><div class="line">            <span class="built_in">Log</span>.e(<span class="string">"OkHttp"</span>,e.getMessage());</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>发起请求时：client.newCall(request)。</li>
+</ul>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@Override <span class="keyword">public</span> Call <span class="keyword">new</span><span class="type">Call</span>(Request request) &#123;</div><div class="line">	    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">RealCall</span>(<span class="built_in">this</span>, request, <span class="literal">false</span> <span class="comment">/* for web socket */</span>);</div><div class="line">	  	&#125;</div></pre></td></tr></table></figure>
+<p>  实际上就是创建一个RealCall的实例。</p>
+<ul>
+<li>然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Callback responseCallback)</span> </span>&#123;</div><div class="line">	    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">	      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">	      executed = <span class="keyword">true</span>;</div><div class="line">	    &#125;</div><div class="line">	    captureCallStackTrace();</div><div class="line">	    client.dispatcher().enqueue(<span class="keyword">new</span> AsyncCall(responseCallback));</div><div class="line">	  	&#125;</div></pre></td></tr></table></figure>
+<h4 id="二、AsyncCall"><a href="#二、AsyncCall" class="headerlink" title="二、AsyncCall"></a>二、AsyncCall</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="keyword">protected</span> void execute() &#123;</div><div class="line">      boolean signalledCallback = <span class="literal">false</span>;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        Response response = getResponseWithInterceptorChain();</div><div class="line">        <span class="keyword">if</span> (retryAndFollowUpInterceptor.isCanceled()) &#123;</div><div class="line">          signalledCallback = <span class="literal">true</span>;</div><div class="line">          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, new IOException(<span class="string">"Canceled"</span>));</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          signalledCallback = <span class="literal">true</span>;</div><div class="line">          responseCallback.onResponse(RealCall.<span class="keyword">this</span>, response);</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">        <span class="keyword">if</span> (signalledCallback) &#123;</div><div class="line">          <span class="comment">// Do not signal the callback twice!</span></div><div class="line">          Platform.<span class="keyword">get</span>().log(INFO, <span class="string">"Callback failure for "</span> + toLoggableString(), e);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, e);</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">```  </div><div class="line">  </div><div class="line">  AsyncCall会执行execute方法。execute方法逻辑很简单：</div><div class="line">  </div><div class="line"></div><div class="line">* 通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功</div></pre></td></tr></table></figure>
+<p>Response response = getResponseWithInterceptorChain();<br><figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  </div><div class="line"></div><div class="line"><span class="asciidoc"><span class="bullet">* </span>通知任务分发器该任务结束</span></div></pre></td></tr></table></figure></p>
+<p>client.dispatcher().finished(this);<br><figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"><span class="clean">        </span></div><div class="line">#### 三、构建拦截器链</div></pre></td></tr></table></figure></p>
+<p> Response getResponseWithInterceptorChain() throws IOException {<br>        // Build a full stack of interceptors.<br>        List<interceptor> interceptors = new ArrayList&lt;&gt;();<br>        interceptors.addAll(client.interceptors());<br>        interceptors.add(retryAndFollowUpInterceptor);<br>        interceptors.add(new BridgeInterceptor(client.cookieJar()));<br>        interceptors.add(new CacheInterceptor(client.internalCache()));<br>        interceptors.add(new ConnectInterceptor(client));<br>        if (!forWebSocket) {<br>          interceptors.addAll(client.networkInterceptors());<br>        }<br>        interceptors.add(new CallServerInterceptor(forWebSocket));</interceptor></p>
+<pre><code>  Interceptor.Chain chain = new RealInterceptorChain(
+      interceptors, null, null, null, 0, originalRequest);
+  return chain.proceed(originalRequest);
 }
-captureCallStackTrace();
-client.dispatcher().enqueue(new AsyncCall(responseCallback));
-  }
-</code></pre></li>
-</ul>
-<h4 id="二、AsyncCall"><a href="#二、AsyncCall" class="headerlink" title="二、AsyncCall"></a>二、AsyncCall</h4><pre><code> @Override protected void execute() {
-  boolean signalledCallback = false;
-  try {
-    Response response = getResponseWithInterceptorChain();
-    if (retryAndFollowUpInterceptor.isCanceled()) {
-      signalledCallback = true;
-      responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));
-    } else {
-      signalledCallback = true;
-      responseCallback.onResponse(RealCall.this, response);
-    }
-  } catch (IOException e) {
-    if (signalledCallback) {
-      // Do not signal the callback twice!
-      Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);
-    } else {
-      responseCallback.onFailure(RealCall.this, e);
-    }
-  } finally {
-    client.dispatcher().finished(this);
-  }
-}
-</code></pre><p>  AsyncCall会执行execute方法。execute方法逻辑很简单：</p>
-<ul>
-<li><p>通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功</p>
-<pre><code>Response response = getResponseWithInterceptorChain();
-</code></pre></li>
-</ul>
-<ul>
-<li><p>通知任务分发器该任务结束</p>
-<pre><code>client.dispatcher().finished(this);
-</code></pre></li>
-</ul>
-<h4 id="三、构建拦截器链"><a href="#三、构建拦截器链" class="headerlink" title="三、构建拦截器链"></a>三、构建拦截器链</h4><pre><code>Response getResponseWithInterceptorChain() throws IOException {
-   // Build a full stack of interceptors.
-   List&lt;Interceptor&gt; interceptors = new ArrayList&lt;&gt;();
-   interceptors.addAll(client.interceptors());
-   interceptors.add(retryAndFollowUpInterceptor);
-   interceptors.add(new BridgeInterceptor(client.cookieJar()));
-   interceptors.add(new CacheInterceptor(client.internalCache()));
-   interceptors.add(new ConnectInterceptor(client));
-   if (!forWebSocket) {
-     interceptors.addAll(client.networkInterceptors());
-   }
-   interceptors.add(new CallServerInterceptor(forWebSocket));
-
-   Interceptor.Chain chain = new RealInterceptorChain(
-       interceptors, null, null, null, 0, originalRequest);
-   return chain.proceed(originalRequest);
- }
-</code></pre><p>从源码来看，基本逻辑就是：</p>
-<ul>
-<li>创建一系列拦截器，加到拦截器数组中。</li>
-<li>创建拦截器链RealInterceptorChain</li>
-<li>执行拦截器链中的proceed方法</li>
-</ul>
-<h4 id="四、RealInterceptorChain"><a href="#四、RealInterceptorChain" class="headerlink" title="四、RealInterceptorChain"></a>四、RealInterceptorChain</h4><pre><code>/**
- * A concrete interceptor chain that carries the entire interceptor chain: all application
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">从源码来看，基本逻辑就是：</div><div class="line"></div><div class="line">* 创建一系列拦截器，加到拦截器数组中。</div><div class="line">* 创建拦截器链RealInterceptorChain</div><div class="line">* 执行拦截器链中的proceed方法</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#### 四、RealInterceptorChain</div></pre></td></tr></table></figure>
+<p>/**</p>
+<pre><code> * A concrete interceptor chain that carries the entire interceptor chain: all application
  * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
  */
 public final class RealInterceptorChain implements Interceptor.Chain {
@@ -534,22 +459,12 @@ public final class RealInterceptorChain implements Interceptor.Chain {
     return response;
   }
 }
-</code></pre><p>可以看到procees方法的逻辑：</p>
-<ul>
-<li><p>创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。</p>
-<pre><code>// Call the next interceptor in the chain.
-RealInterceptorChain next = new RealInterceptorChain(
-            interceptors, streamAllocation, httpCodec, connection, index + 1, request);
-</code></pre></li>
-<li><p>获取索引为index的interceptor,执行索引为index的intercept方法。</p>
-<pre><code>Interceptor interceptor = interceptors.get(index);
-Response response = interceptor.intercept(next);
-</code></pre></li>
-</ul>
-<h4 id="五、拦截器链"><a href="#五、拦截器链" class="headerlink" title="五、拦截器链"></a>五、拦截器链</h4><h5 id="1-RetryAndFollowUpInterceptor"><a href="#1-RetryAndFollowUpInterceptor" class="headerlink" title="1.RetryAndFollowUpInterceptor"></a>1.RetryAndFollowUpInterceptor</h5><pre><code>  @Override public Response intercept(Chain chain) throws IOException {
-    Request request = chain.request();
-
-streamAllocation = new StreamAllocation(
+</code></pre><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">可以看到procees方法的逻辑：</div><div class="line"></div><div class="line">* 创建下一个拦截链（代码中的<span class="keyword">next</span>），传入<span class="keyword">index</span>+<span class="number">1</span>，使创建的下一个拦截器链只能从下一个拦截器访问。</div></pre></td></tr></table></figure>
+<p>// Call the next interceptor in the chain.<br>        RealInterceptorChain next = new RealInterceptorChain(<br>                    interceptors, streamAllocation, httpCodec, connection, index + 1, request);</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">		        </div><div class="line">* 获取索引为<span class="built_in">index</span>的interceptor,执行索引为<span class="built_in">index</span>的<span class="built_in">intercept</span>方法。</div></pre></td></tr></table></figure>
+<p>Interceptor interceptor = interceptors.get(index);<br>Response response = interceptor.intercept(next);<br><figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line"><span class="clean">#### 五、拦截器链</span></div><div class="line"></div><div class="line">##### <span class="number">1.</span>RetryAndFollowUpInterceptor</div></pre></td></tr></table></figure></p>
+<p>@Override public Response intercept(Chain chain) throws IOException {<br>        Request request = chain.request();</p>
+<pre><code>streamAllocation = new StreamAllocation(
     client.connectionPool(), createAddress(request.url()), callStackTrace);
 
 int followUpCount = 0;
@@ -631,34 +546,10 @@ while (true) {
   priorResponse = response;
 }
 }
-</code></pre><ul>
-<li>发起请求前拦截器对request处理</li>
-<li>然后调用下一个拦截器，获取Response</li>
-</ul>
-<p>调用的关键：</p>
-<pre><code>try {
-        response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
-        releaseConnection = false;
-      }
-</code></pre><p>那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.</p>
-<p>下面就来对几种拦截器一一介绍。</p>
-<h5 id="2-BidgeInterceptor"><a href="#2-BidgeInterceptor" class="headerlink" title="2.BidgeInterceptor"></a>2.BidgeInterceptor</h5><p>官方注释解释：从应用程序代码到网络代码的桥梁，首先从用户的请求构建一个网络请求，然后执行访问网络，最后返回Response.</p>
-<p>整个过程就是：首先将客户端构建的Request对象信息构建成真正的网络请求;然后发起网络请求，最后就是将服务器返回的消息封装成一个Response对象。</p>
-<p>下面就看一下核心方法intercept()</p>
-<pre><code>@Override public Response intercept(Chain chain) throws IOException {
-//拿到用户的请求
-Request userRequest = chain.request();
-Request.Builder requestBuilder = userRequest.newBuilder();
-//拿到用户请求body
-RequestBody body = userRequest.body();
-//对请求头的补充
-if (body != null) {
-  MediaType contentType = body.contentType();
-  if (contentType != null) {
-    requestBuilder.header(&quot;Content-Type&quot;, contentType.toString());
-  }
-
-  long contentLength = body.contentLength();
+</code></pre><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="code">	</span></div><div class="line"><span class="code">	</span></div><div class="line"><span class="bullet">* </span>发起请求前拦截器对request处理</div><div class="line"><span class="bullet">* </span>然后调用下一个拦截器，获取Response</div><div class="line"></div><div class="line">调用的关键：</div></pre></td></tr></table></figure>
+<p>try {<br>    response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);<br>    releaseConnection = false;<br>}<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">下面就来对几种拦截器一一介绍。</div><div class="line"></div><div class="line">##### <span class="number">2.</span>BidgeInterceptor</div><div class="line"></div><div class="line">官方注释解释：从应用程序代码到网络代码的桥梁，首先从用户的请求构建一个网络请求，然后执行访问网络，最后返回Response.</div><div class="line"></div><div class="line">整个过程就是：首先将客户端构建的Request对象信息构建成真正的网络请求;然后发起网络请求，最后就是将服务器返回的消息封装成一个Response对象。</div><div class="line"></div><div class="line">下面就看一下核心方法intercept()</div></pre></td></tr></table></figure></p>
+<p>@Override public Response intercept(Chain chain) throws IOException {<br>    //拿到用户的请求<br>    Request userRequest = chain.request();<br>    Request.Builder requestBuilder = userRequest.newBuilder();<br>    //拿到用户请求body<br>    RequestBody body = userRequest.body();<br>    //对请求头的补充<br>    if (body != null) {<br>      MediaType contentType = body.contentType();<br>      if (contentType != null) {<br>        requestBuilder.header(“Content-Type”, contentType.toString());<br>      }</p>
+<pre><code>  long contentLength = body.contentLength();
   if (contentLength != -1) {
     requestBuilder.header(&quot;Content-Length&quot;, Long.toString(contentLength));
     requestBuilder.removeHeader(&quot;Transfer-Encoding&quot;);
@@ -716,79 +607,10 @@ if (transparentGzip
 //构建一个Response
 return responseBuilder.build();
   }
-</code></pre><p>BridgeInterceptor主要流程逻辑：</p>
-<ol>
-<li>拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求</li>
-<li>将这个符合网络请求的Request进行网络请求</li>
-<li>将网络请求返回的Response转化为用户可用的Response</li>
-</ol>
-<p>代码中构建网络Request添加的请求头信息：</p>
-<ul>
-<li>简单了解一下先，头信息</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>协议头字段名</th>
-<th>说明</th>
-<th>示例</th>
-<th>状态</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Content-Type</td>
-<td>请求体的 多媒体类型 （用于POST和PUT请求中）</td>
-<td>Content-Type: application/x-www-form-urlencoded</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Content-Length</td>
-<td>以 八位字节数组 （8位的字节）表示的请求体的长度</td>
-<td>Content-Length: 348</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Transfer-Encoding</td>
-<td>用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity</td>
-<td>Transfer-Encoding: chunked</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Host</td>
-<td>服务器的域名(用于虚拟主机 )，以及服务器所监听的传输控制协议端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本1.1（HTTP/1.1）开始便是必需字段。</td>
-<td>Host: en.wikipedia.org:80 Host: en.wikipedia.org</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Connection</td>
-<td>该浏览器想要优先使用的连接类型</td>
-<td>Connection: keep-alive      ，Connection: Upgrade</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Accept-Encoding</td>
-<td>能够接受的编码方式列表</td>
-<td>Accept-Encoding: gzip, deflate</td>
-<td>常设</td>
-</tr>
-<tr>
-<td>Cookie</td>
-<td>之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109</td>
-<td>Cookie: $Version=1; Skin=new;</td>
-<td>常设: 标准</td>
-</tr>
-</tbody>
-</table>
-<h6 id="小结："><a href="#小结：" class="headerlink" title="小结："></a>小结：</h6><ul>
-<li><p>构建完头信息后，进行网络请求</p>
-<pre><code>Response networkResponse = chain.proceed(requestBuilder.build());
-</code></pre></li>
-<li><p>获取到返回的Response,转化为客户端可用的Response</p>
-<pre><code> Response.Builder responseBuilder = networkResponse.newBuilder()
-    .request(userRequest);
-
-if (transparentGzip
+</code></pre><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">BridgeInterceptor主要流程逻辑：</div><div class="line"></div><div class="line">1. 拿到用户的请求,将用户的构建的Request请求转化为真正的网络请求</div><div class="line">2. 将这个符合网络请求的Request进行网络请求</div><div class="line">3. 将网络请求返回的Response转化为用户可用的Response</div><div class="line">	</div><div class="line">	</div><div class="line">代码中构建网络Request添加的请求头信息：</div><div class="line"></div><div class="line"><span class="symbol">*</span> 简单了解一下先，头信息</div><div class="line"></div><div class="line">协议头字段名 |<span class="string">说明</span>|<span class="string"> 示例 </span>|<span class="string"> 状态</span></div><div class="line">---- |<span class="string"> --- </span>|<span class="string"> --- </span>|<span class="string"> ---</span></div><div class="line">Content-Type |<span class="string"> 请求体的 多媒体类型 （用于POST和PUT请求中）</span>|<span class="string">Content-Type: application/x-www-form-urlencoded</span>|<span class="string">常设</span></div><div class="line">Content-Length |<span class="string">  以 八位字节数组 （8位的字节）表示的请求体的长度</span>|<span class="string">Content-Length: 348</span>|<span class="string">常设</span></div><div class="line">Transfer-Encoding|<span class="string">用来将实体安全地传输给用户的编码形式。当前定义的方法包括：分块（chunked）、compress、deflate、gzip和identity</span>|<span class="string">Transfer-Encoding: chunked</span>|<span class="string">常设</span></div><div class="line">Host|<span class="string">服务器的域名(用于虚拟主机 )，以及服务器所监听的传输控制协议端口号。如果所请求的端口是对应的服务的标准端口，则端口号可被省略。自超文件传输协议版本1.1（HTTP/1.1）开始便是必需字段。</span>|<span class="string"> Host: en.wikipedia.org:80 Host: en.wikipedia.org</span>|<span class="string">常设</span></div><div class="line">Connection|<span class="string">该浏览器想要优先使用的连接类型</span>|<span class="string">Connection: keep-alive  	，Connection: Upgrade</span>|<span class="string">常设</span></div><div class="line">Accept-Encoding|<span class="string">能够接受的编码方式列表</span>|<span class="string">Accept-Encoding: gzip, deflate</span>|<span class="string">常设</span></div><div class="line">Cookie|<span class="string">之前由服务器通过 Set- Cookie （下文详述）发送的一个 超文本传输协议Cookie。指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。定义于RFC2109</span>|<span class="string">Cookie: $Version=1; Skin=new;</span>|<span class="string">常设: 标准</span></div><div class="line"></div><div class="line">###### 小结：</div><div class="line"></div><div class="line">* 构建完头信息后，进行网络请求</div></pre></td></tr></table></figure>
+<p>Response networkResponse = chain.proceed(requestBuilder.build());<br><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">		</div><div class="line">* 获取到返回的<span class="built_in">Response</span>,转化为客户端可用的<span class="built_in">Response</span></div></pre></td></tr></table></figure></p>
+<p>Response.Builder responseBuilder = networkResponse.newBuilder()<br>            .request(userRequest);</p>
+<pre><code>if (transparentGzip
     &amp;&amp; &quot;gzip&quot;.equalsIgnoreCase(networkResponse.header(&quot;Content-Encoding&quot;))
     &amp;&amp; HttpHeaders.hasBody(networkResponse)) {
   GzipSource responseBody = new GzipSource(networkResponse.body().source());
@@ -798,17 +620,9 @@ if (transparentGzip
       .build();
   responseBuilder.headers(strippedHeaders);
   responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
-</code></pre></li>
-</ul>
-<h5 id="3-CacheIntetceptor"><a href="#3-CacheIntetceptor" class="headerlink" title="3.CacheIntetceptor"></a>3.CacheIntetceptor</h5><p>CacheIntetceptor的职责就是负责Cache的管理</p>
-<p>看一下核心方法：</p>
-<pre><code> @Override public Response intercept(Chain chain) throws IOException {
- //1.读取候选的缓存
-Response cacheCandidate = cache != null
-    ? cache.get(chain.request())
-    : null;
-
-long now = System.currentTimeMillis();
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">##### <span class="number">3.</span>CacheIntetceptor</div><div class="line"></div><div class="line">CacheIntetceptor的职责就是负责Cache的管理</div><div class="line"></div><div class="line">看一下核心方法：</div></pre></td></tr></table></figure>
+<p>@Override public Response intercept(Chain chain) throws IOException {<br>     //1.读取候选的缓存<br>    Response cacheCandidate = cache != null<br>        ? cache.get(chain.request())<br>        : null;</p>
+<pre><code>long now = System.currentTimeMillis();
 //2.首先创建缓存策略，networkRequest为网络请求，cacheResponse为缓存
 CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
 Request networkRequest = strategy.networkRequest;
@@ -901,52 +715,20 @@ if (cache != null) {
 //11.返回网络请求的结果
 return response;
   }
-</code></pre><p>####### 整个过程大致：</p>
-<p>CacheInterceptor主要就是负责Cache的管理</p>
-<ul>
-<li>当网络被禁止访问，缓存不完整，那么返回失败（504）</li>
-<li>缓存可用，返回缓存结果</li>
-<li>当网络访问，返回（304），更新本地缓存</li>
-<li>当Cache失效，删除缓存</li>
-</ul>
-<h5 id="4-ConnectInterceptor"><a href="#4-ConnectInterceptor" class="headerlink" title="4.ConnectInterceptor"></a>4.ConnectInterceptor</h5><p>代码不多，但包含的内容很多。</p>
-<pre><code>@Override public Response intercept(Chain chain) throws IOException {
-   RealInterceptorChain realChain = (RealInterceptorChain) chain;
-   Request request = realChain.request();
-   //拿到StreamAllocation对象。
-   StreamAllocation streamAllocation = realChain.streamAllocation();
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">	</div><div class="line">####### 整个过程大致：</div><div class="line"></div><div class="line">CacheInterceptor主要就是负责Cache的管理</div><div class="line"></div><div class="line">   * 当网络被禁止访问，缓存不完整，那么返回失败（<span class="number">504</span>）</div><div class="line">   * 缓存可用，返回缓存结果</div><div class="line">   * 当网络访问，返回（<span class="number">304</span>），更新本地缓存</div><div class="line">   * 当Cache失效，删除缓存</div><div class="line"></div><div class="line">  </div><div class="line">##### <span class="number">4.</span>ConnectInterceptor</div><div class="line"></div><div class="line">代码不多，但包含的内容很多。</div></pre></td></tr></table></figure>
+<p>@Override public Response intercept(Chain chain) throws IOException {<br>        RealInterceptorChain realChain = (RealInterceptorChain) chain;<br>        Request request = realChain.request();<br>        //拿到StreamAllocation对象。<br>        StreamAllocation streamAllocation = realChain.streamAllocation();</p>
+<pre><code>// We need the network to satisfy this request. Possibly for validating a conditional GET.
+boolean doExtensiveHealthChecks = !request.method().equals(&quot;GET&quot;);
+HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+RealConnection connection = streamAllocation.connection();
 
-   // We need the network to satisfy this request. Possibly for validating a conditional GET.
-   boolean doExtensiveHealthChecks = !request.method().equals(&quot;GET&quot;);
-   HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
-   RealConnection connection = streamAllocation.connection();
-
-   return realChain.proceed(request, streamAllocation, httpCodec, connection);
-     }
-</code></pre><p>从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化</p>
-<pre><code>streamAllocation = new StreamAllocation(
-client.connectionPool(), createAddress(request.url()), callStackTrace);
-</code></pre><p>三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用</p>
-<p>看一下StreamAllocation的构造方法</p>
-<pre><code>public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {
-this.connectionPool = connectionPool;
-this.address = address;
-this.routeSelector = new RouteSelector(address, routeDatabase());
-this.callStackTrace = callStackTrace;
+return realChain.proceed(request, streamAllocation, httpCodec, connection);
   }
-</code></pre><p>在把这个三个参数保存为内部变量的同时也创建了一个线路选择器</p>
-<p>streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。</p>
-<p>接下来继续看StreamAllocation中的newSream()方法</p>
-<pre><code>public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
-//读取从OkHttpClient配置的超时时间
-int connectTimeout = client.connectTimeoutMillis();
-//获取读写超时时间
-int readTimeout = client.readTimeoutMillis();
-int writeTimeout = client.writeTimeoutMillis();
-//连接重试
-boolean connectionRetryEnabled = client.retryOnConnectionFailure();
-
-try {
+</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">	</div><div class="line">从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化</div></pre></td></tr></table></figure>
+<p>streamAllocation = new StreamAllocation(<br>        client.connectionPool(), createAddress(request.url()), callStackTrace);<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">        </div><div class="line">三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用</div><div class="line"></div><div class="line">看一下StreamAllocation的构造方法</div></pre></td></tr></table></figure></p>
+<p>public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {<br>    this.connectionPool = connectionPool;<br>    this.address = address;<br>    this.routeSelector = new RouteSelector(address, routeDatabase());<br>    this.callStackTrace = callStackTrace;<br>      }<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">在把这个三个参数保存为内部变量的同时也创建了一个线路选择器</div><div class="line"></div><div class="line">streamAllocation.<span class="keyword">new</span><span class="type">Stream</span> 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。</div><div class="line"></div><div class="line">接下来继续看StreamAllocation中的<span class="keyword">new</span><span class="type">Sream</span>()方法</div></pre></td></tr></table></figure></p>
+<p>public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {<br>    //读取从OkHttpClient配置的超时时间<br>    int connectTimeout = client.connectTimeoutMillis();<br>    //获取读写超时时间<br>    int readTimeout = client.readTimeoutMillis();<br>    int writeTimeout = client.writeTimeoutMillis();<br>    //连接重试<br>    boolean connectionRetryEnabled = client.retryOnConnectionFailure();</p>
+<pre><code>try {
 //找到一个健康的连接（在连接池中寻找或者新创建一个连接）
   RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
       writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
@@ -961,16 +743,9 @@ try {
   throw new RouteException(e);
 }
   }
-</code></pre><p> 下面就再看一下它是如何找到一个健康的连接的</p>
-<pre><code>private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
-    int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
-    throws IOException {
-  while (true) {
-  //找到健康的连接
-    RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
-        connectionRetryEnabled);
-
-    // If this is a brand new connection, we can skip the extensive health checks.
+</code></pre><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> 	</div><div class="line">下面就再看一下它是如何找到一个健康的连接的</div></pre></td></tr></table></figure>
+<p>private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,<br>          int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)<br>          throws IOException {<br>        while (true) {<br>        //找到健康的连接<br>          RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,<br>              connectionRetryEnabled);</p>
+<pre><code>    // If this is a brand new connection, we can skip the extensive health checks.
     synchronized (connectionPool) {
       if (candidate.successCount == 0) {
         return candidate;
@@ -987,174 +762,152 @@ try {
     return candidate;
   }
 }
-</code></pre><p>从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。</p>
-<p>那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法</p>
-<pre><code>private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
-      boolean connectionRetryEnabled) throws IOException {
-    Route selectedRoute;
-    //同步线程池
-    synchronized (connectionPool) {
-      if (released) throw new IllegalStateException(&quot;released&quot;);
-      if (codec != null) throw new IllegalStateException(&quot;codec != null&quot;);
-      if (canceled) throw new IOException(&quot;Canceled&quot;);
-
-        //尝试使用现有连接，判断是否可用
-      // Attempt to use an already-allocated connection.
-      RealConnection allocatedConnection = this.connection;
-      if (allocatedConnection != null &amp;&amp; !allocatedConnection.noNewStreams) {
-        return allocatedConnection;
-      }
-        //尝试在连接池中获取一个连接，
-      // Attempt to get a connection from the pool.
-      Internal.instance.get(connectionPool, address, this, null);
-      if (connection != null) {
-        return connection;
-      }
-
-      selectedRoute = route;
+</code></pre><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">	  </div><div class="line">从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。</div><div class="line"></div><div class="line">那么继续跟进，看一下是怎么找到健康的连接，进入<span class="selector-tag">findConnection</span>(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法</div></pre></td></tr></table></figure>
+<p>private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,<br>          boolean connectionRetryEnabled) throws IOException {<br>        Route selectedRoute;<br>        //同步线程池<br>        synchronized (connectionPool) {<br>          if (released) throw new IllegalStateException(“released”);<br>          if (codec != null) throw new IllegalStateException(“codec != null”);<br>          if (canceled) throw new IOException(“Canceled”);</p>
+<pre><code>      //尝试使用现有连接，判断是否可用
+    // Attempt to use an already-allocated connection.
+    RealConnection allocatedConnection = this.connection;
+    if (allocatedConnection != null &amp;&amp; !allocatedConnection.noNewStreams) {
+      return allocatedConnection;
+    }
+      //尝试在连接池中获取一个连接，
+    // Attempt to get a connection from the pool.
+    Internal.instance.get(connectionPool, address, this, null);
+    if (connection != null) {
+      return connection;
     }
 
-    // If we need a route, make one. This is a blocking operation.
-    if (selectedRoute == null) {
-      selectedRoute = routeSelector.next();
-    }
-
-    RealConnection result;
-    synchronized (connectionPool) {
-      if (canceled) throw new IOException(&quot;Canceled&quot;);
-
-      // Now that we have an IP address, make another attempt at getting a connection from the pool.
-      // This could match due to connection coalescing.
-      Internal.instance.get(connectionPool, address, this, selectedRoute);
-      if (connection != null) {
-        route = selectedRoute;
-        return connection;
-      }
-
-      // Create a connection and assign it to this allocation immediately. This makes it possible
-      // for an asynchronous cancel() to interrupt the handshake we&apos;re about to do.
-      route = selectedRoute;
-      refusedStreamCount = 0;
-      result = new RealConnection(connectionPool, selectedRoute);
-      acquire(result);
-    }
-
-    // Do TCP + TLS handshakes. This is a blocking operation.
-    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
-    routeDatabase().connected(result.route());
-
-    Socket socket = null;
-    synchronized (connectionPool) {
-      // Pool the connection.
-      Internal.instance.put(connectionPool, result);
-
-      // If another multiplexed connection to the same address was created concurrently, then
-      // release this connection and acquire that one.
-      if (result.isMultiplexed()) {
-        socket = Internal.instance.deduplicate(connectionPool, address, this);
-        result = connection;
-      }
-    }
-    closeQuietly(socket);
-
-    return result;
+    selectedRoute = route;
   }
-</code></pre><p>这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。</p>
-<p>那么回到ConnectInterceptor,它的作用就是为当前请求找到合适的连接，可能复用已有连接也可能是重新创建的连接，返回的连接由连接池负责决定。</p>
-<h5 id="5-CallServerInterceptor"><a href="#5-CallServerInterceptor" class="headerlink" title="5.CallServerInterceptor"></a>5.CallServerInterceptor</h5><p>整个拦截器链中的最后一个拦截器，看一下源码。</p>
-<p>关键方法intercept,如下：</p>
-<pre><code>@Override public Response intercept(Chain chain) throws IOException {
-   RealInterceptorChain realChain = (RealInterceptorChain) chain;
-   HttpCodec httpCodec = realChain.httpStream();
-   StreamAllocation streamAllocation = realChain.streamAllocation();
-   RealConnection connection = (RealConnection) realChain.connection();
-   Request request = realChain.request();
 
-   long sentRequestMillis = System.currentTimeMillis();
-    //1.首先写请求头
-   realChain.eventListener().requestHeadersStart(realChain.call());
-   httpCodec.writeRequestHeaders(request);
-   realChain.eventListener().requestHeadersEnd(realChain.call(), request);
+  // If we need a route, make one. This is a blocking operation.
+  if (selectedRoute == null) {
+    selectedRoute = routeSelector.next();
+  }
 
-   Response.Builder responseBuilder = null;
-   if (HttpMethod.permitsRequestBody(request.method()) &amp;&amp; request.body() != null) {
-     // If there&apos;s a &quot;Expect: 100-continue&quot; header on the request, wait for a &quot;HTTP/1.1 100
-     // Continue&quot; response before transmitting the request body. If we don&apos;t get that, return
-     // what we did get (such as a 4xx response) without ever transmitting the request body.
-     if (&quot;100-continue&quot;.equalsIgnoreCase(request.header(&quot;Expect&quot;))) {
-       httpCodec.flushRequest();
-       realChain.eventListener().responseHeadersStart(realChain.call());
-       responseBuilder = httpCodec.readResponseHeaders(true);
-     }
-      //2.然后写请求体
-     if (responseBuilder == null) {
-       // Write the request body if the &quot;Expect: 100-continue&quot; expectation was met.
-       realChain.eventListener().requestBodyStart(realChain.call());
-       long contentLength = request.body().contentLength();
-       CountingSink requestBodyOut =
-           new CountingSink(httpCodec.createRequestBody(request, contentLength));
-       BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+  RealConnection result;
+  synchronized (connectionPool) {
+    if (canceled) throw new IOException(&quot;Canceled&quot;);
 
-       request.body().writeTo(bufferedRequestBody);
-       bufferedRequestBody.close();
-       realChain.eventListener()
-           .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
-     } else if (!connection.isMultiplexed()) {
-       // If the &quot;Expect: 100-continue&quot; expectation wasn&apos;t met, prevent the HTTP/1 connection
-       // from being reused. Otherwise we&apos;re still obligated to transmit the request body to
-       // leave the connection in a consistent state.
-       streamAllocation.noNewStreams();
-     }
-   }
+    // Now that we have an IP address, make another attempt at getting a connection from the pool.
+    // This could match due to connection coalescing.
+    Internal.instance.get(connectionPool, address, this, selectedRoute);
+    if (connection != null) {
+      route = selectedRoute;
+      return connection;
+    }
 
-   httpCodec.finishRequest();
-    //读取响应头
-   if (responseBuilder == null) {
-     realChain.eventListener().responseHeadersStart(realChain.call());
-     responseBuilder = httpCodec.readResponseHeaders(false);
-   }
+    // Create a connection and assign it to this allocation immediately. This makes it possible
+    // for an asynchronous cancel() to interrupt the handshake we&apos;re about to do.
+    route = selectedRoute;
+    refusedStreamCount = 0;
+    result = new RealConnection(connectionPool, selectedRoute);
+    acquire(result);
+  }
 
-   Response response = responseBuilder
-       .request(request)
-       .handshake(streamAllocation.connection().handshake())
-       .sentRequestAtMillis(sentRequestMillis)
-       .receivedResponseAtMillis(System.currentTimeMillis())
-       .build();
+  // Do TCP + TLS handshakes. This is a blocking operation.
+  result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
+  routeDatabase().connected(result.route());
 
-   realChain.eventListener()
-       .responseHeadersEnd(realChain.call(), response);
-   //判断响应码，读取响应体
-   int code = response.code();
-   if (forWebSocket &amp;&amp; code == 101) {
-     // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
-     response = response.newBuilder()
-         .body(Util.EMPTY_RESPONSE)
-         .build();
-   } else {
-     response = response.newBuilder()
-         .body(httpCodec.openResponseBody(response))
-         .build();
-   }
+  Socket socket = null;
+  synchronized (connectionPool) {
+    // Pool the connection.
+    Internal.instance.put(connectionPool, result);
 
-   if (&quot;close&quot;.equalsIgnoreCase(response.request().header(&quot;Connection&quot;))
-       || &quot;close&quot;.equalsIgnoreCase(response.header(&quot;Connection&quot;))) {
-     streamAllocation.noNewStreams();
-   }
+    // If another multiplexed connection to the same address was created concurrently, then
+    // release this connection and acquire that one.
+    if (result.isMultiplexed()) {
+      socket = Internal.instance.deduplicate(connectionPool, address, this);
+      result = connection;
+    }
+  }
+  closeQuietly(socket);
 
-   if ((code == 204 || code == 205) &amp;&amp; response.body().contentLength() &gt; 0) {
-     throw new ProtocolException(
-         &quot;HTTP &quot; + code + &quot; had non-zero Content-Length: &quot; + response.body().contentLength());
-   }
+  return result;
+}
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。</div><div class="line"></div><div class="line">那么回到ConnectInterceptor,它的作用就是为当前请求找到合适的连接，可能复用已有连接也可能是重新创建的连接，返回的连接由连接池负责决定。</div><div class="line"></div><div class="line">##### <span class="number">5.</span>CallServerInterceptor</div><div class="line"></div><div class="line">整个拦截器链中的最后一个拦截器，看一下源码。</div><div class="line"></div><div class="line">关键方法intercept,如下：</div></pre></td></tr></table></figure>
+<p>@Override public Response intercept(Chain chain) throws IOException {<br>        RealInterceptorChain realChain = (RealInterceptorChain) chain;<br>        HttpCodec httpCodec = realChain.httpStream();<br>        StreamAllocation streamAllocation = realChain.streamAllocation();<br>        RealConnection connection = (RealConnection) realChain.connection();<br>        Request request = realChain.request();</p>
+<pre><code>  long sentRequestMillis = System.currentTimeMillis();
+   //1.首先写请求头
+  realChain.eventListener().requestHeadersStart(realChain.call());
+  httpCodec.writeRequestHeaders(request);
+  realChain.eventListener().requestHeadersEnd(realChain.call(), request);
 
-   return response;
- }
-</code></pre><p>真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。</p>
-<h5 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h5><pre><code>// Call the next interceptor in the chain.
-   RealInterceptorChain next = new RealInterceptorChain(
-       interceptors, streamAllocation, httpCodec, connection, index + 1, request);
-   Interceptor interceptor = interceptors.get(index);
-   Response response = interceptor.intercept(next);
-</code></pre><p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
+  Response.Builder responseBuilder = null;
+  if (HttpMethod.permitsRequestBody(request.method()) &amp;&amp; request.body() != null) {
+    // If there&apos;s a &quot;Expect: 100-continue&quot; header on the request, wait for a &quot;HTTP/1.1 100
+    // Continue&quot; response before transmitting the request body. If we don&apos;t get that, return
+    // what we did get (such as a 4xx response) without ever transmitting the request body.
+    if (&quot;100-continue&quot;.equalsIgnoreCase(request.header(&quot;Expect&quot;))) {
+      httpCodec.flushRequest();
+      realChain.eventListener().responseHeadersStart(realChain.call());
+      responseBuilder = httpCodec.readResponseHeaders(true);
+    }
+     //2.然后写请求体
+    if (responseBuilder == null) {
+      // Write the request body if the &quot;Expect: 100-continue&quot; expectation was met.
+      realChain.eventListener().requestBodyStart(realChain.call());
+      long contentLength = request.body().contentLength();
+      CountingSink requestBodyOut =
+          new CountingSink(httpCodec.createRequestBody(request, contentLength));
+      BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+
+      request.body().writeTo(bufferedRequestBody);
+      bufferedRequestBody.close();
+      realChain.eventListener()
+          .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
+    } else if (!connection.isMultiplexed()) {
+      // If the &quot;Expect: 100-continue&quot; expectation wasn&apos;t met, prevent the HTTP/1 connection
+      // from being reused. Otherwise we&apos;re still obligated to transmit the request body to
+      // leave the connection in a consistent state.
+      streamAllocation.noNewStreams();
+    }
+  }
+
+  httpCodec.finishRequest();
+   //读取响应头
+  if (responseBuilder == null) {
+    realChain.eventListener().responseHeadersStart(realChain.call());
+    responseBuilder = httpCodec.readResponseHeaders(false);
+  }
+
+  Response response = responseBuilder
+      .request(request)
+      .handshake(streamAllocation.connection().handshake())
+      .sentRequestAtMillis(sentRequestMillis)
+      .receivedResponseAtMillis(System.currentTimeMillis())
+      .build();
+
+  realChain.eventListener()
+      .responseHeadersEnd(realChain.call(), response);
+  //判断响应码，读取响应体
+  int code = response.code();
+  if (forWebSocket &amp;&amp; code == 101) {
+    // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+    response = response.newBuilder()
+        .body(Util.EMPTY_RESPONSE)
+        .build();
+  } else {
+    response = response.newBuilder()
+        .body(httpCodec.openResponseBody(response))
+        .build();
+  }
+
+  if (&quot;close&quot;.equalsIgnoreCase(response.request().header(&quot;Connection&quot;))
+      || &quot;close&quot;.equalsIgnoreCase(response.header(&quot;Connection&quot;))) {
+    streamAllocation.noNewStreams();
+  }
+
+  if ((code == 204 || code == 205) &amp;&amp; response.body().contentLength() &gt; 0) {
+    throw new ProtocolException(
+        &quot;HTTP &quot; + code + &quot; had non-zero Content-Length: &quot; + response.body().contentLength());
+  }
+
+  return response;
+}
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。</div><div class="line"></div><div class="line"></div><div class="line">##### 最后</div></pre></td></tr></table></figure>
+<p>// Call the next interceptor in the chain.<br>            RealInterceptorChain next = new RealInterceptorChain(<br>                interceptors, streamAllocation, httpCodec, connection, index + 1, request);<br>            Interceptor interceptor = interceptors.get(index);<br>            Response response = interceptor.intercept(next);<br>```    </p>
+<p>整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。</p>
 
       
     </div>
@@ -1368,7 +1121,7 @@ try {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、发起请求"><span class="nav-number">1.</span> <span class="nav-text">一、发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">二、AsyncCall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、构建拦截器链"><span class="nav-number">3.</span> <span class="nav-text">三、构建拦截器链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、RealInterceptorChain"><span class="nav-number">4.</span> <span class="nav-text">四、RealInterceptorChain</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、拦截器链"><span class="nav-number">5.</span> <span class="nav-text">五、拦截器链</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-RetryAndFollowUpInterceptor"><span class="nav-number">5.1.</span> <span class="nav-text">1.RetryAndFollowUpInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-BidgeInterceptor"><span class="nav-number">5.2.</span> <span class="nav-text">2.BidgeInterceptor</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#小结："><span class="nav-number">5.2.1.</span> <span class="nav-text">小结：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-CacheIntetceptor"><span class="nav-number">5.3.</span> <span class="nav-text">3.CacheIntetceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-ConnectInterceptor"><span class="nav-number">5.4.</span> <span class="nav-text">4.ConnectInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-CallServerInterceptor"><span class="nav-number">5.5.</span> <span class="nav-text">5.CallServerInterceptor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最后"><span class="nav-number">5.6.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、发起请求"><span class="nav-number">1.</span> <span class="nav-text">一、发起请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、AsyncCall"><span class="nav-number">2.</span> <span class="nav-text">二、AsyncCall</span></a></li></ol></div>
             
 
           </div>
