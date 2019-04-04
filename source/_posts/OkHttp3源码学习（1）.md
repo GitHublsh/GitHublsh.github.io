@@ -37,42 +37,45 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 
 
 1. GET请求
+
+
 	* 同步
 
-		```
-		OkHttpClient client = new OkHttpClient();
+	```
+	OkHttpClient client = new OkHttpClient();
 		
-		String run(String url) throws IOException {
-		Request request = new Request.Builder()
-			.url(url)
-			.build();
+	String run(String url) throws IOException {
+	Request request = new Request.Builder()
+		.url(url)
+		.build();
 		
-		Response response = client.newCall(request).execute();
-		return response.body().string();
-		}
-		```
+	Response response = client.newCall(request).execute();
+	return response.body().string();
+	}
+	```
 		
 	* 异步
 
-		```
-		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder()
-			.url(url)
-			.build();
-		client.newCall(request).enqueue(new CallBack(){
-			@Override
-			public void onFailure(Request request,IOException e){
-			}
-			@Override
-			public void onResponse(Response response){
-			}
-		})
-		```
+	```
+	OkHttpClient client = new OkHttpClient();
+	Request request = new Request.Builder()
+		.url(url)
+		.build();
+	client.newCall(request).enqueue(new CallBack(){
+		@Override
+		public void onFailure(Request request,IOException e){
+		}
+		@Override
+		public void onResponse(Response response){
+		}
+	})
+	```
 			
 2. POST请求
 	* 同步请求
 	
-			public static final MediaType JSON
+	```
+	public static final MediaType JSON
 			    = MediaType.parse("application/json; charset=utf-8");
 			
 			OkHttpClient client = new OkHttpClient();
@@ -86,10 +89,13 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 			  Response response = client.newCall(request).execute();
 			  return response.body().string();
 			}
+	```
+			
 			
 	* 异步请求
 			
-			public static final MediaType JSON
+	```
+	public static final MediaType JSON
 			    = MediaType.parse("application/json; charset=utf-8");
 			
 			OkHttpClient client = new OkHttpClient();
@@ -107,6 +113,7 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 					public void onResponse(Response response){
 					}
 			  })
+	```
 			  
 			  
 			  
