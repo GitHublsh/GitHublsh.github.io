@@ -95,10 +95,8 @@ client.dispatcher().finished(this);
      
 #### 三、构建拦截器链
 
-
 ```
 Response getResponseWithInterceptorChain() throws IOException {
-    // Build a full stack of interceptors.
     List<Interceptor> interceptors = new ArrayList<>();
     interceptors.addAll(client.interceptors());
     interceptors.add(retryAndFollowUpInterceptor);
@@ -113,8 +111,10 @@ Response getResponseWithInterceptorChain() throws IOException {
     Interceptor.Chain chain = new RealInterceptorChain(
         interceptors, null, null, null, 0, originalRequest);
     return chain.proceed(originalRequest);
-  }
-```	
+}
+```
+
+
 
 从源码来看，基本逻辑就是：
 
@@ -314,9 +314,10 @@ public Response intercept(Chain chain) throws IOException {
       priorResponse = response;
     }
 	}
-```	
-	
-	
+```
+
+
+
 1.发起请求前拦截器对request处理
 2.然后调用下一个拦截器，获取Response
 
@@ -467,115 +468,119 @@ Response.Builder responseBuilder = networkResponse.newBuilder()
 	      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
 ```
 
+
+
 ##### 3.CacheIntetceptor
 
 CacheIntetceptor的职责就是负责Cache的管理
 
 看一下核心方法：
 
-```
-@Override public Response intercept(Chain chain) throws IOException {
-	 //1.读取候选的缓存
-    Response cacheCandidate = cache != null
-        ? cache.get(chain.request())
-        : null;
 
-    long now = System.currentTimeMillis();
-	//2.首先创建缓存策略，networkRequest为网络请求，cacheResponse为缓存
-    CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
-    Request networkRequest = strategy.networkRequest;
-    Response cacheResponse = strategy.cacheResponse;
-
-    if (cache != null) {
-      cache.trackResponse(strategy);
-    }
-
-    if (cacheCandidate != null && cacheResponse == null) {
-      closeQuietly(cacheCandidate.body()); // The cache candidate wasn't applicable. Close it.
-    }
-
-    // If we're forbidden from using the network and the cache is insufficient, fail.
-    //3.如果禁止网络访问并且本地cache缓存也不完整，那么请求失败
-    if (networkRequest == null && cacheResponse == null) {
-      return new Response.Builder()
-          .request(chain.request())
-          .protocol(Protocol.HTTP_1_1)
-          .code(504)
-          .message("Unsatisfiable Request (only-if-cached)")
-          .body(Util.EMPTY_RESPONSE)
-          .sentRequestAtMillis(-1L)
-          .receivedResponseAtMillis(System.currentTimeMillis())
-          .build();
-    }
-
-    // If we don't need the network, we're done.
-    //4.不需要访问网络的情况下，取本地缓存作为结果返回。
-    if (networkRequest == null) {
-      return cacheResponse.newBuilder()
-          .cacheResponse(stripBody(cacheResponse))
-          .build();
-    }
-
-    Response networkResponse = null;
-    try {
-    //5.当以上情况都没有结果返回，就读取网络结果（继续执行下一个拦截器）
-      networkResponse = chain.proceed(networkRequest);
-    } finally {
-      // If we're crashing on I/O or otherwise, don't leak the cache body.
-      if (networkResponse == null && cacheCandidate != null) {
-        closeQuietly(cacheCandidate.body());
-      }
-    }
-
-    // If we have a cache response too, then we're doing a conditional get.
-    //6.接收到网络结果返回，如果我们也有缓存，那么就会进行条件对比组合
-    if (cacheResponse != null) {
-      if (networkResponse.code() == HTTP_NOT_MODIFIED) {
-        Response response = cacheResponse.newBuilder()
-            .headers(combine(cacheResponse.headers(), networkResponse.headers()))//7.将缓存返回与网络返回的头信息进行组合
-            .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
-            .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
-            .cacheResponse(stripBody(cacheResponse))
-            .networkResponse(stripBody(networkResponse))
-            .build();
-        networkResponse.body().close();
-		//8.组合头后，但在剥离Content-Encoding头（由initContentStream（）执行）之前更新缓存。
-        // Update the cache after combining headers but before stripping the
-        // Content-Encoding header (as performed by initContentStream()).
-        cache.trackConditionalCacheHit();
-        cache.update(cacheResponse, response);
-        return response;
-      } else {
-        closeQuietly(cacheResponse.body());
-      }
-    }
-	//9.读取网络请求
-    Response response = networkResponse.newBuilder()
-        .cacheResponse(stripBody(cacheResponse))
-        .networkResponse(stripBody(networkResponse))
-        .build();
-	//10.对数据进行缓存
-    if (cache != null) {
-      if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
-        // Offer this request to the cache.
-        CacheRequest cacheRequest = cache.put(response);
-        return cacheWritingResponse(cacheRequest, response);
-      }
-
-      if (HttpMethod.invalidatesCache(networkRequest.method())) {
-        try {
-          cache.remove(networkRequest);
-        } catch (IOException ignored) {
-          // The cache cannot be written.
-        }
-      }
-    }
-	//11.返回网络请求的结果
-    return response;
-  	}
-```	
+	@Override
+	public Response intercept(Chain chain) throws IOException {
+		 //1.读取候选的缓存
+	    Response cacheCandidate = cache != null
+	        ? cache.get(chain.request())
+	        : null;
 	
-####### 整个过程大致：
+	    long now = System.currentTimeMillis();
+		//2.首先创建缓存策略，networkRequest为网络请求，cacheResponse为缓存
+	    CacheStrategy strategy = new CacheStrategy.Factory(now, chain.request(), cacheCandidate).get();
+	    Request networkRequest = strategy.networkRequest;
+	    Response cacheResponse = strategy.cacheResponse;
+	
+	    if (cache != null) {
+	      cache.trackResponse(strategy);
+	    }
+	
+	    if (cacheCandidate != null && cacheResponse == null) {
+	      closeQuietly(cacheCandidate.body()); // The cache candidate wasn't applicable. Close it.
+	    }
+	
+	    // If we're forbidden from using the network and the cache is insufficient, fail.
+	    //3.如果禁止网络访问并且本地cache缓存也不完整，那么请求失败
+	    if (networkRequest == null && cacheResponse == null) {
+	      return new Response.Builder()
+	          .request(chain.request())
+	          .protocol(Protocol.HTTP_1_1)
+	          .code(504)
+	          .message("Unsatisfiable Request (only-if-cached)")
+	          .body(Util.EMPTY_RESPONSE)
+	          .sentRequestAtMillis(-1L)
+	          .receivedResponseAtMillis(System.currentTimeMillis())
+	          .build();
+	    }
+	
+	    // If we don't need the network, we're done.
+	    //4.不需要访问网络的情况下，取本地缓存作为结果返回。
+	    if (networkRequest == null) {
+	      return cacheResponse.newBuilder()
+	          .cacheResponse(stripBody(cacheResponse))
+	          .build();
+	    }
+	
+	    Response networkResponse = null;
+	    try {
+	    //5.当以上情况都没有结果返回，就读取网络结果（继续执行下一个拦截器）
+	      networkResponse = chain.proceed(networkRequest);
+	    } finally {
+	      // If we're crashing on I/O or otherwise, don't leak the cache body.
+	      if (networkResponse == null && cacheCandidate != null) {
+	        closeQuietly(cacheCandidate.body());
+	      }
+	    }
+	
+	    // If we have a cache response too, then we're doing a conditional get.
+	    //6.接收到网络结果返回，如果我们也有缓存，那么就会进行条件对比组合
+	    if (cacheResponse != null) {
+	      if (networkResponse.code() == HTTP_NOT_MODIFIED) {
+	        Response response = cacheResponse.newBuilder()
+	            .headers(combine(cacheResponse.headers(), networkResponse.headers()))//7.将缓存返回与网络返回的头信息进行组合
+	            .sentRequestAtMillis(networkResponse.sentRequestAtMillis())
+	            .receivedResponseAtMillis(networkResponse.receivedResponseAtMillis())
+	            .cacheResponse(stripBody(cacheResponse))
+	            .networkResponse(stripBody(networkResponse))
+	            .build();
+	        networkResponse.body().close();
+			//8.组合头后，但在剥离Content-Encoding头（由initContentStream（）执行）之前更新缓存。
+	        // Update the cache after combining headers but before stripping the
+	        // Content-Encoding header (as performed by initContentStream()).
+	        cache.trackConditionalCacheHit();
+	        cache.update(cacheResponse, response);
+	        return response;
+	      } else {
+	        closeQuietly(cacheResponse.body());
+	      }
+	    }
+		//9.读取网络请求
+	    Response response = networkResponse.newBuilder()
+	        .cacheResponse(stripBody(cacheResponse))
+	        .networkResponse(stripBody(networkResponse))
+	        .build();
+		//10.对数据进行缓存
+	    if (cache != null) {
+	      if (HttpHeaders.hasBody(response) && CacheStrategy.isCacheable(response, networkRequest)) {
+	        // Offer this request to the cache.
+	        CacheRequest cacheRequest = cache.put(response);
+	        return cacheWritingResponse(cacheRequest, response);
+	      }
+	
+	      if (HttpMethod.invalidatesCache(networkRequest.method())) {
+	        try {
+	          cache.remove(networkRequest);
+	        } catch (IOException ignored) {
+	          // The cache cannot be written.
+	        }
+	      }
+	    }
+		//11.返回网络请求的结果
+	    return response;
+	}
+
+
+
+整个过程大致：
 
 CacheInterceptor主要就是负责Cache的管理
 
@@ -589,30 +594,32 @@ CacheInterceptor主要就是负责Cache的管理
 
 代码不多，但包含的内容很多。
 
-```
-@Override
-public Response intercept(Chain chain) throws IOException {
-	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
-	    Request request = realChain.request();
-	    //拿到StreamAllocation对象。
-	    StreamAllocation streamAllocation = realChain.streamAllocation();
-	
-	    // We need the network to satisfy this request. Possibly for validating a conditional GET.
-	    boolean doExtensiveHealthChecks = !request.method().equals("GET");
-	    HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
-	    RealConnection connection = streamAllocation.connection();
-	
-	    return realChain.proceed(request, streamAllocation, httpCodec, connection);
-	  	}
-```	
-	
+	@Override
+	public Response intercept(Chain chain) throws IOException {
+		    RealInterceptorChain realChain = (RealInterceptorChain) chain;
+		    Request request = realChain.request();
+		    //拿到StreamAllocation对象。
+		    StreamAllocation streamAllocation = realChain.streamAllocation();
+		
+		    // We need the network to satisfy this request. Possibly for validating a conditional GET.
+		    boolean doExtensiveHealthChecks = !request.method().equals("GET");
+		    HttpCodec httpCodec = streamAllocation.newStream(client, doExtensiveHealthChecks);
+		    RealConnection connection = streamAllocation.connection();
+		
+		    return realChain.proceed(request, streamAllocation, httpCodec, connection);
+		  	}
+
+
+
 从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化
 
 ```
 streamAllocation = new StreamAllocation(
         client.connectionPool(), createAddress(request.url()), callStackTrace);
 ```
-        
+
+
+   
 三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用
 
 看一下StreamAllocation的构造方法
@@ -626,145 +633,147 @@ public StreamAllocation(ConnectionPool connectionPool, Address address, Object c
   	}
 ```
 
+
+
 在把这个三个参数保存为内部变量的同时也创建了一个线路选择器
 
 streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。
 
 接下来继续看StreamAllocation中的newSream()方法
 
-```
-public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
-	//读取从OkHttpClient配置的超时时间
-    int connectTimeout = client.connectTimeoutMillis();
-    //获取读写超时时间
-    int readTimeout = client.readTimeoutMillis();
-    int writeTimeout = client.writeTimeoutMillis();
-    //连接重试
-    boolean connectionRetryEnabled = client.retryOnConnectionFailure();
+	public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
+		//读取从OkHttpClient配置的超时时间
+	    int connectTimeout = client.connectTimeoutMillis();
+	    //获取读写超时时间
+	    int readTimeout = client.readTimeoutMillis();
+	    int writeTimeout = client.writeTimeoutMillis();
+	    //连接重试
+	    boolean connectionRetryEnabled = client.retryOnConnectionFailure();
+	
+	    try {
+	    //找到一个健康的连接（在连接池中寻找或者新创建一个连接）
+	      RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
+	          writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
+	      //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化
+	      HttpCodec resultCodec = resultConnection.newCodec(client, this);
+	
+	      synchronized (connectionPool) {
+	        codec = resultCodec;
+	        return resultCodec;
+	      }
+	    } catch (IOException e) {
+	      throw new RouteException(e);
+	    }
+	  	}
 
-    try {
-    //找到一个健康的连接（在连接池中寻找或者新创建一个连接）
-      RealConnection resultConnection = findHealthyConnection(connectTimeout, readTimeout,
-          writeTimeout, connectionRetryEnabled, doExtensiveHealthChecks);
-      //HttpCodec用来编码HTTP请求并解码HTTP响应。在这里初始化
-      HttpCodec resultCodec = resultConnection.newCodec(client, this);
 
-      synchronized (connectionPool) {
-        codec = resultCodec;
-        return resultCodec;
-      }
-    } catch (IOException e) {
-      throw new RouteException(e);
-    }
-  	}
-```
-  	
+
  下面就再看一下它是如何找到一个健康的连接的
 
-```
-private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
-	      int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
-	      throws IOException {
-	    while (true) {
-	    //找到健康的连接
-	      RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
-	          connectionRetryEnabled);
-	
-	      // If this is a brand new connection, we can skip the extensive health checks.
-	      synchronized (connectionPool) {
-	        if (candidate.successCount == 0) {
-	          return candidate;
-	        }
-	      }
-	
-	      // Do a (potentially slow) check to confirm that the pooled connection is still good. If it
-	      // isn't, take it out of the pool and start again.
-	      if (!candidate.isHealthy(doExtensiveHealthChecks)) {
-	        noNewStreams();
-	        continue;
-	      }
-	
-	      return candidate;
-	    }
-	  }
-```	
-	  
+	private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
+		      int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
+		      throws IOException {
+		    while (true) {
+		    //找到健康的连接
+		      RealConnection candidate = findConnection(connectTimeout, readTimeout, writeTimeout,
+		          connectionRetryEnabled);
+		
+		      // If this is a brand new connection, we can skip the extensive health checks.
+		      synchronized (connectionPool) {
+		        if (candidate.successCount == 0) {
+		          return candidate;
+		        }
+		      }
+		
+		      // Do a (potentially slow) check to confirm that the pooled connection is still good. If it
+		      // isn't, take it out of the pool and start again.
+		      if (!candidate.isHealthy(doExtensiveHealthChecks)) {
+		        noNewStreams();
+		        continue;
+		      }
+		
+		      return candidate;
+		    }
+		  }
+
+
+
 从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。
 
 那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法
 	          
-```
-private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
-	      boolean connectionRetryEnabled) throws IOException {
-	    Route selectedRoute;
-	    //同步线程池
-	    synchronized (connectionPool) {
-	      if (released) throw new IllegalStateException("released");
-	      if (codec != null) throw new IllegalStateException("codec != null");
-	      if (canceled) throw new IOException("Canceled");
-	
-			//尝试使用现有连接，判断是否可用
-	      // Attempt to use an already-allocated connection.
-	      RealConnection allocatedConnection = this.connection;
-	      if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
-	        return allocatedConnection;
-	      }
-			//尝试在连接池中获取一个连接，
-	      // Attempt to get a connection from the pool.
-	      Internal.instance.get(connectionPool, address, this, null);
-	      if (connection != null) {
-	        return connection;
-	      }
-	
-	      selectedRoute = route;
-	    }
-	
-	    // If we need a route, make one. This is a blocking operation.
-	    if (selectedRoute == null) {
-	      selectedRoute = routeSelector.next();
-	    }
-	
-	    RealConnection result;
-	    synchronized (connectionPool) {
-	      if (canceled) throw new IOException("Canceled");
-	
-	      // Now that we have an IP address, make another attempt at getting a connection from the pool.
-	      // This could match due to connection coalescing.
-	      Internal.instance.get(connectionPool, address, this, selectedRoute);
-	      if (connection != null) {
-	        route = selectedRoute;
-	        return connection;
-	      }
-	
-	      // Create a connection and assign it to this allocation immediately. This makes it possible
-	      // for an asynchronous cancel() to interrupt the handshake we're about to do.
-	      route = selectedRoute;
-	      refusedStreamCount = 0;
-	      result = new RealConnection(connectionPool, selectedRoute);
-	      acquire(result);
-	    }
-	
-	    // Do TCP + TLS handshakes. This is a blocking operation.
-	    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
-	    routeDatabase().connected(result.route());
-	
-	    Socket socket = null;
-	    synchronized (connectionPool) {
-	      // Pool the connection.
-	      Internal.instance.put(connectionPool, result);
-	
-	      // If another multiplexed connection to the same address was created concurrently, then
-	      // release this connection and acquire that one.
-	      if (result.isMultiplexed()) {
-	        socket = Internal.instance.deduplicate(connectionPool, address, this);
-	        result = connection;
-	      }
-	    }
-	    closeQuietly(socket);
-	
-	    return result;
-	  }
-```       
+	private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
+		      boolean connectionRetryEnabled) throws IOException {
+		    Route selectedRoute;
+		    //同步线程池
+		    synchronized (connectionPool) {
+		      if (released) throw new IllegalStateException("released");
+		      if (codec != null) throw new IllegalStateException("codec != null");
+		      if (canceled) throw new IOException("Canceled");
+		
+				//尝试使用现有连接，判断是否可用
+		      // Attempt to use an already-allocated connection.
+		      RealConnection allocatedConnection = this.connection;
+		      if (allocatedConnection != null && !allocatedConnection.noNewStreams) {
+		        return allocatedConnection;
+		      }
+				//尝试在连接池中获取一个连接，
+		      // Attempt to get a connection from the pool.
+		      Internal.instance.get(connectionPool, address, this, null);
+		      if (connection != null) {
+		        return connection;
+		      }
+		
+		      selectedRoute = route;
+		    }
+		
+		    // If we need a route, make one. This is a blocking operation.
+		    if (selectedRoute == null) {
+		      selectedRoute = routeSelector.next();
+		    }
+		
+		    RealConnection result;
+		    synchronized (connectionPool) {
+		      if (canceled) throw new IOException("Canceled");
+		
+		      // Now that we have an IP address, make another attempt at getting a connection from the pool.
+		      // This could match due to connection coalescing.
+		      Internal.instance.get(connectionPool, address, this, selectedRoute);
+		      if (connection != null) {
+		        route = selectedRoute;
+		        return connection;
+		      }
+		
+		      // Create a connection and assign it to this allocation immediately. This makes it possible
+		      // for an asynchronous cancel() to interrupt the handshake we're about to do.
+		      route = selectedRoute;
+		      refusedStreamCount = 0;
+		      result = new RealConnection(connectionPool, selectedRoute);
+		      acquire(result);
+		    }
+		
+		    // Do TCP + TLS handshakes. This is a blocking operation.
+		    result.connect(connectTimeout, readTimeout, writeTimeout, connectionRetryEnabled);
+		    routeDatabase().connected(result.route());
+		
+		    Socket socket = null;
+		    synchronized (connectionPool) {
+		      // Pool the connection.
+		      Internal.instance.put(connectionPool, result);
+		
+		      // If another multiplexed connection to the same address was created concurrently, then
+		      // release this connection and acquire that one.
+		      if (result.isMultiplexed()) {
+		        socket = Internal.instance.deduplicate(connectionPool, address, this);
+		        result = connection;
+		      }
+		    }
+		    closeQuietly(socket);
+		
+		    return result;
+		  }
+
+
 
 这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
 
@@ -776,96 +785,96 @@ private RealConnection findConnection(int connectTimeout, int readTimeout, int w
 
 关键方法intercept,如下：
 
-```
-@Override 
-public Response intercept(Chain chain) throws IOException {
-	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
-	    HttpCodec httpCodec = realChain.httpStream();
-	    StreamAllocation streamAllocation = realChain.streamAllocation();
-	    RealConnection connection = (RealConnection) realChain.connection();
-	    Request request = realChain.request();
-		
-	    long sentRequestMillis = System.currentTimeMillis();
-		 //1.首先写请求头
-	    realChain.eventListener().requestHeadersStart(realChain.call());
-	    httpCodec.writeRequestHeaders(request);
-	    realChain.eventListener().requestHeadersEnd(realChain.call(), request);
-	
-	    Response.Builder responseBuilder = null;
-	    if (HttpMethod.permitsRequestBody(request.method()) && request.body() != null) {
-	      // If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100
-	      // Continue" response before transmitting the request body. If we don't get that, return
-	      // what we did get (such as a 4xx response) without ever transmitting the request body.
-	      if ("100-continue".equalsIgnoreCase(request.header("Expect"))) {
-	        httpCodec.flushRequest();
-	        realChain.eventListener().responseHeadersStart(realChain.call());
-	        responseBuilder = httpCodec.readResponseHeaders(true);
-	      }
-		   //2.然后写请求体
-	      if (responseBuilder == null) {
-	        // Write the request body if the "Expect: 100-continue" expectation was met.
-	        realChain.eventListener().requestBodyStart(realChain.call());
-	        long contentLength = request.body().contentLength();
-	        CountingSink requestBodyOut =
-	            new CountingSink(httpCodec.createRequestBody(request, contentLength));
-	        BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
-	
-	        request.body().writeTo(bufferedRequestBody);
-	        bufferedRequestBody.close();
-	        realChain.eventListener()
-	            .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
-	      } else if (!connection.isMultiplexed()) {
-	        // If the "Expect: 100-continue" expectation wasn't met, prevent the HTTP/1 connection
-	        // from being reused. Otherwise we're still obligated to transmit the request body to
-	        // leave the connection in a consistent state.
-	        streamAllocation.noNewStreams();
-	      }
-	    }
-	
-	    httpCodec.finishRequest();
-		 //读取响应头
-	    if (responseBuilder == null) {
-	      realChain.eventListener().responseHeadersStart(realChain.call());
-	      responseBuilder = httpCodec.readResponseHeaders(false);
-	    }
-	
-	    Response response = responseBuilder
-	        .request(request)
-	        .handshake(streamAllocation.connection().handshake())
-	        .sentRequestAtMillis(sentRequestMillis)
-	        .receivedResponseAtMillis(System.currentTimeMillis())
-	        .build();
-	
-	    realChain.eventListener()
-	        .responseHeadersEnd(realChain.call(), response);
-	    //判断响应码，读取响应体
-	    int code = response.code();
-	    if (forWebSocket && code == 101) {
-	      // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
-	      response = response.newBuilder()
-	          .body(Util.EMPTY_RESPONSE)
-	          .build();
-	    } else {
-	      response = response.newBuilder()
-	          .body(httpCodec.openResponseBody(response))
-	          .build();
-	    }
-	
-	    if ("close".equalsIgnoreCase(response.request().header("Connection"))
-	        || "close".equalsIgnoreCase(response.header("Connection"))) {
-	      streamAllocation.noNewStreams();
-	    }
-	
-	    if ((code == 204 || code == 205) && response.body().contentLength() > 0) {
-	      throw new ProtocolException(
-	          "HTTP " + code + " had non-zero Content-Length: " + response.body().contentLength());
-	    }
-	
-	    return response;
-	  }
-```
 
-真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。
+	@Override 
+	public Response intercept(Chain chain) throws IOException {
+		    RealInterceptorChain realChain = (RealInterceptorChain) chain;
+		    HttpCodec httpCodec = realChain.httpStream();
+		    StreamAllocation streamAllocation = realChain.streamAllocation();
+		    RealConnection connection = (RealConnection) realChain.connection();
+		    Request request = realChain.request();
+			
+		    long sentRequestMillis = System.currentTimeMillis();
+			 //1.首先写请求头
+		    realChain.eventListener().requestHeadersStart(realChain.call());
+		    httpCodec.writeRequestHeaders(request);
+		    realChain.eventListener().requestHeadersEnd(realChain.call(), request);
+		
+		    Response.Builder responseBuilder = null;
+		    if (HttpMethod.permitsRequestBody(request.method()) && request.body() != null) {
+		      // If there's a "Expect: 100-continue" header on the request, wait for a "HTTP/1.1 100
+		      // Continue" response before transmitting the request body. If we don't get that, return
+		      // what we did get (such as a 4xx response) without ever transmitting the request body.
+		      if ("100-continue".equalsIgnoreCase(request.header("Expect"))) {
+		        httpCodec.flushRequest();
+		        realChain.eventListener().responseHeadersStart(realChain.call());
+		        responseBuilder = httpCodec.readResponseHeaders(true);
+		      }
+			   //2.然后写请求体
+		      if (responseBuilder == null) {
+		        // Write the request body if the "Expect: 100-continue" expectation was met.
+		        realChain.eventListener().requestBodyStart(realChain.call());
+		        long contentLength = request.body().contentLength();
+		        CountingSink requestBodyOut =
+		            new CountingSink(httpCodec.createRequestBody(request, contentLength));
+		        BufferedSink bufferedRequestBody = Okio.buffer(requestBodyOut);
+		
+		        request.body().writeTo(bufferedRequestBody);
+		        bufferedRequestBody.close();
+		        realChain.eventListener()
+		            .requestBodyEnd(realChain.call(), requestBodyOut.successfulCount);
+		      } else if (!connection.isMultiplexed()) {
+		        // If the "Expect: 100-continue" expectation wasn't met, prevent the HTTP/1 connection
+		        // from being reused. Otherwise we're still obligated to transmit the request body to
+		        // leave the connection in a consistent state.
+		        streamAllocation.noNewStreams();
+		      }
+		    }
+		
+		    httpCodec.finishRequest();
+			 //读取响应头
+		    if (responseBuilder == null) {
+		      realChain.eventListener().responseHeadersStart(realChain.call());
+		      responseBuilder = httpCodec.readResponseHeaders(false);
+		    }
+		
+		    Response response = responseBuilder
+		        .request(request)
+		        .handshake(streamAllocation.connection().handshake())
+		        .sentRequestAtMillis(sentRequestMillis)
+		        .receivedResponseAtMillis(System.currentTimeMillis())
+		        .build();
+		
+		    realChain.eventListener()
+		        .responseHeadersEnd(realChain.call(), response);
+		    //判断响应码，读取响应体
+		    int code = response.code();
+		    if (forWebSocket && code == 101) {
+		      // Connection is upgrading, but we need to ensure interceptors see a non-null response body.
+		      response = response.newBuilder()
+		          .body(Util.EMPTY_RESPONSE)
+		          .build();
+		    } else {
+		      response = response.newBuilder()
+		          .body(httpCodec.openResponseBody(response))
+		          .build();
+		    }
+		
+		    if ("close".equalsIgnoreCase(response.request().header("Connection"))
+		        || "close".equalsIgnoreCase(response.header("Connection"))) {
+		      streamAllocation.noNewStreams();
+		    }
+		
+		    if ((code == 204 || code == 205) && response.body().contentLength() > 0) {
+		      throw new ProtocolException(
+		          "HTTP " + code + " had non-zero Content-Length: " + response.body().contentLength());
+		    }
+		    return response;
+		  }
+
+
+
+整个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。
 
 
 ##### 最后
@@ -877,7 +886,9 @@ public Response intercept(Chain chain) throws IOException {
 		    Interceptor interceptor = interceptors.get(index);
 		    Response response = interceptor.intercept(next);
 ```	
-	    
+
+
+
 整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。
 
 
