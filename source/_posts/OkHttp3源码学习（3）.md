@@ -26,7 +26,6 @@ OkHttpClient client = new OkHttpClient();
         } catch (Exception e) {
             Log.e("OkHttp",e.getMessage());
         }
-
 ```
 	        
 * 发起请求时：client.newCall(request)。
@@ -77,7 +76,6 @@ OkHttpClient client = new OkHttpClient();
         client.dispatcher().finished(this);
       }
     }
-
 ```  
   
   AsyncCall会执行execute方法。execute方法逻辑很简单：
@@ -118,7 +116,6 @@ client.dispatcher().finished(this);
 	        interceptors, null, null, null, 0, originalRequest);
 	    return chain.proceed(originalRequest);
 	  }
-
 ```	
 
 从源码来看，基本逻辑就是：
@@ -222,7 +219,6 @@ client.dispatcher().finished(this);
 // Call the next interceptor in the chain.
 		RealInterceptorChain next = new RealInterceptorChain(
 			        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
-
 ```
 		        
 * 获取索引为index的interceptor,执行索引为index的intercept方法。
@@ -473,7 +469,6 @@ Response.Builder responseBuilder = networkResponse.newBuilder()
 	          .build();
 	      responseBuilder.headers(strippedHeaders);
 	      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
-
 ```
 
 ##### 3.CacheIntetceptor
@@ -613,7 +608,6 @@ CacheInterceptor主要就是负责Cache的管理
 	
 	    return realChain.proceed(request, streamAllocation, httpCodec, connection);
 	  	}
-
 ```	
 	
 从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化
