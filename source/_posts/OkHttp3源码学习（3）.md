@@ -593,7 +593,6 @@ CacheInterceptor主要就是负责Cache的管理
 
 代码不多，但包含的内容很多。
 
-
 ```
 @Override public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;

@@ -147,7 +147,6 @@ Call即是一个实际的访问请求，用户的每一个网络请求都是一�
 			  synchronized void executed(RealCall call) {
 			    runningSyncCalls.add(call);
 			  }
-
 ```
 		
 		 			  
