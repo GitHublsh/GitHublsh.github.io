@@ -76,9 +76,9 @@ OkHttpClient client = new OkHttpClient();
         client.dispatcher().finished(this);
       }
     }
-```  
-  
-  AsyncCall会执行execute方法。execute方法逻辑很简单：
+```
+
+AsyncCall会执行execute方法。execute方法逻辑很简单：
   
 
 * 通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功
@@ -86,36 +86,34 @@ OkHttpClient client = new OkHttpClient();
 ```
 Response response = getResponseWithInterceptorChain();
 ```
-  
 
 * 通知任务分发器该任务结束
 
 ```
 client.dispatcher().finished(this);
 ```
-
-
-        
+     
 #### 三、构建拦截器链
 
+
 ```
- Response getResponseWithInterceptorChain() throws IOException {
-	    // Build a full stack of interceptors.
-	    List<Interceptor> interceptors = new ArrayList<>();
-	    interceptors.addAll(client.interceptors());
-	    interceptors.add(retryAndFollowUpInterceptor);
-	    interceptors.add(new BridgeInterceptor(client.cookieJar()));
-	    interceptors.add(new CacheInterceptor(client.internalCache()));
-	    interceptors.add(new ConnectInterceptor(client));
-	    if (!forWebSocket) {
-	      interceptors.addAll(client.networkInterceptors());
-	    }
-	    interceptors.add(new CallServerInterceptor(forWebSocket));
+Response getResponseWithInterceptorChain() throws IOException {
+    // Build a full stack of interceptors.
+    List<Interceptor> interceptors = new ArrayList<>();
+    interceptors.addAll(client.interceptors());
+    interceptors.add(retryAndFollowUpInterceptor);
+    interceptors.add(new BridgeInterceptor(client.cookieJar()));
+    interceptors.add(new CacheInterceptor(client.internalCache()));
+    interceptors.add(new ConnectInterceptor(client));
+    if (!forWebSocket) {
+      interceptors.addAll(client.networkInterceptors());
+    }
+    interceptors.add(new CallServerInterceptor(forWebSocket));
 	
-	    Interceptor.Chain chain = new RealInterceptorChain(
-	        interceptors, null, null, null, 0, originalRequest);
-	    return chain.proceed(originalRequest);
-	  }
+    Interceptor.Chain chain = new RealInterceptorChain(
+        interceptors, null, null, null, 0, originalRequest);
+    return chain.proceed(originalRequest);
+  }
 ```	
 
 从源码来看，基本逻辑就是：
@@ -127,6 +125,7 @@ client.dispatcher().finished(this);
 
 
 #### 四、RealInterceptorChain
+
 
 ```
 /**
@@ -215,6 +214,7 @@ client.dispatcher().finished(this);
 
 * 创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
 
+
 ```
 // Call the next interceptor in the chain.
 		RealInterceptorChain next = new RealInterceptorChain(
@@ -222,6 +222,7 @@ client.dispatcher().finished(this);
 ```
 		        
 * 获取索引为index的interceptor,执行索引为index的intercept方法。
+
 
 ```
 Interceptor interceptor = interceptors.get(index);
