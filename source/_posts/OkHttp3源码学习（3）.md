@@ -5,7 +5,8 @@ tags: [OkHttp3]
 ---
 #### 一、发起请求
 
-	OkHttpClient client = new OkHttpClient();
+```
+OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("")
                 .build();
@@ -25,18 +26,23 @@ tags: [OkHttp3]
         } catch (Exception e) {
             Log.e("OkHttp",e.getMessage());
         }
-        
+
+```
+	        
 * 发起请求时：client.newCall(request)。
 
-		@Override public Call newCall(Request request) {
+```
+@Override public Call newCall(Request request) {
 	    return new RealCall(this, request, false /* for web socket */);
 	  	}
+```
   
   实际上就是创建一个RealCall的实例。
   
 *  然后call.enqueue,源码实现就是将RealCall加到任务队列中，等合适的机会去执行。
 
-		@Override public void enqueue(Callback responseCallback) {
+```
+@Override public void enqueue(Callback responseCallback) {
 	    synchronized (this) {
 	      if (executed) throw new IllegalStateException("Already Executed");
 	      executed = true;
@@ -44,10 +50,12 @@ tags: [OkHttp3]
 	    captureCallStackTrace();
 	    client.dispatcher().enqueue(new AsyncCall(responseCallback));
 	  	}
+```
 
 #### 二、AsyncCall
 
-	 @Override protected void execute() {
+```
+@Override protected void execute() {
       boolean signalledCallback = false;
       try {
         Response response = getResponseWithInterceptorChain();
@@ -69,25 +77,31 @@ tags: [OkHttp3]
         client.dispatcher().finished(this);
       }
     }
-  
+
+```  
   
   AsyncCall会执行execute方法。execute方法逻辑很简单：
   
 
 * 通过调用getResponseWithInterceptorChain获取服务器返回结果，失败或者成功
 
-		Response response = getResponseWithInterceptorChain();
+```
+Response response = getResponseWithInterceptorChain();
+```
   
 
 * 通知任务分发器该任务结束
 
-  		client.dispatcher().finished(this);
+```
+client.dispatcher().finished(this);
+```
 
 
         
 #### 三、构建拦截器链
 
-	 Response getResponseWithInterceptorChain() throws IOException {
+```
+ Response getResponseWithInterceptorChain() throws IOException {
 	    // Build a full stack of interceptors.
 	    List<Interceptor> interceptors = new ArrayList<>();
 	    interceptors.addAll(client.interceptors());
@@ -105,6 +119,7 @@ tags: [OkHttp3]
 	    return chain.proceed(originalRequest);
 	  }
 
+```	
 
 从源码来看，基本逻辑就是：
 
@@ -116,7 +131,8 @@ tags: [OkHttp3]
 
 #### 四、RealInterceptorChain
 
-	/**
+```
+/**
 	 * A concrete interceptor chain that carries the entire interceptor chain: all application
 	 * interceptors, the OkHttp core, all network interceptors, and finally the network caller.
 	 */
@@ -196,29 +212,33 @@ tags: [OkHttp3]
 	    return response;
 	  }
 	}
-
+```
 
 可以看到procees方法的逻辑：
 
 * 创建下一个拦截链（代码中的next），传入index+1，使创建的下一个拦截器链只能从下一个拦截器访问。
 
-		// Call the next interceptor in the chain.
+```
+// Call the next interceptor in the chain.
 		RealInterceptorChain next = new RealInterceptorChain(
 			        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
-        
+
+```
+		        
 * 获取索引为index的interceptor,执行索引为index的intercept方法。
-	
-		Interceptor interceptor = interceptors.get(index);
-    	Response response = interceptor.intercept(next);
+
+```
+Interceptor interceptor = interceptors.get(index);
+Response response = interceptor.intercept(next);
+```
 
 
 #### 五、拦截器链
 
 ##### 1.RetryAndFollowUpInterceptor
 
-
-	
-	  @Override public Response intercept(Chain chain) throws IOException {
+```
+@Override public Response intercept(Chain chain) throws IOException {
 	    Request request = chain.request();
 	
     streamAllocation = new StreamAllocation(
@@ -303,7 +323,7 @@ tags: [OkHttp3]
       priorResponse = response;
     }
 	}
-	
+```	
 	
 	
 * 发起请求前拦截器对request处理
@@ -311,10 +331,12 @@ tags: [OkHttp3]
 
 调用的关键：
 
-	try {
-	        response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
-	        releaseConnection = false;
-	      }
+```
+try {
+    response = ((RealInterceptorChain) chain).proceed(request, streamAllocation, null, null);
+    releaseConnection = false;
+}
+```
 
 那么这个时候就会去调用下一个拦截器。对response进行处理，返回给上一个拦截器.
 
@@ -332,7 +354,8 @@ tags: [OkHttp3]
 
 下面就看一下核心方法intercept()
 
-	@Override public Response intercept(Chain chain) throws IOException {
+```
+@Override public Response intercept(Chain chain) throws IOException {
 	//拿到用户的请求
     Request userRequest = chain.request();
     Request.Builder requestBuilder = userRequest.newBuilder();
@@ -403,7 +426,7 @@ tags: [OkHttp3]
 	//构建一个Response
     return responseBuilder.build();
   	}
-
+```
 
 BridgeInterceptor主要流程逻辑：
 
@@ -430,11 +453,14 @@ Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 �
 
 * 构建完头信息后，进行网络请求
 
-		Response networkResponse = chain.proceed(requestBuilder.build());
+```
+Response networkResponse = chain.proceed(requestBuilder.build());
+```
 		
 * 获取到返回的Response,转化为客户端可用的Response
-	
-		 Response.Builder responseBuilder = networkResponse.newBuilder()
+
+```
+Response.Builder responseBuilder = networkResponse.newBuilder()
 	        .request(userRequest);
 	
 	    if (transparentGzip
@@ -448,8 +474,7 @@ Cookie|之前由服务器通过 Set- Cookie （下文详述）发送的一个 �
 	      responseBuilder.headers(strippedHeaders);
 	      responseBuilder.body(new RealResponseBody(strippedHeaders, Okio.buffer(responseBody)));
 
-	
-	
+```
 
 ##### 3.CacheIntetceptor
 
@@ -457,7 +482,8 @@ CacheIntetceptor的职责就是负责Cache的管理
 
 看一下核心方法：
 
-	 @Override public Response intercept(Chain chain) throws IOException {
+```
+@Override public Response intercept(Chain chain) throws IOException {
 	 //1.读取候选的缓存
     Response cacheCandidate = cache != null
         ? cache.get(chain.request())
@@ -556,7 +582,7 @@ CacheIntetceptor的职责就是负责Cache的管理
 	//11.返回网络请求的结果
     return response;
   	}
-	
+```	
 	
 ####### 整个过程大致：
 
@@ -573,7 +599,8 @@ CacheInterceptor主要就是负责Cache的管理
 代码不多，但包含的内容很多。
 
 
-	 @Override public Response intercept(Chain chain) throws IOException {
+```
+@Override public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
 	    Request request = realChain.request();
 	    //拿到StreamAllocation对象。
@@ -586,30 +613,37 @@ CacheInterceptor主要就是负责Cache的管理
 	
 	    return realChain.proceed(request, streamAllocation, httpCodec, connection);
 	  	}
-	
+
+```	
 	
 从源码来看，StreamAllocation在RetryAndFollowUpInterceptor中进行的初始化
 
-	    streamAllocation = new StreamAllocation(
+```
+streamAllocation = new StreamAllocation(
         client.connectionPool(), createAddress(request.url()), callStackTrace);
+```
         
 三个参数分别是：一个连接池，一个地址类，一个调用堆栈跟踪相关。主要是把这个三个参数保存为内部变量，供后面使用
 
 看一下StreamAllocation的构造方法
 
-	public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {
+```
+public StreamAllocation(ConnectionPool connectionPool, Address address, Object callStackTrace) {
     this.connectionPool = connectionPool;
     this.address = address;
     this.routeSelector = new RouteSelector(address, routeDatabase());
     this.callStackTrace = callStackTrace;
   	}
+```
+
 在把这个三个参数保存为内部变量的同时也创建了一个线路选择器
 
 streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接口有两个实现类分别是 Http1xStream 和 Http2xStream 现在只分析 Http1xStream ，这个 Http1xStream 流是通过 SOCKET 与服务端建立连接之后，通向服务端的输入和输出流的封装。
 
 接下来继续看StreamAllocation中的newSream()方法
 
-	public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
+```
+public HttpCodec newStream(OkHttpClient client, boolean doExtensiveHealthChecks) {
 	//读取从OkHttpClient配置的超时时间
     int connectTimeout = client.connectTimeoutMillis();
     //获取读写超时时间
@@ -633,10 +667,12 @@ streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接�
       throw new RouteException(e);
     }
   	}
+```
   	
  下面就再看一下它是如何找到一个健康的连接的
-		
-	  private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
+
+```
+private RealConnection findHealthyConnection(int connectTimeout, int readTimeout,
 	      int writeTimeout, boolean connectionRetryEnabled, boolean doExtensiveHealthChecks)
 	      throws IOException {
 	    while (true) {
@@ -661,13 +697,14 @@ streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接�
 	      return candidate;
 	    }
 	  }
+```	
 	  
 从源码来看，这个方法就是找到一个连接并返回它，如果它是健康的。 如果这是不健康的，那么这个过程将被重复，直到找到一个健康的连接。
 
 那么继续跟进，看一下是怎么找到健康的连接，进入findConnection(connectTimeout,readTimeout, writeTimeout,connectionRetryEnabled)方法
 	          
-	          
-	private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
+```
+private RealConnection findConnection(int connectTimeout, int readTimeout, int writeTimeout,
 	      boolean connectionRetryEnabled) throws IOException {
 	    Route selectedRoute;
 	    //同步线程池
@@ -737,6 +774,7 @@ streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接�
 	
 	    return result;
 	  }
+```       
 
 这个方法的大致逻辑就是：返回连接以托管新流。 如果现有的连接存在，则优先选择池，最后建立一个新的连接。
 
@@ -748,7 +786,8 @@ streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接�
 
 关键方法intercept,如下：
 
-	 @Override public Response intercept(Chain chain) throws IOException {
+```
+@Override public Response intercept(Chain chain) throws IOException {
 	    RealInterceptorChain realChain = (RealInterceptorChain) chain;
 	    HttpCodec httpCodec = realChain.httpStream();
 	    StreamAllocation streamAllocation = realChain.streamAllocation();
@@ -833,19 +872,21 @@ streamAllocation.newStream 通过这个方法得到一个 HttpStream 这个接�
 	
 	    return response;
 	  }
+```
 
 真个过程就是CallServerInterceptor向服务器发起真正的请求，并在接收服务器的返回后读取响应返回。
 
 
 ##### 最后
 
-		 // Call the next interceptor in the chain.
+```
+// Call the next interceptor in the chain.
 		    RealInterceptorChain next = new RealInterceptorChain(
 		        interceptors, streamAllocation, httpCodec, connection, index + 1, request);
 		    Interceptor interceptor = interceptors.get(index);
 		    Response response = interceptor.intercept(next);
-		    
-		    
+```	
+	    
 整个执行链就在拦截器与拦截器链中交替执行，最终完成所有拦截器的操作。
 
 
