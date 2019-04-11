@@ -364,15 +364,14 @@
       
         
           
-            <p>单元测试中经常碰到的问题：</p>
-<ol>
+            <h4 id="单元测试中经常碰到的问题："><a href="#单元测试中经常碰到的问题：" class="headerlink" title="单元测试中经常碰到的问题："></a>单元测试中经常碰到的问题：</h4><ol>
 <li>Android依赖</li>
 <li>内部new对象如何处理？</li>
 <li>本地方法怎么隔离？</li>
 <li>RxJava异步如何处理？</li>
 </ol>
 <p>前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。</p>
-<h4 id="一、Android依赖"><a href="#一、Android依赖" class="headerlink" title="一、Android依赖"></a>一、Android依赖</h4><h5 id="1、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#1、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="1、代码中用到了TextUtil.isEmpty()的如何测试？"></a>1、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="一、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#一、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="一、代码中用到了TextUtil.isEmpty()的如何测试？"></a>一、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p> 当测试这个方法时，就会报错，</p>
 <figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.RuntimeException: <span class="function"><span class="keyword">Method</span> <span class="title">isEmpty</span> <span class="title">in</span> <span class="title">android</span>.<span class="title">text</span>.<span class="title">TextUtils</span> <span class="title">not</span> <span class="title">mocked</span>.</span></div></pre></td></tr></table></figure>
 <p>这种情况，直接在本地测试目录(app/src/test/java)下添加TextUtils类的实现，但必须保证包名相同。</p>
