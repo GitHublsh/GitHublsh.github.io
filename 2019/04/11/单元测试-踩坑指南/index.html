@@ -111,17 +111,17 @@
 
 
 
-<meta name="description" content="单元测试中经常碰到的问题：  Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、Android依赖1、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSeque">
+<meta name="description" content="单元测试中经常碰到的问题： Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSequence email) &amp;">
 <meta name="keywords" content="单元测试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单元测试-踩坑指南">
 <meta property="og:url" content="http://yoursite.com/2019/04/11/单元测试-踩坑指南/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="单元测试中经常碰到的问题：  Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、Android依赖1、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSeque">
-<meta property="og:updated_time" content="2019-04-11T03:28:05.000Z">
+<meta property="og:description" content="单元测试中经常碰到的问题： Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSequence email) &amp;">
+<meta property="og:updated_time" content="2019-04-11T03:33:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单元测试-踩坑指南">
-<meta name="twitter:description" content="单元测试中经常碰到的问题：  Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、Android依赖1、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSeque">
+<meta name="twitter:description" content="单元测试中经常碰到的问题： Android依赖 内部new对象如何处理？ 本地方法怎么隔离？ RxJava异步如何处理？  前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。 一、代码中用到了TextUtil.isEmpty()的如何测试？123456public static boolean isValidEmail(CharSequence email) &amp;">
 
 
 
@@ -360,15 +360,14 @@
       
 
       
-        <p>单元测试中经常碰到的问题：</p>
-<ol>
+        <h4 id="单元测试中经常碰到的问题："><a href="#单元测试中经常碰到的问题：" class="headerlink" title="单元测试中经常碰到的问题："></a>单元测试中经常碰到的问题：</h4><ol>
 <li>Android依赖</li>
 <li>内部new对象如何处理？</li>
 <li>本地方法怎么隔离？</li>
 <li>RxJava异步如何处理？</li>
 </ol>
 <p>前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。</p>
-<h4 id="一、Android依赖"><a href="#一、Android依赖" class="headerlink" title="一、Android依赖"></a>一、Android依赖</h4><h5 id="1、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#1、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="1、代码中用到了TextUtil.isEmpty()的如何测试？"></a>1、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="一、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#一、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="一、代码中用到了TextUtil.isEmpty()的如何测试？"></a>一、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p> 当测试这个方法时，就会报错，</p>
 <figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.RuntimeException: <span class="function"><span class="keyword">Method</span> <span class="title">isEmpty</span> <span class="title">in</span> <span class="title">android</span>.<span class="title">text</span>.<span class="title">TextUtils</span> <span class="title">not</span> <span class="title">mocked</span>.</span></div></pre></td></tr></table></figure>
 <p>这种情况，直接在本地测试目录(app/src/test/java)下添加TextUtils类的实现，但必须保证包名相同。</p>
@@ -595,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、Android依赖"><span class="nav-number">1.</span> <span class="nav-text">一、Android依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、代码中用到了TextUtil-isEmpty-的如何测试？"><span class="nav-number">1.1.</span> <span class="nav-text">1、代码中用到了TextUtil.isEmpty()的如何测试？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#二、native方法隔离"><span class="nav-number">1.2.</span> <span class="nav-text">二、native方法隔离</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三、内部new对象如何处理？"><span class="nav-number">1.3.</span> <span class="nav-text">三、内部new对象如何处理？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四、Rxjava异步如何处理？"><span class="nav-number">1.4.</span> <span class="nav-text">四、Rxjava异步如何处理？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">2.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#单元测试中经常碰到的问题："><span class="nav-number">1.</span> <span class="nav-text">单元测试中经常碰到的问题：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#一、代码中用到了TextUtil-isEmpty-的如何测试？"><span class="nav-number">1.1.</span> <span class="nav-text">一、代码中用到了TextUtil.isEmpty()的如何测试？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#二、native方法隔离"><span class="nav-number">1.2.</span> <span class="nav-text">二、native方法隔离</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三、内部new对象如何处理？"><span class="nav-number">1.3.</span> <span class="nav-text">三、内部new对象如何处理？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四、Rxjava异步如何处理？"><span class="nav-number">1.4.</span> <span class="nav-text">四、Rxjava异步如何处理？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">2.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
