@@ -284,6 +284,249 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/13/Android常见内存泄漏及解决办法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/13/Android常见内存泄漏及解决办法/" itemprop="url">Android常见内存泄漏及解决办法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-13T16:12:15+08:00">
+                2018-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/13/Android常见内存泄漏及解决办法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/03/13/Android常见内存泄漏及解决办法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h4><p>当一个对象已经不需要再使用了，本该被回收时，而有另外一个正在使用的对象持有它的引用从而导致它不能被回收，这导致本该被回收的对象不能被回收而停留在堆内存中，这就产生了内存泄漏。</p>
+<p>内存泄漏是造成应用程序OOM的主要原因之一！我们知道Android系统为每个应用程序分配的内存有限，而当一个应用中产生的内存泄漏比较多时，这就难免会导致应用所需要的内存超过这个系统分配的内存限额，这就造成了内存溢出而导致应用Crash。</p>
+<h4 id="How"><a href="#How" class="headerlink" title="How?"></a>How?</h4><p>主要几点：</p>
+<ul>
+<li>Context</li>
+<li>内部类（handler等）</li>
+<li>Cursor</li>
+<li>Adapter</li>
+<li>Bitmap</li>
+</ul>
+<h5 id="1-单例造成的内存泄漏"><a href="#1-单例造成的内存泄漏" class="headerlink" title="1. 单例造成的内存泄漏"></a>1. 单例造成的内存泄漏</h5><p>单例的静态特性使得单例的生命周期和应用的生命周期一样长，这就说明了如果一个对象已经不需要使用了，而单例对象还持有该对象的引用，那么这个对象将不能被正常回收，这就导致了内存泄漏。 </p>
+<p>例如：</p>
+<pre><code>public class AppManager {
+    private static AppManager instance;
+    private Context context;
+    private AppManager(Context context) {
+        this.context = context;
+    }
+    public static AppManager getInstance(Context context) {
+        if (instance != null) {
+            instance = new AppManager(context);
+        }
+        return instance;
+    }
+}
+</code></pre><ul>
+<li>传入的是Application的Context：这将没有任何问题，因为单例的生命周期和Application的一样长 </li>
+</ul>
+<ul>
+<li>传入的是Activity的Context：当这个Context所对应的Activity退出时，由于该Context和Activity的生命周期一样长（Activity间接继承于Context），所以当前Activity退出时它的内存并不会被回收，因为单例对象持有该Activity的引用。 </li>
+</ul>
+<p> 正确的单例：</p>
+<pre><code> public class AppManager {
+    private static AppManager instance;
+    private Context context;
+    private AppManager(Context context) {
+        this.context = context.getApplicationContext();
+    }
+    public static AppManager getInstance(Context context) {
+        if (instance != null) {
+            instance = new AppManager(context);
+        }
+        return instance;
+    }
+}
+</code></pre><h5 id="2-非静态内部类创建静态实例造成的内存泄漏"><a href="#2-非静态内部类创建静态实例造成的内存泄漏" class="headerlink" title="2.非静态内部类创建静态实例造成的内存泄漏"></a>2.非静态内部类创建静态实例造成的内存泄漏</h5><p>在实际的项目开发中，有时候我们需要频繁的启动某个页面（Activity），启动的时候总是需要初始化一些资源，为了避免重复创建相同资源，常常会使用静态对象去保存这些值，这种情况下，也很容易照成内存泄漏。我们举个例子：</p>
+<pre><code>public class MainActivity extends AppCompatActivity {
+    private static TestResource mResource = null;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        if(mManager == null){
+            mManager = new TestResource();
+        }
+        //...
+    }
+    private class TestResource {
+        //...
+    }
+}
+</code></pre><p>我们创建了一个静态的资源对象mResouce，每次Activity启动都会使用该资源的数据，避免了重复创建。但是这样会造成内存泄漏</p>
+<ul>
+<li>非静态内部类默认会持有外部类的引用</li>
+<li>又使用了该非静态内部类创建了一个静态的实例</li>
+<li>该静态实例的生命周期和应用的一样长，这就导致了该静态实例一直会持有该Activity的引用，导致Activity的内存资源不能正常回收。</li>
+</ul>
+<p>解决办法：</p>
+<ul>
+<li>将内部类testResource改成静态内部类</li>
+<li>将testResource抽取出来，封装成一个单例</li>
+</ul>
+<pre><code>public class MainActivity extends AppCompatActivity {
+    private static TestResource mResource = null;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        if(mManager == null){
+            mManager = new TestResource();
+        }
+        //...
+    }
+    private static class TestResource {
+        //...
+    }
+}
+</code></pre><h5 id="3-handler导致内存泄漏"><a href="#3-handler导致内存泄漏" class="headerlink" title="3. handler导致内存泄漏"></a>3. handler导致内存泄漏</h5><p>举例如下</p>
+<pre><code>public class MainActivity extends AppCompatActivity {
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //...
+        }
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        loadData();
+    }
+    private void loadData(){
+        //...request
+        Message message = Message.obtain();
+        mHandler.sendMessage(message);
+    }
+}
+</code></pre><p>由于mHandler是Handler的非静态匿名内部类的实例，所以它持有外部类Activity的引用，我们知道消息队列是在一个Looper线程中不断轮询处理消息，那么当这个Activity退出时消息队列中还有未处理的消息或者正在处理消息，而消息队列中的Message持有mHandler实例的引用，mHandler又持有Activity的引用，所以导致该Activity的内存资源无法及时回收，引发内存泄漏</p>
+<p>解决方案：</p>
+<ul>
+<li>在Activity onDestroy的时候，也应该对消息队列中的消息移除。</li>
+</ul>
+<pre><code> @Override
+public void onDestroy() {
+   //三种均可
+    mHandler.removeMessages(message);
+    mHandler.removeCallbacks(Runnable);
+    mHandler.removeCallbacksAndMessages(null);
+}
+</code></pre><h5 id="4-资源未关闭导致内存泄漏"><a href="#4-资源未关闭导致内存泄漏" class="headerlink" title="4.资源未关闭导致内存泄漏"></a>4.资源未关闭导致内存泄漏</h5><p>BraodcastReceiver，ContentObserver，File，Cursor，Stream，Bitmap等资源的使用，应该在Activity销毁时及时关闭或者注销，否则这些资源将不会被回收，造成内存泄漏。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/30/Android-Gradle构建入门(一)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1885,394 +2128,6 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/11/Android-View事件分发机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/11/Android-View事件分发机制/" itemprop="url">Android View事件分发机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T17:27:08+08:00">
-                2017-10-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/10/11/Android-View事件分发机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/10/11/Android-View事件分发机制/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、点击事件的传递规则"><a href="#一、点击事件的传递规则" class="headerlink" title="一、点击事件的传递规则"></a>一、点击事件的传递规则</h3><p>   首先，要明白点击事件的分发就是MotionEvent事件的分发过程。</p>
-<h4 id="1-MotionEvent"><a href="#1-MotionEvent" class="headerlink" title="1.MotionEvent"></a>1.MotionEvent</h4><p>  常见的动作：</p>
-<p>  常见的动作常量：</p>
-<ul>
-<li><p>public static final int ACTION_DOWN = 0;单点触摸动作</p>
-</li>
-<li><p>public static final int ACTION_UP = 1;单点触摸离开动作</p>
-</li>
-<li>public static final int ACTION_MOVE = 2;触摸点移动动作</li>
-<li>public static final int ACTION_CANCEL = 3;触摸动作取消</li>
-<li>public static final int ACTION_OUTSIDE = 4;触摸动作超出边界</li>
-<li>public static final int ACTION_POINTER_DOWN = 5;多点触摸动作</li>
-<li>public static final int ACTION_POINTER_UP       = 6;多点离开动作</li>
-</ul>
-<pre><code>主要就是：
-
-* ACTION_DOWN--手指刚接触屏幕
-* ACTION_MOVE--手指在屏幕上滑动
-* ACTION_UP--手指离开屏幕
-</code></pre><h4 id="2-点击事件的分发中最重要的三个方法"><a href="#2-点击事件的分发中最重要的三个方法" class="headerlink" title="2.点击事件的分发中最重要的三个方法"></a>2.点击事件的分发中最重要的三个方法</h4><ul>
-<li><p>dispatchTouchEvent(MotionEvent event)–事件分发</p>
-<ul>
-<li>用来进行事件分发，如果事件能够传递给当前View,那么这个方法一定会被调用，返回结果受当前View的onTouchEvent和下级View的dispatchTouchEvent方法影响，表示是否消耗了当前事件。</li>
-</ul>
-</li>
-<li><p>onInterceptTouchEvent(MotionEvent event)–事件拦截</p>
-<ul>
-<li>用来判断是否拦截某个事件，如果当前View拦截了某个事件，那么在同一个事件序列中，此方法不会再次调用，返回结果表示是否拦截当前事件。</li>
-</ul>
-</li>
-<li><p>onTouchEvent(MotionEvent event)–事件消费</p>
-<ul>
-<li>在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一事件序列中，当前View无法再次接收到事件</li>
-</ul>
-</li>
-</ul>
-<h4 id="3-伪代码"><a href="#3-伪代码" class="headerlink" title="3. 伪代码"></a>3. 伪代码</h4><pre><code>public boolean dispatchTouchEvent(MotionEvent ev){
-    boolean touch = false;
-    if(onInterceptTouchEvent(ev)){
-        touch = onTouchEvent(ev);
-    }else{
-        touch = child.dispatchTouchEvent(ev);
-    }
-    return touch;
-}
-</code></pre><ul>
-<li><p>点击事件的传递规则：</p>
-<ul>
-<li><p>对于根ViewGroup来说，点击事件产生后，首先传递给它，这个时候它的dispatchTouchEvent就会被调用     </p>
-</li>
-<li><p>首先判断自身是否处理，处理的话就会调用onInterceptTouchEvent(MotionEvent event),来判断是否处理，自身处理的话，就会调用onTouchEvent(MotionEvent event)，自己就把这次点击事件处理了</p>
-</li>
-<li><p>如果自身不处理，就不拦截，交给子View去处理。子View处理同样按照ViewGroup自身处理一致。子View不处理的话，最后则调用ViewGroup自身的onTouchEvent(MotionEvent event)消费掉此次点击事件</p>
-<p>经典的伪代码如上。</p>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="4-同一次点击事件只能被一个-View-消费"><a href="#4-同一次点击事件只能被一个-View-消费" class="headerlink" title="4.同一次点击事件只能被一个 View 消费"></a>4.同一次点击事件只能被一个 View 消费</h4><p>  安卓为了保证所有的事件都是被一个 View 消费的，对第一次的事件( ACTION_DOWN )进行了特殊判断，View 只有消费了 ACTION_DOWN 事件，才能接收到后续的事件(可点击控件会默认消费所有事件)，并且会将后续所有事件传递过来，不会再传递给其他 View，除非上层 View 进行了拦截。<br>如果上层 View 拦截了当前正在处理的事件，会收到一个 ACTION_CANCEL，表示当前事件已经结束，后续事件不会再传递过来。</p>
-<p>借用GcsSloop源码分析：</p>
-<pre><code>public boolean dispatchTouchEvent(MotionEvent ev) {
-      // 调试用
-    if (mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onTouchEvent(ev, 1);
-    }
-
-      // 判断事件是否是针对可访问的焦点视图(很晚才添加的内容，个人猜测和屏幕辅助相关，方便盲人等使用设备)
-    if (ev.isTargetAccessibilityFocus() &amp;&amp; isAccessibilityFocusedViewOrHost()) {
-        ev.setTargetAccessibilityFocus(false);
-    }
-
-    boolean handled = false;
-    if (onFilterTouchEventForSecurity(ev)) {
-        final int action = ev.getAction();
-        final int actionMasked = action &amp; MotionEvent.ACTION_MASK;
-
-        // 处理第一次ACTION_DOWN.
-        if (actionMasked == MotionEvent.ACTION_DOWN) {
-            // 清除之前所有的状态
-            cancelAndClearTouchTargets(ev);
-            resetTouchState();
-        }
-
-        // 检查是否需要拦截.
-        final boolean intercepted;
-        if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null) {
-            final boolean disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != 0;
-            if (!disallowIntercept) {
-                intercepted = onInterceptTouchEvent(ev);    // 询问是否拦截
-                ev.setAction(action);                         // 恢复操作，防止被更改
-            } else {
-                intercepted = false;
-            }
-        } else {
-              // 没有目标来处理该事件，而且也不是一个新的事件事件(ACTION_DOWN), 进行拦截。
-            intercepted = true;
-        }
-
-          // 判断事件是否是针对可访问的焦点视图
-        if (intercepted || mFirstTouchTarget != null) {
-            ev.setTargetAccessibilityFocus(false);
-        }
-
-        // 检查事件是否被取消(ACTION_CANCEL).
-        final boolean canceled = resetCancelNextUpFlag(this)
-                || actionMasked == MotionEvent.ACTION_CANCEL;
-
-        final boolean split = (mGroupFlags &amp; FLAG_SPLIT_MOTION_EVENTS) != 0;
-        TouchTarget newTouchTarget = null;
-        boolean alreadyDispatchedToNewTouchTarget = false;
-
-          // 如果没有取消也没有被拦截    (进入事件分发)
-        if (!canceled &amp;&amp; !intercepted) {
-
-            // 如果事件是针对可访问性焦点视图，我们将其提供给具有可访问性焦点的视图。
-              // 如果它不处理它，我们清除该标志并像往常一样将事件分派给所有的 ChildView。 
-            // 我们检测并避免保持这种状态，因为这些事非常罕见。
-            View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()
-                    ? findChildWithAccessibilityFocus() : null;
-
-            if (actionMasked == MotionEvent.ACTION_DOWN
-                    || (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_DOWN)
-                    || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
-                final int actionIndex = ev.getActionIndex();
-                final int idBitsToAssign = split ? 1 &lt;&lt; ev.getPointerId(actionIndex)
-                        : TouchTarget.ALL_POINTER_IDS;
-
-                // 清除此指针ID的早期触摸目标，防止不同步。
-                removePointersFromTouchTargets(idBitsToAssign);
-
-                final int childrenCount = mChildrenCount;
-                if (newTouchTarget == null &amp;&amp; childrenCount != 0) {
-                    final float x = ev.getX(actionIndex);    // 获取触摸位置坐标
-                    final float y = ev.getY(actionIndex);
-                    // 查找可以接受事件的 ChildView
-                    final ArrayList&lt;View&gt; preorderedList = buildOrderedChildList();
-                    final boolean customOrder = preorderedList == null
-                            &amp;&amp; isChildrenDrawingOrderEnabled();
-                    final View[] children = mChildren;
-                      // ▼注意，从最后向前扫描
-                    for (int i = childrenCount - 1; i &gt;= 0; i--) {
-                        final int childIndex = customOrder
-                                ? getChildDrawingOrder(childrenCount, i) : i;
-                        final View child = (preorderedList == null)
-                                ? children[childIndex] : preorderedList.get(childIndex);
-
-                        // 如果有一个视图具有可访问性焦点，我们希望它首先获取事件，
-                          // 如果不处理，我们将执行正常的分派。 
-                          // 尽管这可能会分发两次，但它能保证在给定的时间内更安全的执行。
-                        if (childWithAccessibilityFocus != null) {
-                            if (childWithAccessibilityFocus != child) {
-                                continue;
-                            }
-                            childWithAccessibilityFocus = null;
-                            i = childrenCount - 1;
-                        }
-
-                          // 检查View是否允许接受事件(即处于显示状态(VISIBLE)或者正在播放动画)
-                          // 检查触摸位置是否在View区域内
-                        if (!canViewReceivePointerEvents(child)
-                                || !isTransformedTouchPointInView(x, y, child, null)) {
-                            ev.setTargetAccessibilityFocus(false);
-                            continue;
-                        }
-
-                          // getTouchTarget 中判断了 child 是否包含在 mFirstTouchTarget 中
-                          // 如果有返回 target，如果没有返回 null 
-                        newTouchTarget = getTouchTarget(child);
-                        if (newTouchTarget != null) {
-                            // ChildView 已经准备好接受在其区域内的事件。
-                            newTouchTarget.pointerIdBits |= idBitsToAssign;
-                            break;    // ◀︎已经找到目标View，跳出循环
-                        }
-
-                        resetCancelNextUpFlag(child);
-                        if (dispatchTransformedTouchEvent(ev, false, child, idBitsToAssign)) {
-                            mLastTouchDownTime = ev.getDownTime();
-                            if (preorderedList != null) {
-                                for (int j = 0; j &lt; childrenCount; j++) {
-                                    if (children[childIndex] == mChildren[j]) {
-                                        mLastTouchDownIndex = j;
-                                        break;
-                                    }
-                                }
-                            } else {
-                                mLastTouchDownIndex = childIndex;
-                            }
-                            mLastTouchDownX = ev.getX();
-                            mLastTouchDownY = ev.getY();
-                            newTouchTarget = addTouchTarget(child, idBitsToAssign);
-                            alreadyDispatchedToNewTouchTarget = true;
-                            break;
-                        }
-
-                        ev.setTargetAccessibilityFocus(false);
-                    }
-                    if (preorderedList != null) preorderedList.clear();
-                }
-
-                if (newTouchTarget == null &amp;&amp; mFirstTouchTarget != null) {
-                    // 没有找到 ChildView 接收事件
-                    newTouchTarget = mFirstTouchTarget;
-                    while (newTouchTarget.next != null) {
-                        newTouchTarget = newTouchTarget.next;
-                    }
-                    newTouchTarget.pointerIdBits |= idBitsToAssign;
-                }
-            }
-        }
-
-        // 分发 TouchTarget
-        if (mFirstTouchTarget == null) {
-            // 没有 TouchTarget，将当前 ViewGroup 当作普通的 View 处理。
-            handled = dispatchTransformedTouchEvent(ev, canceled, null,
-                    TouchTarget.ALL_POINTER_IDS);
-        } else {
-            // 分发TouchTarget，如果我们已经分发过，则避免分配给新的目标。 
-              // 如有必要，取消分发。
-            TouchTarget predecessor = null;
-            TouchTarget target = mFirstTouchTarget;
-            while (target != null) {
-                final TouchTarget next = target.next;
-                if (alreadyDispatchedToNewTouchTarget &amp;&amp; target == newTouchTarget) {
-                    handled = true;
-                } else {
-                    final boolean cancelChild = resetCancelNextUpFlag(target.child)
-                            || intercepted;
-                    if (dispatchTransformedTouchEvent(ev, cancelChild,
-                            target.child, target.pointerIdBits)) {
-                        handled = true;
-                    }
-                    if (cancelChild) {
-                        if (predecessor == null) {
-                            mFirstTouchTarget = next;
-                        } else {
-                            predecessor.next = next;
-                        }
-                        target.recycle();
-                        target = next;
-                        continue;
-                    }
-                }
-                predecessor = target;
-                target = next;
-            }
-        }
-
-        // 如果需要，更新指针的触摸目标列表或取消。
-        if (canceled
-                || actionMasked == MotionEvent.ACTION_UP
-                || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
-            resetTouchState();
-        } else if (split &amp;&amp; actionMasked == MotionEvent.ACTION_POINTER_UP) {
-            final int actionIndex = ev.getActionIndex();
-            final int idBitsToRemove = 1 &lt;&lt; ev.getPointerId(actionIndex);
-            removePointersFromTouchTargets(idBitsToRemove);
-        }
-    }
-
-    if (!handled &amp;&amp; mInputEventConsistencyVerifier != null) {
-        mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);
-    }
-    return handled;
-}
-</code></pre><p>源码注释已经很详细了。</p>
-<h3 id="二、小结"><a href="#二、小结" class="headerlink" title="二、小结"></a>二、小结</h3><h4 id="1-同一个事件是从DOWN开始到UP结束的"><a href="#1-同一个事件是从DOWN开始到UP结束的" class="headerlink" title="1. 同一个事件是从DOWN开始到UP结束的"></a>1. 同一个事件是从DOWN开始到UP结束的</h4><h4 id="2-一个事件最终只能由一个View拦截和消费掉"><a href="#2-一个事件最终只能由一个View拦截和消费掉" class="headerlink" title="2. 一个事件最终只能由一个View拦截和消费掉"></a>2. 一个事件最终只能由一个View拦截和消费掉</h4><h4 id="3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"><a href="#3-某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了" class="headerlink" title="3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了"></a>3. 某个View一旦拦截了，那么久都由它来处理，并且它的onInterceptTouchEvent不会再被调用。因为事件交给要拦截的View处理，就不需要再调用onInterceptTouchEvent去询问是否要拦截事件了</h4><h4 id="4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。"><a href="#4-如果一个View拦截了事件，但是如果它不消耗ACTION-DOWN事件，那么同一事件序列就不再会交由该View处理了。" class="headerlink" title="4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。"></a>4. 如果一个View拦截了事件，但是如果它不消耗ACTION_DOWN事件，那么同一事件序列就不再会交由该View处理了。</h4><h4 id="5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"><a href="#5-ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false" class="headerlink" title="5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false"></a>5. ViewGroup默认是不拦截任何事件的，源码中ViewGroup的onInterceptTouchEvent默认返回false</h4><h4 id="6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。"><a href="#6-事件是否被消费由返回值决定，true-表示消费，false-表示不消费，与是否使用了事件无关。" class="headerlink" title="6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。"></a>6. 事件是否被消费由返回值决定，true 表示消费，false 表示不消费，与是否使用了事件无关。</h4><h4 id="7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"><a href="#7-View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用" class="headerlink" title="7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用"></a>7. View没有onInterceptTouchEvent方法，一旦事件分发到View，那么它的onTouchEven就会被调用</h4><h4 id="8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"><a href="#8-View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。" class="headerlink" title="8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。"></a>8. View的onTouchEvent方法默认会消耗事件即返回true，除非是不可点击的。</h4><h4 id="9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"><a href="#9-事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View" class="headerlink" title="9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View"></a>9. 事件的传递过程是由外向内的，即先传给父元素，然后再由父元素分发给子View</h4><h4 id="10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。"><a href="#10-如果当前正在处理的事件被上层-View-拦截，会收到一个-ACTION-CANCEL，后续事件不会再传递过来。" class="headerlink" title="10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。"></a>10. 如果当前正在处理的事件被上层 View 拦截，会收到一个 ACTION_CANCEL，后续事件不会再传递过来。</h4>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -2322,7 +2177,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">64</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2335,7 +2190,7 @@ com.example.liushihan.glidedemo D/lsh: PackageInfo{213c44fd com.android.provider
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
