@@ -284,6 +284,155 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/11/单元测试-踩坑指南/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/11/单元测试-踩坑指南/" itemprop="url">单元测试-踩坑指南</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-11T11:07:08+08:00">
+                2019-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/11/单元测试-踩坑指南/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/04/11/单元测试-踩坑指南/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>单元测试中经常碰到的问题：</p>
+<ol>
+<li>Android依赖</li>
+<li>内部new对象如何处理？</li>
+<li>本地方法怎么隔离？</li>
+<li>RxJava异步如何处理？</li>
+</ol>
+<p>前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。</p>
+<h4 id="一、Android依赖"><a href="#一、Android依赖" class="headerlink" title="一、Android依赖"></a>一、Android依赖</h4><h5 id="1、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#1、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="1、代码中用到了TextUtil.isEmpty()的如何测试？"></a>1、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 当测试这个方法时，就会报错，</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.RuntimeException: <span class="function"><span class="keyword">Method</span> <span class="title">isEmpty</span> <span class="title">in</span> <span class="title">android</span>.<span class="title">text</span>.<span class="title">TextUtils</span> <span class="title">not</span> <span class="title">mocked</span>.</span></div></pre></td></tr></table></figure>
+<p>这种情况，直接在本地测试目录(app/src/test/java)下添加TextUtils类的实现，但必须保证包名相同。</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package android.text;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextUtils</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEmpty(CharSequence <span class="keyword">str</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">str</span> == <span class="keyword">null</span> || <span class="keyword">str</span>.length() == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="二、native方法隔离"><a href="#二、native方法隔离" class="headerlink" title="二、native方法隔离"></a>二、native方法隔离</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">nativeMethod</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>进行测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ModelTest</span> </span>&#123;</div><div class="line">    Model model;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        model = mock(Model.class);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNativeMethod</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        when(model.nativeMethod()).thenReturn(<span class="keyword">true</span>);</div><div class="line">        Assert.assertTrue(model.nativeMethod());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="三、内部new对象如何处理？"><a href="#三、内部new对象如何处理？" class="headerlink" title="三、内部new对象如何处理？"></a>三、内部new对象如何处理？</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> </span>&#123;</div><div class="line"></div><div class="line">    Model model;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span><span class="params">()</span> </span>&#123;</div><div class="line">        model = <span class="keyword">new</span> Model();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">getBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> model.getBoolean());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>改变写法。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> </span>&#123;</div><div class="line">    Model model;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span><span class="params">(Model model)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.model = model;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">getBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">return</span> model.<span class="title">getBoolean</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>进行测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PresenterTest</span> </span>&#123;</div><div class="line">    Model     model;</div><div class="line">    Presenter presenter;</div><div class="line">    </div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// mock Model对象</span></div><div class="line">        model = mock(Model.class);</div><div class="line">        presenter = <span class="keyword">new</span> Presenter(model);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetBoolean</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        when(model.getBoolean()).thenReturn(<span class="keyword">true</span>);</div><div class="line"></div><div class="line">        Assert.assertTrue(presenter.getBoolean());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="四、Rxjava异步如何处理？"><a href="#四、Rxjava异步如何处理？" class="headerlink" title="四、Rxjava异步如何处理？"></a>四、Rxjava异步如何处理？</h5><p>异步的话单元测试就无法测试了。那么就必须同步情况下才可以测试，开发RxJava的大神早就料到了，于是乎可以他通过立即执行就可以了</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">Schedulers</span><span class="selector-class">.immediate</span>()</div></pre></td></tr></table></figure>
+<p>工具类</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class RxTools &#123;</div><div class="line">    public static void asyncToSync() &#123;</div><div class="line">        Func1&lt;Scheduler, Scheduler&gt; schedulerFunc = new Func1&lt;Scheduler, Scheduler&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            public<span class="built_in"> Scheduler </span>call(Scheduler scheduler) &#123;</div><div class="line">                return Schedulers.immediate();</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        RxAndroidSchedulersHook rxAndroidSchedulersHook = new RxAndroidSchedulersHook() &#123;</div><div class="line">            @Override</div><div class="line">            public<span class="built_in"> Scheduler </span>getMainThreadScheduler() &#123;</div><div class="line">                return Schedulers.immediate();</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        RxJavaHooks.reset();</div><div class="line">        RxJavaHooks.setOnIOScheduler(schedulerFunc);</div><div class="line">        RxJavaHooks.setOnComputationScheduler(schedulerFunc);</div><div class="line"></div><div class="line">        RxAndroidPlugins.getInstance().reset();</div><div class="line">        RxAndroidPlugins.getInstance().registerSchedulersHook(rxAndroidSchedulersHook);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>归根结底最主要的就是进行依赖隔离。单元测试，验证的是逻辑是否正确，忽略数据的变化。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -835,158 +984,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/10/HTTP1-0与HTTP2-0的区别/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/10/HTTP1-0与HTTP2-0的区别/" itemprop="url">HTTP1.0与HTTP2.0的区别</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-10T10:38:26+08:00">
-                2019-01-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/10/HTTP1-0与HTTP2-0的区别/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/01/10/HTTP1-0与HTTP2-0的区别/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="HTTP1-0与HTTP2-0的区别"><a href="#HTTP1-0与HTTP2-0的区别" class="headerlink" title="HTTP1.0与HTTP2.0的区别"></a>HTTP1.0与HTTP2.0的区别</h2><h3 id="一、HTTP2-0简介"><a href="#一、HTTP2-0简介" class="headerlink" title="一、HTTP2.0简介"></a>一、HTTP2.0简介</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
-<p>HTTP 2.0 的出现，相比于 HTTP 1.x ，大幅度的提升了 web 性能。</p>
-<h3 id="二、HTTP2-0与HTTP1-0的主要区别"><a href="#二、HTTP2-0与HTTP1-0的主要区别" class="headerlink" title="二、HTTP2.0与HTTP1.0的主要区别"></a>二、HTTP2.0与HTTP1.0的主要区别</h3><ol>
-<li><p>HTTP/2采用二进制格式而非文本格式</p>
-</li>
-<li><p>HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</p>
-</li>
-<li><p>使用报头压缩，HTTP/2降低了开销</p>
-</li>
-<li><p>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
-</li>
-</ol>
-<h3 id="三、为什么采用二进制格式？"><a href="#三、为什么采用二进制格式？" class="headerlink" title="三、为什么采用二进制格式？"></a>三、为什么采用二进制格式？</h3><p>HTTP1.x的解析是基于文本。基于文本协议的格式解析存在天然缺陷，文本的表现形式有多样性，要做到健壮性考虑的场景必然很多，二进制则不同，只认0和1的组合。基于这种考虑HTTP2.0的协议解析决定采用二进制格式，实现方便且健壮。</p>
-<p>###四、为什么要多路复用？</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg" alt="多路复用"></p>
-<p>整个访问流程第一次请求index.html页面,之后浏览器会去请求style.css和scripts.js的文件。左边的图是顺序加载两个个文件的，右边则是并行加载两个文件。<br>多路复用允许单一的 HTTP/2 连接同时发起多重的请求-响应消息。</p>
-<p>HTTP 性能优化的关键并不在于高带宽，而是低延迟。</p>
-<p>首先你要知道，TCP连接相当于两根管道（一个用于服务器到客户端，一个用于客户端到服务器），管道里面数据传输是通过字节码传输，传输是有序的，每个字节都是一个一个来传输。</p>
-<p>这个时候有一个新的概念就是：二进制分帧。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg" alt="二进制分帧"></p>
-<p>HTTP2.0通过在应用层和传输层之间增加一个二进制分帧层，突破了HTTP1.1的性能限制、改进传输性能。</p>
-<p>二进制分帧层 在 应用层(HTTP/2)和传输层(TCP or UDP)之间。HTTP/2并没有去修改TCP协议而是尽可能的利用TCP的特性。</p>
-<p>在二进制分帧层中， HTTP/2 会将所有传输的信息分割为帧（frame）,并对它们采用二进制格式的编码 ，其中 首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。</p>
-<p>多路复用技术：单连接多资源的方式，减少服务端的链接压力,内存占用更少,连接吞吐量更大；由于减少TCP 慢启动时间，提高传输的速度</p>
-<h3 id="五、为什么要进行首部压缩？"><a href="#五、为什么要进行首部压缩？" class="headerlink" title="五、为什么要进行首部压缩？"></a>五、为什么要进行首部压缩？</h3><p>为什么要压缩？在 HTTP/1 中，HTTP 请求和响应都是由「状态行、请求 / 响应头部、消息主体」三部分组成。一般而言，消息主体都会经过 gzip 压缩，或者本身传输的就是压缩过后的二进制文件（例如图片、音频），但状态行和头部却没有经过任何压缩，直接以纯文本传输。</p>
-<p>随着 Web 功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输 UserAgent、Cookie 这类不会频繁变动的内容，完全是一种浪费。<br>进行头部压缩，既避免了重复header的传输，又减小了需要传输的大小。高效的压缩算法可以很大的压缩header，减少发送包的数量从而降低延迟。</p>
-<h3 id="六、服务器推送的好处是什么？"><a href="#六、服务器推送的好处是什么？" class="headerlink" title="六、服务器推送的好处是什么？"></a>六、服务器推送的好处是什么？</h3><p>服务端推送是一种在客户端请求之前发送数据的机制。当代网页使用了许多资源:HTML、样式表、脚本、图片等等。在HTTP/1.x中这些资源每一个都必须明确地请求。这可能是一个很慢的过程。浏览器从获取HTML开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。</p>
-<p>为了改善延迟，HTTP/2引入了server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前。一个服务器经常知道一个页面需要很多附加资源，在它响应浏览器第一个请求的时候，可以开始推送这些资源。这允许服务端去完全充分地利用一个可能空闲的网络，改善页面加载时间。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg" alt="服务器推送"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1036,7 +1033,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">64</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1049,7 +1046,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

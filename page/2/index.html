@@ -284,6 +284,158 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/10/HTTP1-0与HTTP2-0的区别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/10/HTTP1-0与HTTP2-0的区别/" itemprop="url">HTTP1.0与HTTP2.0的区别</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-10T10:38:26+08:00">
+                2019-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/10/HTTP1-0与HTTP2-0的区别/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/01/10/HTTP1-0与HTTP2-0的区别/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="HTTP1-0与HTTP2-0的区别"><a href="#HTTP1-0与HTTP2-0的区别" class="headerlink" title="HTTP1.0与HTTP2.0的区别"></a>HTTP1.0与HTTP2.0的区别</h2><h3 id="一、HTTP2-0简介"><a href="#一、HTTP2-0简介" class="headerlink" title="一、HTTP2.0简介"></a>一、HTTP2.0简介</h3><p>HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。</p>
+<p>HTTP 2.0 的出现，相比于 HTTP 1.x ，大幅度的提升了 web 性能。</p>
+<h3 id="二、HTTP2-0与HTTP1-0的主要区别"><a href="#二、HTTP2-0与HTTP1-0的主要区别" class="headerlink" title="二、HTTP2.0与HTTP1.0的主要区别"></a>二、HTTP2.0与HTTP1.0的主要区别</h3><ol>
+<li><p>HTTP/2采用二进制格式而非文本格式</p>
+</li>
+<li><p>HTTP/2是完全多路复用的，而非有序并阻塞的——只需一个连接即可实现并行</p>
+</li>
+<li><p>使用报头压缩，HTTP/2降低了开销</p>
+</li>
+<li><p>HTTP/2让服务器可以将响应主动“推送”到客户端缓存中</p>
+</li>
+</ol>
+<h3 id="三、为什么采用二进制格式？"><a href="#三、为什么采用二进制格式？" class="headerlink" title="三、为什么采用二进制格式？"></a>三、为什么采用二进制格式？</h3><p>HTTP1.x的解析是基于文本。基于文本协议的格式解析存在天然缺陷，文本的表现形式有多样性，要做到健壮性考虑的场景必然很多，二进制则不同，只认0和1的组合。基于这种考虑HTTP2.0的协议解析决定采用二进制格式，实现方便且健壮。</p>
+<p>###四、为什么要多路复用？</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg" alt="多路复用"></p>
+<p>整个访问流程第一次请求index.html页面,之后浏览器会去请求style.css和scripts.js的文件。左边的图是顺序加载两个个文件的，右边则是并行加载两个文件。<br>多路复用允许单一的 HTTP/2 连接同时发起多重的请求-响应消息。</p>
+<p>HTTP 性能优化的关键并不在于高带宽，而是低延迟。</p>
+<p>首先你要知道，TCP连接相当于两根管道（一个用于服务器到客户端，一个用于客户端到服务器），管道里面数据传输是通过字节码传输，传输是有序的，每个字节都是一个一个来传输。</p>
+<p>这个时候有一个新的概念就是：二进制分帧。</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg" alt="二进制分帧"></p>
+<p>HTTP2.0通过在应用层和传输层之间增加一个二进制分帧层，突破了HTTP1.1的性能限制、改进传输性能。</p>
+<p>二进制分帧层 在 应用层(HTTP/2)和传输层(TCP or UDP)之间。HTTP/2并没有去修改TCP协议而是尽可能的利用TCP的特性。</p>
+<p>在二进制分帧层中， HTTP/2 会将所有传输的信息分割为帧（frame）,并对它们采用二进制格式的编码 ，其中 首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。</p>
+<p>多路复用技术：单连接多资源的方式，减少服务端的链接压力,内存占用更少,连接吞吐量更大；由于减少TCP 慢启动时间，提高传输的速度</p>
+<h3 id="五、为什么要进行首部压缩？"><a href="#五、为什么要进行首部压缩？" class="headerlink" title="五、为什么要进行首部压缩？"></a>五、为什么要进行首部压缩？</h3><p>为什么要压缩？在 HTTP/1 中，HTTP 请求和响应都是由「状态行、请求 / 响应头部、消息主体」三部分组成。一般而言，消息主体都会经过 gzip 压缩，或者本身传输的就是压缩过后的二进制文件（例如图片、音频），但状态行和头部却没有经过任何压缩，直接以纯文本传输。</p>
+<p>随着 Web 功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输 UserAgent、Cookie 这类不会频繁变动的内容，完全是一种浪费。<br>进行头部压缩，既避免了重复header的传输，又减小了需要传输的大小。高效的压缩算法可以很大的压缩header，减少发送包的数量从而降低延迟。</p>
+<h3 id="六、服务器推送的好处是什么？"><a href="#六、服务器推送的好处是什么？" class="headerlink" title="六、服务器推送的好处是什么？"></a>六、服务器推送的好处是什么？</h3><p>服务端推送是一种在客户端请求之前发送数据的机制。当代网页使用了许多资源:HTML、样式表、脚本、图片等等。在HTTP/1.x中这些资源每一个都必须明确地请求。这可能是一个很慢的过程。浏览器从获取HTML开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。</p>
+<p>为了改善延迟，HTTP/2引入了server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前。一个服务器经常知道一个页面需要很多附加资源，在它响应浏览器第一个请求的时候，可以开始推送这些资源。这允许服务端去完全充分地利用一个可能空闲的网络，改善页面加载时间。</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg" alt="服务器推送"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/LeakCanary源码浅析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -913,161 +1065,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/Java垃圾回收机制浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/21/Java垃圾回收机制浅析/" itemprop="url">Java垃圾回收机制浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-21T17:06:45+08:00">
-                2018-10-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/10/21/Java垃圾回收机制浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/10/21/Java垃圾回收机制浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="JVM垃圾回收机制"><a href="#JVM垃圾回收机制" class="headerlink" title="JVM垃圾回收机制"></a>JVM垃圾回收机制</h1><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><h4 id="一、为什么需要进行垃圾回收？"><a href="#一、为什么需要进行垃圾回收？" class="headerlink" title="一、为什么需要进行垃圾回收？"></a>一、为什么需要进行垃圾回收？</h4><p>在C++中，对象所占的内存在程序结束运行之前一直被占用，在明确释放之前不能分配给其它对象；而在Java中，当没有对象引用指向原先分配给某个对象 的内存时，该内存便成为垃圾。 垃圾回收能自动释放内存空间，减轻编程的负担，JVM的一个系统级线程会自动释放该内存块。垃圾回收意味着程序不再需要的对象是”无用信息”，这些信息将被丢弃。当一个对 象不再被引用的时候，内存回收它占领的空间，以便空间被后来的新对象使用。事实上，除了释放没用的对象，垃圾回收也可以清除内存记录碎片。由于创建对象和垃圾回收器释放丢弃对象所占的内存空间，内存会出现碎片。碎片是分配给对象的内存块之间的空闲内存洞。碎片整理将所占用的堆内存移到堆的一端，JVM将整理出的内存分配给新的对象。</p>
-<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="一、标记清除算法"><a href="#一、标记清除算法" class="headerlink" title="一、标记清除算法"></a>一、标记清除算法</h4><p><strong>标记-清除算法分为标记和清除两个阶段。该算法首先从根集合进行扫描，对存活的对象对象标记，标记完毕后，再扫描整个空间中未被标记的对象并进行回收。</strong></p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e3wlyulkj30fi0crmxm.jpg" alt="标记清除"></p>
-<p>弊端：</p>
-<p>1.效率：标记和清除的效率都不高</p>
-<p>2.空间：不需要对对象进行移动，仅对不存活的对象进行移除操作，对存活的对象不做处理，标记清除后会产生大量的不连续的内存碎片，空间碎片太多的话，当需要分配较大的对象的时候，就无法找到足够的连续的连续的内存而不得不进行另一次的垃圾回收动作。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4585udoj30jz07ljre.jpg" alt="内存碎片弊端"></p>
-<h4 id="二、复制算法"><a href="#二、复制算法" class="headerlink" title="二、复制算法"></a>二、复制算法</h4><p><strong>复制算法将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。</strong></p>
-<p><strong>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这种算法适用于对象存活率低的场景，比如新生代。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。</strong></p>
-<p>现在商用的虚拟机都采用这种算法来回收新生代。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e46smpkhj30ki02zq2t.jpg" alt="复制算法"></p>
-<p>因为研究发现，新生代中的对象每次回收都基本上只有10%左右的对象存活，所以需要复制的对象很少，效率还不错。</p>
-<p>实践中会将新生代内存分为一块较大的Eden空间和两块较小的Survivor空间。</p>
-<p>当回收时，将Eden和Survivor中还存活着的对象一次地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4a18pgdj30n109lnk7.jpg" alt="新生代回收"></p>
-<p>弊端：在对象存活率比较高的情况下，那么进行垃圾回收的时候就会进行大量的复制操作，效率比较低。</p>
-<h4 id="三、标记整理算法"><a href="#三、标记整理算法" class="headerlink" title="三、标记整理算法"></a>三、标记整理算法</h4><p><strong>复制收集算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。更关键的是，如果不想浪费50%的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况</strong></p>
-<p>所以在老年代一般不能直接选用这种算法。<strong>标记整理算法的标记过程类似标记清除算法，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存，类似于磁盘整理的过程，该垃圾回收算法适用于对象存活率高的场景（老年代）</strong></p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e4sb3ru1j30gy0g7js1.jpg" alt="标记整理算法"></p>
-<p>标记整理算法与标记清除算法最显著的区别是：标记清除算法不进行对象的移动，并且仅对不存活的对象进行处理；而标记整理算法会将所有的存活对象移动到一端，并对不存活对象进行处理，因此其不会产生内存碎片，可看做标记-清除算法的进阶版。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e51dp98cj30g902x74e.jpg" alt="对存活对象进行整理"></p>
-<h4 id="四、分代收集算法"><a href="#四、分代收集算法" class="headerlink" title="四、分代收集算法"></a>四、分代收集算法</h4><p>对于比较大型的系统来说，当创建的对象和方法变量比较多时，堆内存中的对象也会比较多，如果逐一分析对象是否该回收，那么势必造成效率低下。分代收集算法是基于这样一个事实：不同的对象的生命周期(存活情况)是不一样的，而不同生命周期的对象位于堆中不同的区域，因此对堆内存不同区域采用不同的策略进行回收可以提高 JVM 的执行效率。<strong>当代商用虚拟机使用的都是分代收集算法：新生代对象存活率低，就采用复制算法；老年代存活率高，就用标记清除算法或者标记整理算法。</strong>Java堆内存一般可以分为新生代、老年代和永久代三个模块。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0e57ul0t2j30fn08kgmb.jpg" alt="堆内存分代"></p>
-<p>1.新生代（Young Generation）</p>
-<p><strong>新生代的目标就是尽可能快速的收集掉那些生命周期短的对象，一般情况下，所有新生成的对象首先都是放在新生代的。</strong></p>
-<p>新生代内存按照 8:1:1 的比例分为一个eden区和两个survivor(survivor0，survivor1)区，大部分对象在Eden区中生成。<br>在进行垃圾回收时，先将eden区存活对象复制到survivor0区，然后清空eden区，当这个survivor0区也满了时，则将eden区和survivor0区存活对象复制到survivor1区，然后清空eden和这个survivor0区，此时survivor0区是空的，然后交换survivor0区和survivor1区的角色（即下次垃圾回收时会扫描Eden区和survivor1区），即保持survivor0区为空，如此往复。</p>
-<p>特别地，当survivor1区也不足以存放eden区和survivor0区的存活对象时，就将存活对象直接存放到老年代。如果老年代也满了，就会触发一次FullGC，也就是新生代、老年代都进行回收。</p>
-<p>注意，新生代发生的GC也叫做MinorGC，MinorGC发生频率比较高，不一定等 Eden区满了才触发。</p>
-<p>2.老年代（Old Generation）</p>
-<p>老年代存放的都是一些生命周期较长的对象，就像上面所叙述的那样，在新生代中经历了N次垃圾回收后仍然存活的对象就会被放到老年代中。此外，老年代的内存也比新生代大很多(大概比例是1:2)，当老年代满时会触发Major GC(Full GC)，老年代对象存活时间比较长，因此FullGC发生的频率比较低。</p>
-<p>3.永久代（Permanent Generation）</p>
-<p><strong>永久代主要用于存放静态文件，如Java类、方法等。</strong>永久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如使用反射、动态代理、CGLib等bytecode框架时，在这种时候需要设置一个比较大的永久代空间来存放这些运行过程中新增的类。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1117,7 +1114,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">64</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1130,7 +1127,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
