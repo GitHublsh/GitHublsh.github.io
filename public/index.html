@@ -303,7 +303,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/20/热修复接入浅析/" itemprop="url">热修复接入浅析</a></h1>
+                <a class="post-title-link" href="/2019/05/20/热修复接入浅析/" itemprop="url">Android热修复接入浅析</a></h1>
         
 
         <div class="post-meta">
@@ -364,7 +364,34 @@
       
         
           
-            <h3 id="Android热修复浅析"><a href="#Android热修复浅析" class="headerlink" title="Android热修复浅析"></a>Android热修复浅析</h3>
+            <h3 id="Android热修复浅析"><a href="#Android热修复浅析" class="headerlink" title="Android热修复浅析"></a>Android热修复浅析</h3><p>目前项目接入了阿里移动热修复，可以通过发补丁的形式，来快速修复线上问题。很方便快捷。</p>
+<p>阿里移动热修复已经很成熟，目前已商业化。</p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><p>HotFix总体来说最大的优势在于：</p>
+<ul>
+<li>补丁即时生效，不需要应用重启；</li>
+<li>补丁包同样采用差量技术，生成的PATCH体积小；</li>
+<li>对应用无侵入，几乎无性能损耗；</li>
+<li>两行代码，傻瓜式接入。（快速接入，但建议稳定接入）</li>
+</ul>
+<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/hotfixcompare.png" alt="热门移动热修复框架对比"></p>
+<h4 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a>功能特点</h4><ul>
+<li>（1）支持代码修复</li>
+<li>（2）支持图片资源修复</li>
+<li>（3）支持so包修复</li>
+<li>（4）采用差量包比对，补丁可以实现最小化</li>
+<li>（5）接入傻瓜式，两行代码接入</li>
+<li>（6）提供打包工具，一键生成补丁</li>
+<li>（7）及时修复，无需发版</li>
+</ul>
+<h4 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h4><h5 id="覆盖patch需要重启APP生效么？"><a href="#覆盖patch需要重启APP生效么？" class="headerlink" title="覆盖patch需要重启APP生效么？"></a>覆盖patch需要重启APP生效么？</h5><p>Android端分两种情况</p>
+<ul>
+<li><p>同一版本的Android端第一次被打补丁时，不用重启直接加载（支持热启动）；</p>
+</li>
+<li><p>同一版本的Android端在被第二次及更多次打补丁时，需要重启（只能冷启动）。</p>
+</li>
+</ul>
+<p>接入文档：<a href="https://help.aliyun.com/document_detail/93825.html?spm=a2c4g.11186631.6.580.24725feb2COuko" target="_blank" rel="external">Android SDK稳定接入</a></p>
+
           
         
       
