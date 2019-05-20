@@ -284,6 +284,143 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/14/TCP-IP三次握手和四次挥手浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/14/TCP-IP三次握手和四次挥手浅析/" itemprop="url">TCP/IP三次握手和四次挥手浅析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-14T18:45:09+08:00">
+                2019-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/01/14/TCP-IP三次握手和四次挥手浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/01/14/TCP-IP三次握手和四次挥手浅析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="TCP-IP三次握手和四次挥手"><a href="#TCP-IP三次握手和四次挥手" class="headerlink" title="TCP/IP三次握手和四次挥手"></a>TCP/IP三次握手和四次挥手</h3><h4 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h4><p>引用：<a href="https://wenku.baidu.com/view/6ec2bad7195f312b3169a5da.html?from=search" target="_blank" rel="external">TCP/IP</a></p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u9lf2hmjj30u00midj9.jpg" alt="TCP数据报文"></p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u9j6s45tj30u00miwgx.jpg" alt="三次握手"></p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u9kgyczsj30u00miacl.jpg" alt="四次挥手"></p>
+<h4 id="一、网络分层"><a href="#一、网络分层" class="headerlink" title="一、网络分层"></a>一、网络分层</h4><p>为了使不同计算机厂家生产的计算机能够相互通信，以便在更大的范围内建立计算机网络，国际标准化组织（ISO）在1978年提出了“开放系统互联参考模型”，即著名的OSI/RM模型（Open System Interconnection/Reference Model）。它将计算机网络体系结构的通信协议划分为七层，自下而上依次为：物理层（Physics Layer）、数据链路层（Data Link Layer）、网络层（Network Layer）、传输层（Transport Layer）、会话层（Session Layer）、表示层（Presentation Layer）、应用层（Application Layer）。其中第四层完成数据传送服务，上面三层面向用户。<br>　　除了标准的OSI七层模型以外，常见的网络层次划分还有TCP/IP四层协议以及TCP/IP五层协议，它们之间的对应关系如下图所示：<br>　　<br><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qjeaejckj30ku0d2gmy.jpg" alt="OSI七层模型"></p>
+<h4 id="二、三次握手和四次挥手"><a href="#二、三次握手和四次挥手" class="headerlink" title="二、三次握手和四次挥手"></a>二、三次握手和四次挥手</h4><p>TCP/IP协议是Internet最基本的协议、Internet国际互联网络的基础，由网络层的IP协议和传输层的TCP协议组成。通俗而言：TCP负责发现传输的问题，一有问题就发出信号，要求重新传输，直到所有数据安全正确地传输到目的地。而IP是给因特网的每一台联网设备规定一个地址。</p>
+<p>　　IP层接收由更低层（网络接口层例如以太网设备驱动程序）发来的数据包，并把该数据包发送到更高层—TCP或UDP层；相反，IP层也把从TCP或UDP层接收来的数据包传送到更低层。IP数据包是不可靠的，因为IP并没有做任何事情来确认数据包是否按顺序发送的或者有没有被破坏，IP数据包中含有发送它的主机的地址（源地址）和接收它的主机的地址（目的地址）。<br>　　<br> 　　TCP是面向连接的通信协议，通过三次握手建立连接，通讯完成时要拆除连接，由于TCP是面向连接的所以只能用于端到端的通讯。TCP提供的是一种可靠的数据流服务，采用“带重传的肯定确认”技术来实现传输的可靠性。TCP还采用一种称为“滑动窗口”的方式进行流量控制，所谓窗口实际表示接收能力，用以限制发送方的发送速度。<br> 　　<br> 　　<br> 　　<img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qyjgqtidj30ih0dmt99.jpg" alt="TCP报文">
+ 　　</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qjrc7umkj30f60lcq43.jpg" alt="三次握手和四次挥手"></p>
+<p>注：seq:”sequance”序列号；ack:”acknowledge”确认号；SYN:”synchronize”请求同步标志；；ACK:”acknowledge”确认标志”；FIN：”Finally”结束标志。</p>
+<p>TCP连接建立过程：</p>
+<p>首先Client端发送连接请求报文，Server段接受连接后回复ACK报文，并为这次连接分配资源。Client端接收到ACK报文后也向Server段发生ACK报文，并分配资源，这样TCP连接就建立了。</p>
+<p>TCP连接断开过程：</p>
+<p>假设Client端发起中断连接请求，也就是发送FIN报文。Server端接到FIN报文后，意思是说”我Client端没有数据要发给你了”，但是如果你还有数据没有发送完成，则不必急着关闭Socket，可以继续发送数据。所以你先发送ACK，”告诉Client端，你的请求我收到了，但是我还没准备好，请继续你等我的消息”。这个时候Client端就进入FIN_WAIT状态，继续等待Server端的FIN报文。当Server端确定数据已发送完成，则向Client端发送FIN报文，”告诉Client端，好了，我这边数据发完了，准备好关闭连接了”。Client端收到FIN报文后，”就知道可以关闭连接了，但是他还是不相信网络，怕Server端不知道要关闭，所以发送ACK后进入TIME_WAIT状态，如果Server端没有收到ACK则可以重传。“，Server端收到ACK后，”就知道可以断开连接了”。Client端等待了2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，我Client端也可以关闭连接了。那么TCP连接就这样关闭了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/10/HTTP1-0与HTTP2-0的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -928,143 +1065,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/07/Android-Studio3-0-Trace分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/07/Android-Studio3-0-Trace分析/" itemprop="url">Android Studio3.0+ Trace分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-07T11:04:26+08:00">
-                2018-11-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/07/Android-Studio3-0-Trace分析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/11/07/Android-Studio3-0-Trace分析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>在进行性能优化的时候，很多情况下需要去看方法耗时。这个时候我们就需要通过Trace来查看方法具体耗时情况。</p>
-<h4 id="二、具体使用方法"><a href="#二、具体使用方法" class="headerlink" title="二、具体使用方法"></a>二、具体使用方法</h4><h5 id="1-使用DDMS工具来查看trace进行分析"><a href="#1-使用DDMS工具来查看trace进行分析" class="headerlink" title="1.使用DDMS工具来查看trace进行分析"></a>1.使用DDMS工具来查看trace进行分析</h5><p>在Android Studio3.0 之前，在AS IDE面板中-&gt;Tools-&gt;Android Device Monitor 打开即可使用，通过点击Start Method Profiling(为红色)按钮开始进行方法调用跟踪(点击后会变为黑色)，停止时再点击停止，即可生成trace文件进行分析。</p>
-<p>需要注意的是，在AS3.0+ DDMS从面板上移除了，官方给的说法是：</p>
-<p>However, most components of the Android Device Monitor are deprecated in favor of updated tools available in Android Studio 3.0 and higher.</p>
-<p>那就手动的去启动就OK了。（在Terminal中输入命令 monitor 启动DDMS）</p>
-<h5 id="2-通过代码进行追踪"><a href="#2-通过代码进行追踪" class="headerlink" title="2.通过代码进行追踪"></a>2.通过代码进行追踪</h5><p>在需要分析的代码中添加</p>
-<p>开始</p>
-<pre><code>Debug.startMethodTracing()
-</code></pre><p>结束</p>
-<pre><code>Debug.stopMethodTracing()
-</code></pre><p>这样就会生成.trace文件了。</p>
-<h4 id="三、分析trace文件"><a href="#三、分析trace文件" class="headerlink" title="三、分析trace文件"></a>三、分析trace文件</h4><p>在面板中会有各种数据，这个时候就需要搞清楚各个参数所代表的具体含义了。</p>
-<p>最关心的数据有：<br>很重要的指标：Calls + Recur Calls / Total , 最重要的指标： Cpu Time / Call<br>因为我们最关心的有两点，一是调用次数不多，但每次调用却需要花费很长时间的函数。这个可以从Cpu Time / Call反映出来。另外一个是那些自身占用时间不长，但调用却非常频繁的函数。这个可以从<strong>Calls + Recur Calls / Total </strong>反映出来。</p>
-<p>当体验卡顿的时候，我们可以借助TraceView来定位问题</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1114,7 +1114,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-count">65</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1127,7 +1127,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
