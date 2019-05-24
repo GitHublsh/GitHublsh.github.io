@@ -90,7 +90,7 @@ public static final MediaType JSON
 		  return response.body().string();
 		}
 ```	
-
+---
 ```
 //异步请求
 public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");	
