@@ -552,40 +552,33 @@
 <ol>
 <li>GET请求</li>
 </ol>
-<pre><code>#####同步请求
-
+<p>#####同步请求</p>
 <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line">	</div><div class="line"><span class="built_in">String</span> run(<span class="built_in">String</span> url) throws IOException &#123;</div><div class="line"><span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()</div><div class="line">	.url(url)</div><div class="line">	.build();</div><div class="line">	</div><div class="line"><span class="built_in">Response</span> <span class="built_in">response</span> = client.newCall(<span class="built_in">request</span>).<span class="keyword">execute</span>();</div><div class="line">return <span class="built_in">response</span>.body().<span class="built_in">string</span>();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-
-#####异步请求
-
+<p>#####异步请求</p>
 <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line"><span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()</div><div class="line">	.url(url)</div><div class="line">	.build();</div><div class="line">client.newCall(<span class="built_in">request</span>).enqueue(<span class="keyword">new</span> CallBack()&#123;</div><div class="line">	@Override</div><div class="line">	<span class="keyword">public</span> void onFailure(<span class="built_in">Request</span> <span class="built_in">request</span>,IOException e)&#123;</div><div class="line">	&#125;</div><div class="line">	@Override</div><div class="line">	<span class="keyword">public</span> void onResponse(<span class="built_in">Response</span> <span class="built_in">response</span>)&#123;</div><div class="line">	&#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-</code></pre><ol>
-<li><p>POST请求</p>
-<p> #####同步请求</p>
- <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> static final MediaType JSON</div><div class="line">		    = MediaType.parse(<span class="string">"application/json; charset=utf-8"</span>);</div><div class="line">		</div><div class="line">		OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line">		</div><div class="line">		<span class="built_in">String</span> post(<span class="built_in">String</span> url, <span class="built_in">String</span> json) throws IOException &#123;</div><div class="line">		  RequestBody body = RequestBody.create(JSON, json);</div><div class="line">		  <span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()</div><div class="line">		      .url(url)</div><div class="line">		      .post(body)</div><div class="line">		      .build();</div><div class="line">		  <span class="built_in">Response</span> <span class="built_in">response</span> = client.newCall(<span class="built_in">request</span>).<span class="keyword">execute</span>();</div><div class="line">		  return <span class="built_in">response</span>.body().<span class="built_in">string</span>();</div><div class="line">		&#125;</div><div class="line">```	</div><div class="line"></div><div class="line">#####异步请求</div></pre></td></tr></table></figure>
-</li>
+<ol>
+<li>POST请求</li>
 </ol>
-<pre><code>public static final MediaType JSON
-            = MediaType.parse(&quot;application/json; charset=utf-8&quot;);
+<p>#####同步请求</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> static final MediaType JSON</div><div class="line">		    = MediaType.parse(<span class="string">"application/json; charset=utf-8"</span>);</div><div class="line">		</div><div class="line">		OkHttpClient client = <span class="keyword">new</span> OkHttpClient();</div><div class="line">		</div><div class="line">		<span class="built_in">String</span> post(<span class="built_in">String</span> url, <span class="built_in">String</span> json) throws IOException &#123;</div><div class="line">		  RequestBody body = RequestBody.create(JSON, json);</div><div class="line">		  <span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()</div><div class="line">		      .url(url)</div><div class="line">		      .post(body)</div><div class="line">		      .build();</div><div class="line">		  <span class="built_in">Response</span> <span class="built_in">response</span> = client.newCall(<span class="built_in">request</span>).<span class="keyword">execute</span>();</div><div class="line">		  return <span class="built_in">response</span>.body().<span class="built_in">string</span>();</div><div class="line">		&#125;</div><div class="line">```	</div><div class="line">	</div><div class="line">#####异步请求</div></pre></td></tr></table></figure>
+<p>public static final MediaType JSON<br>            = MediaType.parse(“application/json; charset=utf-8”);</p>
+<pre><code>OkHttpClient client = new OkHttpClient();
 
-        OkHttpClient client = new OkHttpClient();
-
-          RequestBody body = RequestBody.create(JSON, json);
-          Request request = new Request.Builder()
-              .url(url)
-              .post(body)
-              .build();
-          client.newCall(request).enqueue(new CallBack(){
-                  @Override
-                public void onFailure(Request request,IOException e){
-                }
-                @Override
-                public void onResponse(Response response){
-                }
-          })
-```
-</code></pre><h4 id="二、架构总览"><a href="#二、架构总览" class="headerlink" title="二、架构总览"></a>二、架构总览</h4><p>借用网上的图···（侵权必删）</p>
+  RequestBody body = RequestBody.create(JSON, json);
+  Request request = new Request.Builder()
+      .url(url)
+      .post(body)
+      .build();
+  client.newCall(request).enqueue(new CallBack(){
+          @Override
+        public void onFailure(Request request,IOException e){
+        }
+        @Override
+        public void onResponse(Response response){
+        }
+  })
+</code></pre><p>```</p>
+<h4 id="二、架构总览"><a href="#二、架构总览" class="headerlink" title="二、架构总览"></a>二、架构总览</h4><p>借用网上的图···（侵权必删）</p>
 <p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0vijgeezyj30k10ubtbe.jpg" alt="整体架构"></p>
 <h4 id="三、OkHttp的优点"><a href="#三、OkHttp的优点" class="headerlink" title="三、OkHttp的优点"></a>三、OkHttp的优点</h4><p>网上的各路大神已经总结过很多遍了，我再来一遍，加深记忆···</p>
 <ul>
