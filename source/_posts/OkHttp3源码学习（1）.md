@@ -93,6 +93,21 @@ public static final MediaType JSON
 
 ```
 //异步请求
+OkHttpClient client = new OkHttpClient();
+Request request = new Request.Builder()
+	.url(url)
+	.build();
+client.newCall(request).enqueue(new CallBack(){
+	@Override
+	public void onFailure(Request request,IOException e){
+	}
+	@Override
+	public void onResponse(Response response){
+	}
+})
+```
+```
+//异步请求
 public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");	
    OkHttpClient client = new OkHttpClient();
    RequestBody body = RequestBody.create(JSON, json);
