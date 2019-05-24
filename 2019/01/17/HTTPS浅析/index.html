@@ -118,14 +118,14 @@
 <meta property="og:url" content="http://yoursite.com/2019/01/17/HTTPS浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="什么是HTTPS?HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u8dymy5aj30pq0evgpr.jpg">
-<meta property="og:updated_time" content="2019-03-07T06:50:04.000Z">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/httpsliucheng.jpg">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/httpsjiami.jpg">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/httpszszy.jpg">
+<meta property="og:updated_time" content="2019-05-24T10:18:55.929Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTPS浅析">
 <meta name="twitter:description" content="什么是HTTPS?HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。 HTTPS的特点如下，  内容加密：采用混合">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg">
+<meta name="twitter:image" content="https://github.com/GitHublsh/BlogPic/raw/master/httpsliucheng.jpg">
 
 
 
@@ -373,7 +373,7 @@
 </ol>
 <p>PS:</p>
 <p>混合加密：结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。 </p>
-<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg" alt="流程"></p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><img src="https://github.com/GitHublsh/BlogPic/raw/master/httpsliucheng.jpg" alt="流程"></p>
 <ol>
 <li>client向server发送请求，然后连接到server的443端口。</li>
 </ol>
@@ -392,7 +392,7 @@
 <li><p>客户端解密信息<br>客户端用之前生成的私钥解密服务端传过来的信息，于是获取了解密后的内容。</p>
 </li>
 </ol>
-<h3 id="如何保证证书安全，没有被替换？"><a href="#如何保证证书安全，没有被替换？" class="headerlink" title="如何保证证书安全，没有被替换？"></a>如何保证证书安全，没有被替换？</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg" alt="大致流程"></p>
+<h3 id="如何保证证书安全，没有被替换？"><a href="#如何保证证书安全，没有被替换？" class="headerlink" title="如何保证证书安全，没有被替换？"></a>如何保证证书安全，没有被替换？</h3><p><img src="https://github.com/GitHublsh/BlogPic/raw/master/httpsjiami.jpg" alt="大致流程"></p>
 <p>如上图所示，在第 ② 步时服务器发送了一个SSL证书给客户端，SSL 证书中包含的具体内容有证书的颁发机构、有效期、公钥、证书持有者、签名，通过第三方的校验保证了身份的合法，解决了公钥获取的安全性</p>
 <p>以浏览器为例说明如下整个的校验过程：</p>
 <p>（1）首先浏览器读取证书中的证书所有者、有效期等信息进行一一校验</p>
@@ -402,7 +402,7 @@
 <p>（5）浏览器使用相同的hash算法计算出服务器发来的证书的hash值，将这个计算的hash值与证书中签名做对比</p>
 <p>（6）对比结果一致，则证明服务器发来的证书合法，没有被冒充</p>
 <p>（7）此时浏览器就可以读取证书中的公钥，用于后续加密了</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u8dymy5aj30pq0evgpr.jpg" alt="证书摘要对比"></p>
+<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/httpszszy.jpg" alt="证书摘要对比"></p>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>HTTPS要使客户端与服务器端的通信过程得到安全保证，必须使用的对称加密算法，但是协商对称加密算法的过程，需要使用非对称加密算法来保证安全，然而直接使用非对称加密的过程本身也不安全，会有中间人篡改公钥的可能性，所以客户端与服务器不直接使用公钥，而是使用数字证书签发机构颁发的证书来保证非对称加密过程本身的安全。这样通过这些机制协商出一个对称加密算法，就此双方使用该算法进行加密解密。从而解决了客户端与服务器端之间的通信安全问题。</p>
 
       

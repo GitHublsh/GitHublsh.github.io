@@ -118,14 +118,14 @@
 <meta property="og:url" content="http://yoursite.com/2019/01/10/HTTP1-0与HTTP2-0的区别/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="HTTP1.0与HTTP2.0的区别一、HTTP2.0简介HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。 HTTP 2.0 的出现，相">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg">
-<meta property="og:updated_time" content="2019-03-06T02:52:44.000Z">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/http1vs2.jpg">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7.jpg">
+<meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81.jpg">
+<meta property="og:updated_time" content="2019-05-24T10:13:52.391Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP1.0与HTTP2.0的区别">
 <meta name="twitter:description" content="HTTP1.0与HTTP2.0的区别一、HTTP2.0简介HTTP/2（超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2是HTTP协议自1999年HTTP 1.1发布后的首个更新，主要基于SPDY协议（是Google开发的基于TCP的应用层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验）。 HTTP 2.0 的出现，相">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg">
+<meta name="twitter:image" content="https://github.com/GitHublsh/BlogPic/raw/master/http1vs2.jpg">
 
 
 
@@ -378,12 +378,12 @@
 </ol>
 <h3 id="三、为什么采用二进制格式？"><a href="#三、为什么采用二进制格式？" class="headerlink" title="三、为什么采用二进制格式？"></a>三、为什么采用二进制格式？</h3><p>HTTP1.x的解析是基于文本。基于文本协议的格式解析存在天然缺陷，文本的表现形式有多样性，要做到健壮性考虑的场景必然很多，二进制则不同，只认0和1的组合。基于这种考虑HTTP2.0的协议解析决定采用二进制格式，实现方便且健壮。</p>
 <p>###四、为什么要多路复用？</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0qtyqecozj30f30eyn13.jpg" alt="多路复用"></p>
+<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/http1vs2.jpg" alt="多路复用"></p>
 <p>整个访问流程第一次请求index.html页面,之后浏览器会去请求style.css和scripts.js的文件。左边的图是顺序加载两个个文件的，右边则是并行加载两个文件。<br>多路复用允许单一的 HTTP/2 连接同时发起多重的请求-响应消息。</p>
 <p>HTTP 性能优化的关键并不在于高带宽，而是低延迟。</p>
 <p>首先你要知道，TCP连接相当于两根管道（一个用于服务器到客户端，一个用于客户端到服务器），管道里面数据传输是通过字节码传输，传输是有序的，每个字节都是一个一个来传输。</p>
 <p>这个时候有一个新的概念就是：二进制分帧。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0sv946jnlj30hd090aal.jpg" alt="二进制分帧"></p>
+<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%88%86%E5%B8%A7.jpg" alt="二进制分帧"></p>
 <p>HTTP2.0通过在应用层和传输层之间增加一个二进制分帧层，突破了HTTP1.1的性能限制、改进传输性能。</p>
 <p>二进制分帧层 在 应用层(HTTP/2)和传输层(TCP or UDP)之间。HTTP/2并没有去修改TCP协议而是尽可能的利用TCP的特性。</p>
 <p>在二进制分帧层中， HTTP/2 会将所有传输的信息分割为帧（frame）,并对它们采用二进制格式的编码 ，其中 首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。</p>
@@ -392,7 +392,7 @@
 <p>随着 Web 功能越来越复杂，每个页面产生的请求数也越来越多，导致消耗在头部的流量越来越多，尤其是每次都要传输 UserAgent、Cookie 这类不会频繁变动的内容，完全是一种浪费。<br>进行头部压缩，既避免了重复header的传输，又减小了需要传输的大小。高效的压缩算法可以很大的压缩header，减少发送包的数量从而降低延迟。</p>
 <h3 id="六、服务器推送的好处是什么？"><a href="#六、服务器推送的好处是什么？" class="headerlink" title="六、服务器推送的好处是什么？"></a>六、服务器推送的好处是什么？</h3><p>服务端推送是一种在客户端请求之前发送数据的机制。当代网页使用了许多资源:HTML、样式表、脚本、图片等等。在HTTP/1.x中这些资源每一个都必须明确地请求。这可能是一个很慢的过程。浏览器从获取HTML开始，然后在它解析和评估页面的时候，增量地获取更多的资源。因为服务器必须等待浏览器做每一个请求，网络经常是空闲的和未充分使用的。</p>
 <p>为了改善延迟，HTTP/2引入了server push，它允许服务端推送资源给浏览器，在浏览器明确地请求之前。一个服务器经常知道一个页面需要很多附加资源，在它响应浏览器第一个请求的时候，可以开始推送这些资源。这允许服务端去完全充分地利用一个可能空闲的网络，改善页面加载时间。</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0svh0s3lxj30ff09g0su.jpg" alt="服务器推送"></p>
+<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A8%E9%80%81.jpg" alt="服务器推送"></p>
 
       
     </div>
