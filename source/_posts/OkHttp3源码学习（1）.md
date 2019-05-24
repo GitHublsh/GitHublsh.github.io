@@ -95,6 +95,7 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 	#####异步请求
 			
 	```
+	
 	public static final MediaType JSON
 			    = MediaType.parse("application/json; charset=utf-8");
 			
