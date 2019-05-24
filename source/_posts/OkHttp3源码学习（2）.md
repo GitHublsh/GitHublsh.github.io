@@ -8,7 +8,7 @@ tags: [OkHttp3]
 
 整体流程：
 
-![整体流程](https://ws1.sinaimg.cn/large/0068AzoVgy1g0vimeltgnj30nx0pl0ud.jpg)
+![整体流程](https://github.com/GitHublsh/BlogPic/raw/master/okhttp.png)
 
 那么，从这一节开始，进行源码分析解读···
 

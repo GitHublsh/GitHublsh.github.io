@@ -39,9 +39,8 @@ OkHttp 处理了很多网络疑难杂症：会从很多常用的连接问题中�
 1. GET请求
 
 
-#####同步请求
-
 ```
+//同步请求
 OkHttpClient client = new OkHttpClient();
 	
 String run(String url) throws IOException {
@@ -55,9 +54,8 @@ return response.body().string();
 	
 ```
 		
-#####异步请求
-
 ```
+//异步请求
 OkHttpClient client = new OkHttpClient();
 Request request = new Request.Builder()
 	.url(url)
@@ -74,9 +72,9 @@ client.newCall(request).enqueue(new CallBack(){
 			
 2. POST请求
 
-#####同步请求
 	
 ```
+//同步请求
 public static final MediaType JSON
 		    = MediaType.parse("application/json; charset=utf-8");
 		
@@ -92,10 +90,9 @@ public static final MediaType JSON
 		  return response.body().string();
 		}
 ```	
-	
-#####异步请求
-			
+				
 ```
+//异步请求
 public static final MediaType JSON
 		    = MediaType.parse("application/json; charset=utf-8");
 		
@@ -121,7 +118,7 @@ public static final MediaType JSON
 #### 二、架构总览
 借用网上的图···（侵权必删）
 
-![整体架构](https://ws1.sinaimg.cn/large/0068AzoVgy1g0vijgeezyj30k10ubtbe.jpg)
+![整体架构](https://github.com/GitHublsh/BlogPic/raw/master/okhttp%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84.jpg)
 
 #### 三、OkHttp的优点
 
