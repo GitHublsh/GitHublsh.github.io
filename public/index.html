@@ -956,7 +956,7 @@
 <p>当一个ClassLoader实例需要加载某个类时，它会试图亲自搜索某个类之前，先把这个任务委托给它的父类加载器，这个过程是由上至下依次检查的，首先由最顶层的类加载器Bootstrap ClassLoader试图加载，如果没加载到，则把任务转交给Extension ClassLoader试图加载，如果也没加载到，则转交给App ClassLoader 进行加载，如果它也没有加载得到的话，则返回给委托的发起者，由它到指定的文件系统或网络等URL中加载该类。如果它们都没有加载到这个类时，则抛出ClassNotFoundException异常。否则将这个找到的类生成一个类的定义，并将它加载到内存当中，最后返回这个类在内存中的Class实例对象。</p>
 <h5 id="2-为什么要使用双亲委派模型？"><a href="#2-为什么要使用双亲委派模型？" class="headerlink" title="2.为什么要使用双亲委派模型？"></a>2.为什么要使用双亲委派模型？</h5><p>   安全。为了避免重复加载，例如系统类String可以被任意更改，那么就会引发安全问题。当父加载器已经加载了一个类，那么子加载器就不需要再去加载一次了。</p>
 <h5 id="3-JVM在搜索类的时候，又是如何判定两个class是相同的呢？"><a href="#3-JVM在搜索类的时候，又是如何判定两个class是相同的呢？" class="headerlink" title="3. JVM在搜索类的时候，又是如何判定两个class是相同的呢？"></a>3. JVM在搜索类的时候，又是如何判定两个class是相同的呢？</h5><p> JVM在判定两个class是否相同时，不仅要判断两个类名是否相同，而且要判断是否由同一个类加载器实例加载的。只有两者同时满足的情况下，JVM才认为这两个class是相同的。就算两个class是同一份class字节码，如果被两个不同的ClassLoader实例所加载，JVM也会认为它们是两个不同class。</p>
-<h4 id="二、ClassLoader体系结构"><a href="#二、ClassLoader体系结构" class="headerlink" title="二、ClassLoader体系结构"></a>二、ClassLoader体系结构</h4><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0bj0ovi2qj30m80fiqc1.jpg" alt="ClassLoader体系结构"></p>
+<h4 id="二、ClassLoader体系结构"><a href="#二、ClassLoader体系结构" class="headerlink" title="二、ClassLoader体系结构"></a>二、ClassLoader体系结构</h4><p><img src="https://github.com/GitHublsh/BlogPic/raw/master/javaclassloader.jpg" alt="ClassLoader体系结构"></p>
 
           
         
