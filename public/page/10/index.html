@@ -284,6 +284,174 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/26/OkHttp3源码学习（2）/" itemprop="url">OkHttp3源码学习（2）-发起请求源码实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T15:25:37+08:00">
+                2017-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/07/26/OkHttp3源码学习（2）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/26/OkHttp3源码学习（2）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><a href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。" class="headerlink" title="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"></a>上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</h4><p>整体流程：</p>
+<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0vimeltgnj30nx0pl0ud.jpg" alt="整体流程"></p>
+<p>那么，从这一节开始，进行源码分析解读···</p>
+<h4 id="一、创建OkHttpClient对象"><a href="#一、创建OkHttpClient对象" class="headerlink" title="一、创建OkHttpClient对象"></a>一、创建OkHttpClient对象</h4><p><code>OkHttpClient client = new OkHttpClient();</code></p>
+<p>创建时，做了什么事情？</p>
+<p>直接进OkHttpClient.java </p>
+<p>如果我们不做任何配置，那么就采用默认的配置，已经写好。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public OkHttpClient() &#123;</div><div class="line">    this(new <span class="keyword">Builder());</span></div><div class="line">  &#125;</div><div class="line">  </div><div class="line">public <span class="keyword">Builder() </span>&#123;</div><div class="line">  <span class="keyword">dispatcher </span>= new <span class="keyword">Dispatcher();</span></div><div class="line">  protocols = DEFAULT_PROTOCOLS<span class="comment">;</span></div><div class="line">  connectionSpecs = DEFAULT_CONNECTION_SPECS<span class="comment">;</span></div><div class="line">  eventListenerFactory = EventListener.factory(EventListener.NONE)<span class="comment">;</span></div><div class="line">  proxySelector = ProxySelector.getDefault()<span class="comment">;</span></div><div class="line">  cookieJar = CookieJar.NO_COOKIES<span class="comment">;</span></div><div class="line">  socketFactory = SocketFactory.getDefault()<span class="comment">;</span></div><div class="line">  hostnameVerifier = OkHostnameVerifier.<span class="keyword">INSTANCE;</span></div><div class="line">  certificatePinner = CertificatePinner.DEFAULT<span class="comment">;</span></div><div class="line">  proxyAuthenticator = Authenticator.NONE<span class="comment">;</span></div><div class="line">  authenticator = Authenticator.NONE<span class="comment">;</span></div><div class="line">  connectionPool = new ConnectionPool()<span class="comment">;</span></div><div class="line">  dns = Dns.SYSTEM<span class="comment">;</span></div><div class="line">  followSslRedirects = true<span class="comment">;</span></div><div class="line">  followRedirects = true<span class="comment">;</span></div><div class="line">  retryOnConnectionFailure = true<span class="comment">;</span></div><div class="line">  connectTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  readTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  writeTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  pingInterval = <span class="number">0</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>  当然，如果自己想设置一些参数:</p>
+  <figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">OkHttpClient<span class="built_in"> client </span>= new OkHttpClient.Builder()  </div><div class="line">    .connectTimeout(10, TimeUnit.SECONDS)</div><div class="line">    .addInterceptor(<span class="built_in">..</span>.)</div><div class="line">    <span class="built_in">..</span><span class="built_in">..</span></div><div class="line">    .build();</div></pre></td></tr></table></figure>
+<p> 个性化配置包你满意。</p>
+<h4 id="二、创建网络请求"><a href="#二、创建网络请求" class="headerlink" title="二、创建网络请求"></a>二、创建网络请求</h4><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()  </div><div class="line">        .addHeader(<span class="string">"Connection"</span>, <span class="string">"Keep-Alive"</span>)</div><div class="line">        .url(<span class="string">"http://www.google.com"</span>)</div><div class="line">        ....</div><div class="line">        .build();</div></pre></td></tr></table></figure>
+<p>  这里默认发送的请求是GET：</p>
+  <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public Builder() &#123;</div><div class="line">     this.method = <span class="string">"<span class="keyword">GET</span>"</span>;</div><div class="line">     this.headers = new Headers.Builder();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>发送POST请求，上一章节已经说明了请求方法，源码中实现：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public Builder post(RequestBody body) &#123;</div><div class="line">     return method(<span class="string">"<span class="keyword">POST</span>"</span>, body);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="三、拿到Call对象"><a href="#三、拿到Call对象" class="headerlink" title="三、拿到Call对象"></a>三、拿到Call对象</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Call</span> <span class="keyword">call</span> = client.newCall(request);</div></pre></td></tr></table></figure>
+<p>Call即是一个实际的访问请求，用户的每一个网络请求都是一个Call实例。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * A call is a request that has been prepared for execution. A call can be canceled. As this object</div><div class="line"> * represents a single request/response pair (stream), it cannot be executed twice.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Call</span> <span class="keyword">extends</span> <span class="title">Cloneable</span> </span>&#123;</div><div class="line">	···</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个，所以不能执行两次。</p>
+<p>实际在执行过程中，OkHttp会为每个请求创建一个RealCall.那么再进RealCall看看。</p>
+<ul>
+<li>发起一个同步请求</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="keyword">public</span> <span class="function">Response <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">	      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">	      executed = <span class="keyword">true</span>;</div><div class="line">	    &#125;</div><div class="line">	    captureCallStackTrace();</div><div class="line">	    <span class="keyword">try</span> &#123;</div><div class="line">	      client.dispatcher().executed(<span class="keyword">this</span>);</div><div class="line">	      Response result = getResponseWithInterceptorChain();</div><div class="line">	      <span class="keyword">if</span> (result == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Canceled"</span>);</div><div class="line">	      <span class="keyword">return</span> result;</div><div class="line">	    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">	      client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">	    &#125;</div><div class="line">	  &#125;</div><div class="line">	  </div><div class="line">	  </div><div class="line">	  </div><div class="line">	   <span class="comment">/** Used by &#123;<span class="doctag">@code</span> Call#execute&#125; to signal it is in-flight. */</span></div><div class="line">		  <span class="keyword">synchronized</span> <span class="function"><span class="keyword">void</span> <span class="title">executed</span><span class="params">(RealCall call)</span> </span>&#123;</div><div class="line">		    runningSyncCalls.add(call);</div><div class="line">		  &#125;</div></pre></td></tr></table></figure>
+<pre><code>* 发起同步请求，通过dispatcher.executed()添加到同步队列中执行
+* 调用getResponseWithInterceptorChain获取服务器返回
+* 最后通知任务分发器client.dispatcher().finished(this)任务结束
+</code></pre><ul>
+<li>发起异步请求</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"> @Override <span class="keyword">public</span> <span class="keyword">void</span> enqueue(Callback responseCallback) &#123;</div><div class="line">		    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">		      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">		      executed = <span class="keyword">true</span>;</div><div class="line">		    &#125;</div><div class="line">		    captureCallStackTrace();</div><div class="line">		    client.dispatcher().enqueue(<span class="keyword">new</span> AsyncCall(responseCallback));</div><div class="line">		  &#125;</div><div class="line">		  </div><div class="line">		  </div><div class="line">	  </div><div class="line">		<span class="keyword">synchronized</span> <span class="keyword">void</span> enqueue(AsyncCall <span class="keyword">call</span>) &#123;</div><div class="line">		<span class="keyword">if</span> (runningAsyncCalls.<span class="keyword">size</span>() &lt; maxRequests &amp;&amp; runningCallsForHost(<span class="keyword">call</span>) &lt; maxRequestsPerHost) &#123;</div><div class="line">		  runningAsyncCalls.add(<span class="keyword">call</span>);</div><div class="line">		  executorService().execute(<span class="keyword">call</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">		  readyAsyncCalls.add(<span class="keyword">call</span>);</div><div class="line">		&#125;</div><div class="line">		&#125;</div><div class="line">    </div><div class="line">    </div><div class="line">    AsyncCall.java</div><div class="line">    </div><div class="line">	    <span class="keyword">final</span> <span class="keyword">class</span> AsyncCall <span class="keyword">extends</span> NamedRunnable &#123;</div><div class="line">	    <span class="keyword">private</span> <span class="keyword">final</span> Callback responseCallback;</div><div class="line">	</div><div class="line">	    AsyncCall(Callback responseCallback) &#123;</div><div class="line">	      <span class="keyword">super</span>(<span class="string">"OkHttp %s"</span>, redactedUrl());</div><div class="line">	      <span class="keyword">this</span>.responseCallback = responseCallback;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    String host() &#123;</div><div class="line">	      <span class="keyword">return</span> originalRequest.url().host();</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    Request request() &#123;</div><div class="line">	      <span class="keyword">return</span> originalRequest;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    RealCall get() &#123;</div><div class="line">	      <span class="keyword">return</span> RealCall.<span class="keyword">this</span>;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    @Override <span class="keyword">protected</span> <span class="keyword">void</span> execute() &#123;</div><div class="line">	      <span class="keyword">boolean</span> signalledCallback = <span class="keyword">false</span>;</div><div class="line">	      <span class="keyword">try</span> &#123;</div><div class="line">	        Response response = getResponseWithInterceptorChain();</div><div class="line">	        <span class="keyword">if</span> (retryAndFollowUpInterceptor.isCanceled()) &#123;</div><div class="line">	          signalledCallback = <span class="keyword">true</span>;</div><div class="line">	          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, <span class="keyword">new</span> IOException(<span class="string">"Canceled"</span>));</div><div class="line">	        &#125; <span class="keyword">else</span> &#123;</div><div class="line">	          signalledCallback = <span class="keyword">true</span>;</div><div class="line">	          responseCallback.onResponse(RealCall.<span class="keyword">this</span>, response);</div><div class="line">	        &#125;</div><div class="line">	      &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	        <span class="keyword">if</span> (signalledCallback) &#123;</div><div class="line">	          <span class="comment">// Do not signal the callback twice!</span></div><div class="line">	          Platform.get().log(INFO, <span class="string">"Callback failure for "</span> + toLoggableString(), e);</div><div class="line">	        &#125; <span class="keyword">else</span> &#123;</div><div class="line">	          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, e);</div><div class="line">	        &#125;</div><div class="line">	      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">	        client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">	      &#125;</div><div class="line">	    &#125;</div><div class="line">	  	&#125;</div><div class="line">```	 	  	</div><div class="line">	  	</div><div class="line">RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。</div><div class="line">	 </div><div class="line"></div><div class="line">#### 四、构建拦截器链</div><div class="line"></div><div class="line">还是在RealCall.java中，看源码是如何构建的。</div></pre></td></tr></table></figure>
+<p>Response getResponseWithInterceptorChain() throws IOException {<br>        // Build a full stack of interceptors.<br>        List<interceptor> interceptors = new ArrayList&lt;&gt;();<br>        interceptors.addAll(client.interceptors());<br>        interceptors.add(retryAndFollowUpInterceptor);<br>        interceptors.add(new BridgeInterceptor(client.cookieJar()));<br>        interceptors.add(new CacheInterceptor(client.internalCache()));<br>        interceptors.add(new ConnectInterceptor(client));<br>        if (!forWebSocket) {<br>          interceptors.addAll(client.networkInterceptors());<br>        }<br>        interceptors.add(new CallServerInterceptor(forWebSocket));</interceptor></p>
+<pre><code>  Interceptor.Chain chain = new RealInterceptorChain(
+      interceptors, null, null, null, 0, originalRequest);
+  return chain.proceed(originalRequest);
+}
+</code></pre><p>```      </p>
+<ul>
+<li>创建一系列拦截器，并存放在拦截器数组中。</li>
+<li>然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)</li>
+<li>经过一系列拦截器的处理后，获取Response.</li>
+</ul>
+<h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>本节主要对请求的整个流程进行相对应的源码实现过程解析。</p>
+<p>下节对几种拦截器进行解析。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/25/OkHttp3源码学习（1）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -975,145 +1143,11 @@ OkHttpClient client = new OkHttpClient();
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/设计模式之路（3）开放-封闭原则/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/18/设计模式之路（3）开放-封闭原则/" itemprop="url">设计模式之路（3）开放-封闭原则</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T16:24:08+08:00">
-                2017-07-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/18/设计模式之路（3）开放-封闭原则/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/18/设计模式之路（3）开放-封闭原则/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="一、具体解释"><a href="#一、具体解释" class="headerlink" title="一、具体解释"></a>一、具体解释</h3><p>开放-封闭原则，是说软件实体（类、模块】函数等等）应该可以扩展，但是不可以修改。</p>
-<p>也就是，对于扩展是开放的（Open for extension）<br>对于更改是封闭的（Closed for modification）</p>
-<h3 id="二、核心思想"><a href="#二、核心思想" class="headerlink" title="二、核心思想"></a>二、核心思想</h3><p>关于开放封闭原则，其核心的思想是：</p>
-<p>软件实体应该是可扩展，而不可修改的。也就是说，对扩展是开放的，而对修改是封闭的。</p>
-<p>因此，开放封闭原则主要体现在两个方面：</p>
-<ul>
-<li><p>对扩展开放，意味着有新的需求或变化时，可以对现有代码进行扩展，以适应新的情况。</p>
-</li>
-<li><p>对修改封闭，意味着类一旦设计完成，就可以独立完成其工作，而不要对类进行任何修改。</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1158,7 +1192,7 @@ OkHttpClient client = new OkHttpClient();
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

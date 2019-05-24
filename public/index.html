@@ -434,6 +434,164 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/02/Java-内部类浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/02/Java-内部类浅析/" itemprop="url">Java 内部类浅析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-02T15:26:35+08:00">
+                2019-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/02/Java-内部类浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/02/Java-内部类浅析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Java内部类"><a href="#Java内部类" class="headerlink" title="Java内部类"></a>Java内部类</h3><h4 id="什么是内部类？"><a href="#什么是内部类？" class="headerlink" title="什么是内部类？"></a>什么是内部类？</h4><p>在Java中，可以将一个类定义在另一个类里面或者一个方法里面，这样的类称为内部类。广泛意义上的内部类一般来说包括这四种：成员内部类、局部内部类、匿名内部类和静态内部类。</p>
+<h4 id="为什么要使用内部类？"><a href="#为什么要使用内部类？" class="headerlink" title="为什么要使用内部类？"></a>为什么要使用内部类？</h4><ul>
+<li>内部类提供更好的封装，只有外部类可以访问内部类</li>
+<li>每个内部类都能独立的继承一个接口的实现，所以无论外部类是否已经继承了某个(接口的)实现，对于内部类都没有影响。内部类使得多继承的解决方案变得完整，</li>
+<li>方便将存在一定逻辑关系的类组织在一起，又可以对外界隐藏。</li>
+<li>内部类中的属性和方法即使是外部类也不能直接访问，相反内部类可以直接访问外部类的属性和方法，即使private</li>
+<li>当我们想要定义一个回调函数却不想写大量代码的时候我们可以选择使用匿名内部类来实现</li>
+</ul>
+<h4 id="成员内部类"><a href="#成员内部类" class="headerlink" title="成员内部类"></a>成员内部类</h4><p>顾名思义，成员内部类，就是外部类的一个成员，所以他是可以无限制的访问外围类的所有成员属性和方法，尽管是private的，但是外围类要访问内部类的成员属性和方法则需要通过内部类实例来访问。</p>
+<p>需要注意的是：</p>
+<ul>
+<li>成员内部类中不能存在任何static的变量和方法</li>
+<li>成员内部类是依附于外围类的，所以只有先创建了外围类才能够创建内部类</li>
+</ul>
+<p>for example:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">classCircle &#123;</div><div class="line">	doubleradius =<span class="number">0</span>;</div><div class="line"></div><div class="line">	publicCircle(doubleradius) &#123;</div><div class="line">	<span class="keyword">this</span>.radius = radius;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	classDraw &#123;<span class="comment">//内部类</span></div><div class="line">		publicvoiddrawSahpe() &#123;</div><div class="line">		System.<span class="keyword">out</span>.println(<span class="string">"drawshape"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h4><p>局部内部类是定义在一个方法或者一个作用域里面的类，它和成员内部类的区别在于局部内部类的访问仅限于方法内或者该作用域内。</p>
+<p>需要注意的是：<br>　 局部内部类就像是方法里面的一个局部变量一样，是不能有public、protected、private以及static修饰符的。局部内部类在访问局部变量的时候，局部变量必须使用final修饰。</p>
+<p>举例：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">classPeople&#123;</div><div class="line">	publicPeople() &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">classMan&#123;</div><div class="line">	publicMan()&#123;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">public <span class="type">People</span> getWoman()&#123;</div><div class="line">		<span class="class"><span class="keyword">class</span> <span class="title">Woman</span> <span class="keyword">extends</span> <span class="title">People</span></span>&#123;<span class="comment">//局部内部类</span></div><div class="line">			intage =<span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Woman</span>();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h4><p>匿名内部类其实就是一个没有名字的方法内部类，所以它符合局部内部类的所有约束<br>需要注意的是：</p>
+<ol>
+<li>匿名内部类是没有访问修饰符的。</li>
+<li>匿名内部类必须继承一个抽象类或者实现一个接口</li>
+<li>匿名内部类中不能存在任何静态成员或方法</li>
+<li>匿名内部类是没有构造方法的，因为它没有类名</li>
+</ol>
+<p>举例：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">button</span><span class="selector-class">.setOnClickListener</span>(newOnClickListener() &#123;</div><div class="line">	<span class="variable">@Override</span></div><div class="line">	public void onClick(View v) &#123;</div><div class="line">	<span class="comment">// TODO Auto-generated method stub</span></div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>匿名内部类是唯一一种没有构造器的类。正因为其没有构造器，所以匿名内部类的使用范围非常有限，大部分匿名内部类用于接口回调。匿名内部类在编译的时候由系统自动起名为Outter$1.class。一般来说，匿名内部类用于继承其他类或是实现接口，并不需要增加额外的方法，只是对继承方法的实现或是重写。</p>
+<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><p>静态内部类也是定义在另一个类里面的类，只不过在类的前面多了一个关键字static。静态内部类是不需要依赖于外部类的，这点和类的静态成员属性有点类似，并且它不能使用外部类的非static成员变量或者方法</p>
+<p>静态内部类与非静态内部类之间存在一个最大的区别，我们知道非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围内，但是静态内部类却没有。没有这个引用就意味着：</p>
+<p>静态内部类的创建是不需要依赖于外围类，可以直接创建<br>静态内部类不可以使用任何外围类的非static成员变量和方法，而内部类则都可以</p>
+<p>举例：</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">publicclassTest &#123;</div><div class="line">	publicstaticvoidmain(String[] args) &#123;</div><div class="line">		Outter.Inner inner =newOutter.Inner();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">	classOutter &#123;</div><div class="line">		publicOutter() &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		staticclassInner &#123;</div><div class="line">			publicInner() &#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/11/单元测试-踩坑指南/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -833,174 +991,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/17/HTTPS浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/17/HTTPS浅析/" itemprop="url">HTTPS浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-17T11:11:17+08:00">
-                2019-01-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/01/17/HTTPS浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/01/17/HTTPS浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="什么是HTTPS"><a href="#什么是HTTPS" class="headerlink" title="什么是HTTPS?"></a>什么是HTTPS?</h3><p>HTTPS,即HTTP+SSL/TLS。HTTPS是一种通过计算机网络进行安全通信的传输协议，经由HTTP进行通信，利用SSL/TLS建立全信道，加密数据包。HTTPS使用的主要目的是提供对网站服务器的身份认证，同时保护交换数据的隐私与完整性。<br>PS:TLS是传输层加密协议，前身是SSL协议，由网景公司1995年发布，有时候两者不区分。</p>
-<p>HTTPS的特点如下，</p>
-<ol>
-<li>内容加密：采用混合加密技术，中间者无法直接查看明文内容</li>
-<li>验证身份：通过证书认证客户端访问的是自己的服务器</li>
-<li>保护数据完整性：防止传输的内容被中间人冒充或者篡改</li>
-</ol>
-<p>PS:</p>
-<p>混合加密：结合非对称加密和对称加密技术。客户端使用对称加密生成密钥对传输数据进行加密，然后使用非对称加密的公钥再对秘钥进行加密，所以网络上传输的数据是被秘钥加密的密文和用公钥加密后的秘密秘钥，因此即使被黑客截取，由于没有私钥，无法获取到加密明文的秘钥，便无法获取到明文数据。 </p>
-<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7iivqcsj30m80kadgz.jpg" alt="流程"></p>
-<ol>
-<li>client向server发送请求，然后连接到server的443端口。</li>
-</ol>
-<p>服务端必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面，这套证书其实就是一对公钥和私钥。</p>
-<ol>
-<li><p>传送证书<br>这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间、服务端的公钥，第三方证书认证机构(CA)的签名，服务端的域名信息等内容。</p>
-</li>
-<li><p>客户端解析证书<br>这部分工作是由客户端的TLS来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值（秘钥）。然后用证书对该随机值进行加密。</p>
-</li>
-<li><p>传送加密信息<br>这部分传送的是用证书加密后的秘钥，目的就是让服务端得到这个秘钥，以后客户端和服务端的通信就可以通过这个随机值来进行加密解密了。</p>
-</li>
-<li><p>服务端加密信息<br>服务端用私钥解密秘密秘钥，得到了客户端传过来的私钥，然后把内容通过该值进行对称加密。</p>
-</li>
-<li><p>传输加密后的信息<br>这部分信息是服务端用私钥加密后的信息，可以在客户端被还原。</p>
-</li>
-<li><p>客户端解密信息<br>客户端用之前生成的私钥解密服务端传过来的信息，于是获取了解密后的内容。</p>
-</li>
-</ol>
-<h3 id="如何保证证书安全，没有被替换？"><a href="#如何保证证书安全，没有被替换？" class="headerlink" title="如何保证证书安全，没有被替换？"></a>如何保证证书安全，没有被替换？</h3><p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u7t9grx3j30fr0a2tap.jpg" alt="大致流程"></p>
-<p>如上图所示，在第 ② 步时服务器发送了一个SSL证书给客户端，SSL 证书中包含的具体内容有证书的颁发机构、有效期、公钥、证书持有者、签名，通过第三方的校验保证了身份的合法，解决了公钥获取的安全性</p>
-<p>以浏览器为例说明如下整个的校验过程：</p>
-<p>（1）首先浏览器读取证书中的证书所有者、有效期等信息进行一一校验</p>
-<p>（2）浏览器开始查找操作系统中已内置的受信任的证书发布机构CA，与服务器发来的证书中的颁发者CA比对，用于校验证书是否为合法机构颁发 </p>
-<p>（3）如果找不到，浏览器就会报错，说明服务器发来的证书是不可信任的。</p>
-<p>（4）如果找到，那么浏览器就会从操作系统中取出  颁发者CA  的公钥，然后对服务器发来的证书里面的签名进行解密</p>
-<p>（5）浏览器使用相同的hash算法计算出服务器发来的证书的hash值，将这个计算的hash值与证书中签名做对比</p>
-<p>（6）对比结果一致，则证明服务器发来的证书合法，没有被冒充</p>
-<p>（7）此时浏览器就可以读取证书中的公钥，用于后续加密了</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0u8dymy5aj30pq0evgpr.jpg" alt="证书摘要对比"></p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>HTTPS要使客户端与服务器端的通信过程得到安全保证，必须使用的对称加密算法，但是协商对称加密算法的过程，需要使用非对称加密算法来保证安全，然而直接使用非对称加密的过程本身也不安全，会有中间人篡改公钥的可能性，所以客户端与服务器不直接使用公钥，而是使用数字证书签发机构颁发的证书来保证非对称加密过程本身的安全。这样通过这些机制协商出一个对称加密算法，就此双方使用该算法进行加密解密。从而解决了客户端与服务器端之间的通信安全问题。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1045,7 +1040,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

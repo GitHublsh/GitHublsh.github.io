@@ -284,6 +284,377 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/12/RxJava2-0-三-变换操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/12/RxJava2-0-三-变换操作/" itemprop="url">RxJava2.0(三)操作符简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-12T15:58:33+08:00">
+                2017-08-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/12/RxJava2-0-三-变换操作/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2017/08/12/RxJava2-0-三-变换操作/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>了解了线程控制的基本使用，接下来就来看看RxJava厉害的地方–变换操作。</p>
+<p>RxJava提供对事件序列进行变换操作。就是将事件序列中的对象或整个序列进行加工处理，转换成不同的事件或事件序列。</p>
+<h3 id="变换操作"><a href="#变换操作" class="headerlink" title="变换操作"></a>变换操作</h3><h4 id="一、map"><a href="#一、map" class="headerlink" title="一、map"></a>一、map</h4><p>返回一个Observable，它将指定的函数应用于源ObservableSource发出的每个项目，并发出这些函数应用程序的结果。</p>
+<p>一对一的变换，如下图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/map.png" alt="map"></p>
+<pre><code>@Test
+public void testMap() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;map&quot;);
+        }
+    }).map(new Function&lt;String, Integer&gt;() {
+        @Override
+        public Integer apply(@NonNull String s) throws Exception {
+            return getValue(s);
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer s) {
+            System.out.println(&quot;testMap:&quot; + s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>从上面的例子可以看到，map() 方法将参数中的 String 对象转换成一个 Bitmap 对象后返回，而在经过 map() 方法后，事件的参数类型也由 String 转为了 Bitmap。这种直接变换对象并返回的，是最常见的也最容易理解的变换。</p>
+<ul>
+<li><p>对上游发送的每一个事件应用一个函数, 使得每一个事件都按照指定的函数去变化</p>
+</li>
+<li><p>map是一对一的， 可以将上游发来的事件转换为任意的类型, 可以是一个Object, 也可以是一个集合</p>
+</li>
+</ul>
+<h4 id="二、flatmap"><a href="#二、flatmap" class="headerlink" title="二、flatmap"></a>二、flatmap</h4><p>更加高级的变换。如图（来源：官方文档）</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/flatMap.png" alt="flatmap"></p>
+<ul>
+<li><p>一个Observable它发射一个数据序列，这些数据本身也可以发射Observable。RxJava的flatMap()函数提供一种铺平序列的方式，然后合并这些Observables发射的数据，最后将合并后的结果作为最终的Observable。</p>
+</li>
+<li><p>flatMap()不能够保证在最终生成的Observable中源Observables确切的发射顺序。</p>
+</li>
+</ul>
+<p>For Example：</p>
+<pre><code> @Test
+public void testRxFlatMap() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(99);
+            e.onNext(66);
+            e.onComplete();
+        }
+    }).flatMap(new Function&lt;Integer, ObservableSource&lt;String&gt;&gt;() {
+        @Override
+        public ObservableSource&lt;String&gt; apply(@NonNull Integer s) throws Exception {
+            if (s&gt;80){
+                return Observable.just(&quot;A&quot;);
+            }
+            return Observable.just(&quot;B&quot;);
+        }
+    }).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;成绩为：&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>  从上面的代码很容易看出FlatMap将int变换为String对象，操作简单。一个操作符搞定，这样就方便多了。</p>
+<h4 id="三、concatMap"><a href="#三、concatMap" class="headerlink" title="三、concatMap"></a>三、concatMap</h4><ul>
+<li>官方文档解释：返回一个新的Observable，它会发送由应用源ObservableSource发出的每个项目提供的函数产生的项目，该函数返回一个ObservableSource，然后发出连接那些由此产生的ObservableSource产生的项目。</li>
+</ul>
+<p>通俗一点，就是和flatmap相比，concatMap是有序的。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/concatMap.png" alt="concatmap"></p>
+<h4 id="四、zip"><a href="#四、zip" class="headerlink" title="四、zip"></a>四、zip</h4><p>返回一个Observable，它发出指定的组合器函数的结果，该结果应用于依次发送的其他ObservableSource的迭代项的组合。</p>
+<p>zip以严格的顺序应用此功能，因此新的ObservableSource发出的第一个项目将是应用于每个源ObservableSources发出的第一个项目的函数的结果; 新的ObservableSource发出的第二个项目将是应用于每个ObservableSource发出的第二个项目的函数的结果; 等等。</p>
+<p>来看一个简单的例子，加深理解。</p>
+<pre><code>/**
+ * RxJava zip变换
+ * @throws Exception
+ */
+@Test
+public void testZip() throws Exception {
+    Observable&lt;String&gt; observableHello = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;Hello&quot;);
+        }
+    });
+    Observable&lt;String&gt; observableWorld = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;World&quot;);
+        }
+    });
+    Observable.zip(observableHello, observableWorld, new BiFunction&lt;String, String, String&gt;() {
+        @Override
+        public String apply(@NonNull String s, @NonNull String s2) throws Exception {
+            return s+s2;
+        }
+    }).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;Final:&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p> 从上面的例子就可以看出zip将获取的不同两个String重新组装得到一个新的组装后的String，达到zip类似打包的效果，应该很好理解吧。</p>
+<h4 id="五、concat"><a href="#五、concat" class="headerlink" title="五、concat"></a>五、concat</h4><p>Concatenates elements of each ObservableSource provided via an Iterable sequence into a single sequence of elements without interleaving them.</p>
+<p>简单来说就是将多个数据源按序发射。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/concat.png" alt="concat"></p>
+<p>举个很简单的例子，获取一包卫龙辣条包装的信息，可能需要制造商信息、价格、材料信息。</p>
+<p>获取辣条制造商信息</p>
+<pre><code>@Test
+public void testConcat() throws Exception {
+    final Observable&lt;String&gt; factory = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;卫龙&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable&lt;String&gt; price = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;5&quot;);
+            e.onComplete();
+        }
+    });
+    Observable&lt;String&gt; material = Observable.create(new ObservableOnSubscribe&lt;String&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;String&gt; e) throws Exception {
+            e.onNext(&quot;chili&quot;);
+            e.onComplete();
+        }
+    });
+
+    Observable.concat(factory, price,material).subscribe(new Observer&lt;String&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull String s) {
+            System.out.println(&quot;result&quot;+s);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+}
+</code></pre><p>结果为：</p>
+<pre><code>result：卫龙
+result：5
+result：chili
+</code></pre><p>就拿到了辣条的所有信息了。</p>
+<h3 id="过滤操作"><a href="#过滤操作" class="headerlink" title="过滤操作"></a>过滤操作</h3><h4 id="一、buffer"><a href="#一、buffer" class="headerlink" title="一、buffer"></a>一、buffer</h4><p>可以理解为缓存。它定期从Observable收集数据到一个集合，然后把这些数据打包发射，而不是一次发一个。</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/buffer.png" alt="buffer"></p>
+<h4 id="二、filter"><a href="#二、filter" class="headerlink" title="二、filter"></a>二、filter</h4><p> 简单的说，就是按照自定义条件过滤。官方解释：Filters items emitted by an ObservableSource by only emitting those that satisfy a specified predicate.</p>
+<p><img src="http://ot29getcp.bkt.clouddn.com/images/filter.png" alt="filter"></p>
+<p>举一个简单的例子：</p>
+<pre><code>@Test
+public void testFilter() throws Exception {
+    Observable.create(new ObservableOnSubscribe&lt;Integer&gt;() {
+        @Override
+        public void subscribe(@NonNull ObservableEmitter&lt;Integer&gt; e) throws Exception {
+            e.onNext(1);
+            e.onNext(666);
+            e.onNext(6);
+            e.onComplete();
+        }
+    }).filter(new Predicate&lt;Integer&gt;() {
+        @Override
+        public boolean test(@NonNull Integer integer) throws Exception {
+            return integer&gt;100;
+        }
+    }).subscribe(new Observer&lt;Integer&gt;() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onNext(@NonNull Integer integer) {
+            System.out.println(&quot;result:&quot;+integer);
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+
+        }
+    });
+</code></pre><p>从上面的例子，很明显的看出filter按照自己的定义，过滤掉了小于100的数字，然后输出自己想要得到的数字。很容易理解。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/11/RxJava2-0-二/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1655,179 +2026,11 @@ public Response intercept(Chain chain) throws IOException {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/OkHttp3源码学习（2）/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/26/OkHttp3源码学习（2）/" itemprop="url">OkHttp3源码学习（2）-发起请求源码实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T15:25:37+08:00">
-                2017-07-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/07/26/OkHttp3源码学习（2）/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2017/07/26/OkHttp3源码学习（2）/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"><a href="#上一节对OkHttp3做了一个简单的介绍及科普了一下使用。" class="headerlink" title="上一节对OkHttp3做了一个简单的介绍及科普了一下使用。"></a>上一节对OkHttp3做了一个简单的介绍及科普了一下使用。</h4><p>整体流程：</p>
-<p><img src="https://ws1.sinaimg.cn/large/0068AzoVgy1g0vimeltgnj30nx0pl0ud.jpg" alt="整体流程"></p>
-<p>那么，从这一节开始，进行源码分析解读···</p>
-<h4 id="一、创建OkHttpClient对象"><a href="#一、创建OkHttpClient对象" class="headerlink" title="一、创建OkHttpClient对象"></a>一、创建OkHttpClient对象</h4><p><code>OkHttpClient client = new OkHttpClient();</code></p>
-<p>创建时，做了什么事情？</p>
-<p>直接进OkHttpClient.java </p>
-<p>如果我们不做任何配置，那么就采用默认的配置，已经写好。</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public OkHttpClient() &#123;</div><div class="line">    this(new <span class="keyword">Builder());</span></div><div class="line">  &#125;</div><div class="line">  </div><div class="line">public <span class="keyword">Builder() </span>&#123;</div><div class="line">  <span class="keyword">dispatcher </span>= new <span class="keyword">Dispatcher();</span></div><div class="line">  protocols = DEFAULT_PROTOCOLS<span class="comment">;</span></div><div class="line">  connectionSpecs = DEFAULT_CONNECTION_SPECS<span class="comment">;</span></div><div class="line">  eventListenerFactory = EventListener.factory(EventListener.NONE)<span class="comment">;</span></div><div class="line">  proxySelector = ProxySelector.getDefault()<span class="comment">;</span></div><div class="line">  cookieJar = CookieJar.NO_COOKIES<span class="comment">;</span></div><div class="line">  socketFactory = SocketFactory.getDefault()<span class="comment">;</span></div><div class="line">  hostnameVerifier = OkHostnameVerifier.<span class="keyword">INSTANCE;</span></div><div class="line">  certificatePinner = CertificatePinner.DEFAULT<span class="comment">;</span></div><div class="line">  proxyAuthenticator = Authenticator.NONE<span class="comment">;</span></div><div class="line">  authenticator = Authenticator.NONE<span class="comment">;</span></div><div class="line">  connectionPool = new ConnectionPool()<span class="comment">;</span></div><div class="line">  dns = Dns.SYSTEM<span class="comment">;</span></div><div class="line">  followSslRedirects = true<span class="comment">;</span></div><div class="line">  followRedirects = true<span class="comment">;</span></div><div class="line">  retryOnConnectionFailure = true<span class="comment">;</span></div><div class="line">  connectTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  readTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  writeTimeout = <span class="number">10</span>_000<span class="comment">;</span></div><div class="line">  pingInterval = <span class="number">0</span><span class="comment">;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>  当然，如果自己想设置一些参数:</p>
-  <figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">OkHttpClient<span class="built_in"> client </span>= new OkHttpClient.Builder()  </div><div class="line">    .connectTimeout(10, TimeUnit.SECONDS)</div><div class="line">    .addInterceptor(<span class="built_in">..</span>.)</div><div class="line">    <span class="built_in">..</span><span class="built_in">..</span></div><div class="line">    .build();</div></pre></td></tr></table></figure>
-<p> 个性化配置包你满意。</p>
-<h4 id="二、创建网络请求"><a href="#二、创建网络请求" class="headerlink" title="二、创建网络请求"></a>二、创建网络请求</h4><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Request</span> <span class="built_in">request</span> = <span class="keyword">new</span> <span class="built_in">Request</span>.Builder()  </div><div class="line">        .addHeader(<span class="string">"Connection"</span>, <span class="string">"Keep-Alive"</span>)</div><div class="line">        .url(<span class="string">"http://www.google.com"</span>)</div><div class="line">        ....</div><div class="line">        .build();</div></pre></td></tr></table></figure>
-<p>  这里默认发送的请求是GET：</p>
-  <figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public Builder() &#123;</div><div class="line">     this.method = <span class="string">"<span class="keyword">GET</span>"</span>;</div><div class="line">     this.headers = new Headers.Builder();</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>发送POST请求，上一章节已经说明了请求方法，源码中实现：</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public Builder post(RequestBody body) &#123;</div><div class="line">     return method(<span class="string">"<span class="keyword">POST</span>"</span>, body);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="三、拿到Call对象"><a href="#三、拿到Call对象" class="headerlink" title="三、拿到Call对象"></a>三、拿到Call对象</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">Call</span> <span class="keyword">call</span> = client.newCall(request);</div></pre></td></tr></table></figure>
-<p>Call即是一个实际的访问请求，用户的每一个网络请求都是一个Call实例。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * A call is a request that has been prepared for execution. A call can be canceled. As this object</div><div class="line"> * represents a single request/response pair (stream), it cannot be executed twice.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Call</span> <span class="keyword">extends</span> <span class="title">Cloneable</span> </span>&#123;</div><div class="line">	···</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>一个call就是一次已准备好的请求执行，并且可以被取消。这个请求对象是单个，所以不能执行两次。</p>
-<p>实际在执行过程中，OkHttp会为每个请求创建一个RealCall.那么再进RealCall看看。</p>
-<ul>
-<li>发起一个同步请求</li>
-</ul>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span> <span class="keyword">public</span> <span class="function">Response <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">	    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">	      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">	      executed = <span class="keyword">true</span>;</div><div class="line">	    &#125;</div><div class="line">	    captureCallStackTrace();</div><div class="line">	    <span class="keyword">try</span> &#123;</div><div class="line">	      client.dispatcher().executed(<span class="keyword">this</span>);</div><div class="line">	      Response result = getResponseWithInterceptorChain();</div><div class="line">	      <span class="keyword">if</span> (result == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Canceled"</span>);</div><div class="line">	      <span class="keyword">return</span> result;</div><div class="line">	    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">	      client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">	    &#125;</div><div class="line">	  &#125;</div><div class="line">	  </div><div class="line">	  </div><div class="line">	  </div><div class="line">	   <span class="comment">/** Used by &#123;<span class="doctag">@code</span> Call#execute&#125; to signal it is in-flight. */</span></div><div class="line">		  <span class="keyword">synchronized</span> <span class="function"><span class="keyword">void</span> <span class="title">executed</span><span class="params">(RealCall call)</span> </span>&#123;</div><div class="line">		    runningSyncCalls.add(call);</div><div class="line">		  &#125;</div></pre></td></tr></table></figure>
-<pre><code>* 发起同步请求，通过dispatcher.executed()添加到同步队列中执行
-* 调用getResponseWithInterceptorChain获取服务器返回
-* 最后通知任务分发器client.dispatcher().finished(this)任务结束
-</code></pre><ul>
-<li>发起异步请求</li>
-</ul>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"> @Override <span class="keyword">public</span> <span class="keyword">void</span> enqueue(Callback responseCallback) &#123;</div><div class="line">		    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">		      <span class="keyword">if</span> (executed) <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Already Executed"</span>);</div><div class="line">		      executed = <span class="keyword">true</span>;</div><div class="line">		    &#125;</div><div class="line">		    captureCallStackTrace();</div><div class="line">		    client.dispatcher().enqueue(<span class="keyword">new</span> AsyncCall(responseCallback));</div><div class="line">		  &#125;</div><div class="line">		  </div><div class="line">		  </div><div class="line">	  </div><div class="line">		<span class="keyword">synchronized</span> <span class="keyword">void</span> enqueue(AsyncCall <span class="keyword">call</span>) &#123;</div><div class="line">		<span class="keyword">if</span> (runningAsyncCalls.<span class="keyword">size</span>() &lt; maxRequests &amp;&amp; runningCallsForHost(<span class="keyword">call</span>) &lt; maxRequestsPerHost) &#123;</div><div class="line">		  runningAsyncCalls.add(<span class="keyword">call</span>);</div><div class="line">		  executorService().execute(<span class="keyword">call</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">		  readyAsyncCalls.add(<span class="keyword">call</span>);</div><div class="line">		&#125;</div><div class="line">		&#125;</div><div class="line">    </div><div class="line">    </div><div class="line">    AsyncCall.java</div><div class="line">    </div><div class="line">	    <span class="keyword">final</span> <span class="keyword">class</span> AsyncCall <span class="keyword">extends</span> NamedRunnable &#123;</div><div class="line">	    <span class="keyword">private</span> <span class="keyword">final</span> Callback responseCallback;</div><div class="line">	</div><div class="line">	    AsyncCall(Callback responseCallback) &#123;</div><div class="line">	      <span class="keyword">super</span>(<span class="string">"OkHttp %s"</span>, redactedUrl());</div><div class="line">	      <span class="keyword">this</span>.responseCallback = responseCallback;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    String host() &#123;</div><div class="line">	      <span class="keyword">return</span> originalRequest.url().host();</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    Request request() &#123;</div><div class="line">	      <span class="keyword">return</span> originalRequest;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    RealCall get() &#123;</div><div class="line">	      <span class="keyword">return</span> RealCall.<span class="keyword">this</span>;</div><div class="line">	    &#125;</div><div class="line">	</div><div class="line">	    @Override <span class="keyword">protected</span> <span class="keyword">void</span> execute() &#123;</div><div class="line">	      <span class="keyword">boolean</span> signalledCallback = <span class="keyword">false</span>;</div><div class="line">	      <span class="keyword">try</span> &#123;</div><div class="line">	        Response response = getResponseWithInterceptorChain();</div><div class="line">	        <span class="keyword">if</span> (retryAndFollowUpInterceptor.isCanceled()) &#123;</div><div class="line">	          signalledCallback = <span class="keyword">true</span>;</div><div class="line">	          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, <span class="keyword">new</span> IOException(<span class="string">"Canceled"</span>));</div><div class="line">	        &#125; <span class="keyword">else</span> &#123;</div><div class="line">	          signalledCallback = <span class="keyword">true</span>;</div><div class="line">	          responseCallback.onResponse(RealCall.<span class="keyword">this</span>, response);</div><div class="line">	        &#125;</div><div class="line">	      &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">	        <span class="keyword">if</span> (signalledCallback) &#123;</div><div class="line">	          <span class="comment">// Do not signal the callback twice!</span></div><div class="line">	          Platform.get().log(INFO, <span class="string">"Callback failure for "</span> + toLoggableString(), e);</div><div class="line">	        &#125; <span class="keyword">else</span> &#123;</div><div class="line">	          responseCallback.onFailure(RealCall.<span class="keyword">this</span>, e);</div><div class="line">	        &#125;</div><div class="line">	      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">	        client.dispatcher().finished(<span class="keyword">this</span>);</div><div class="line">	      &#125;</div><div class="line">	    &#125;</div><div class="line">	  	&#125;</div><div class="line">```	 	  	</div><div class="line">	  	</div><div class="line">RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。</div><div class="line">	 </div><div class="line"></div><div class="line">#### 四、构建拦截器链</div><div class="line"></div><div class="line">还是在RealCall.java中，看源码是如何构建的。</div></pre></td></tr></table></figure>
-<p>Response getResponseWithInterceptorChain() throws IOException {<br>        // Build a full stack of interceptors.<br>        List<interceptor> interceptors = new ArrayList&lt;&gt;();<br>        interceptors.addAll(client.interceptors());<br>        interceptors.add(retryAndFollowUpInterceptor);<br>        interceptors.add(new BridgeInterceptor(client.cookieJar()));<br>        interceptors.add(new CacheInterceptor(client.internalCache()));<br>        interceptors.add(new ConnectInterceptor(client));<br>        if (!forWebSocket) {<br>          interceptors.addAll(client.networkInterceptors());<br>        }<br>        interceptors.add(new CallServerInterceptor(forWebSocket));</interceptor></p>
-<pre><code>  Interceptor.Chain chain = new RealInterceptorChain(
-      interceptors, null, null, null, 0, originalRequest);
-  return chain.proceed(originalRequest);
-}
-</code></pre><p>```      </p>
-<ul>
-<li>创建一系列拦截器，并存放在拦截器数组中。</li>
-<li>然后创建一个拦截器链RealInterceptorChain，执行拦截器链的方法chain.proceed(originalRequest)</li>
-<li>经过一系列拦截器的处理后，获取Response.</li>
-</ul>
-<h4 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h4><p>本节主要对请求的整个流程进行相对应的源码实现过程解析。</p>
-<p>下节对几种拦截器进行解析。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1872,7 +2075,7 @@ public Response intercept(Chain chain) throws IOException {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
