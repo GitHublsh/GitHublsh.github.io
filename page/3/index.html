@@ -284,6 +284,198 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/04/Java-线程池浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/04/Java-线程池浅析/" itemprop="url">Java线程池浅析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-04T15:59:48+08:00">
+                2018-12-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/04/Java-线程池浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2018/12/04/Java-线程池浅析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Java线程池"><a href="#Java线程池" class="headerlink" title="Java线程池"></a>Java线程池</h2><p>合理利用线程池能够带来三个好处。第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。第二：提高响应速度。当任务到达时，任务可以不需要的等到线程创建就能立即执行。第三：提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</p>
+<h3 id="一、简单介绍"><a href="#一、简单介绍" class="headerlink" title="一、简单介绍"></a>一、简单介绍</h3><p>最简单的新建一个线程的方式就是new Thread<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">		<span class="meta">@Overrider</span></div><div class="line">		<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</div><div class="line">			<span class="comment">//do something</span></div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">).start();</div></pre></td></tr></table></figure></p>
+<p>虽然简单，但是有很多缺点：</p>
+<ol>
+<li>频繁的使用new Thread 来新建线程会造成新建对象性能差</li>
+<li>新建的线程缺乏统一的管理，并且新建线程没有限制，互相竞争，可能占用系统资源导致oom</li>
+<li>功能单一</li>
+</ol>
+<p>既然不能new Thread不能满足多样的需求变化，那么Java提供的线程池就很好的解决了这些问题。Java提供四种线程池，下面一一介绍。</p>
+<h3 id="二、Java线程池"><a href="#二、Java线程池" class="headerlink" title="二、Java线程池"></a>二、Java线程池</h3><p>优点：</p>
+<ol>
+<li>重用线程池中的线程，避免因频繁创建和销毁线程带来的性能的开销</li>
+<li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致阻塞的现象</li>
+<li>能够对线程进行简单的管理，并提供定时执行及指定间隔循环执行的功能</li>
+</ol>
+<p>Java中的线程池的具体实现是在ThreadPoolExecutor，通过配置不同的参数来实现不同功能的线程池。</p>
+<p>ThreadPoolExecutor构造函数有四个，源码实现最终都是调用了</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></div><div class="line">                          <span class="keyword">int</span> maximumPoolSize,</div><div class="line">                          <span class="keyword">long</span> keepAliveTime,</div><div class="line">                          TimeUnit unit,</div><div class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                          ThreadFactory threadFactory,</div><div class="line">                          RejectedExecutionHandler <span class="keyword">handler</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (corePoolSize &lt; <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt;= <span class="number">0</span> ||</div><div class="line">        maximumPoolSize &lt; corePoolSize ||</div><div class="line">        keepAliveTime &lt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</div><div class="line">    <span class="keyword">if</span> (workQueue == <span class="keyword">null</span> || threadFactory == <span class="keyword">null</span> || <span class="keyword">handler</span> == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="keyword">this</span>.corePoolSize = corePoolSize;</div><div class="line">    <span class="keyword">this</span>.maximumPoolSize = maximumPoolSize;</div><div class="line">    <span class="keyword">this</span>.workQueue = workQueue;</div><div class="line">    <span class="keyword">this</span>.keepAliveTime = unit.toNanos(keepAliveTime);</div><div class="line">    <span class="keyword">this</span>.threadFactory = threadFactory;</div><div class="line">    <span class="keyword">this</span>.<span class="keyword">handler</span> = <span class="keyword">handler</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 构造函数的各个参数将会影响到线程池的功能特性，</p>
+<ul>
+<li>corePoolSize： 线程池中的核心线程池数量，除非设置了allowCoreThreadTimeOut为true，否则即使处于空闲状态也一直保留在线程池中。</li>
+<li>maximumPoolSize：最大线程数，当活动的线程数达到最大，后续新的任务将会被阻塞</li>
+<li>keepAliveTime：非核心线程空闲时的超时时间，空闲超过该时间将会被回收，当allowCoreThreadTimeOut为true也会作用于核心线程</li>
+<li>unit：超时时间的单位</li>
+<li><p>workQueue：线程池中的任务队列，通过线程池的execute方法提交的Runnable会存储在这个参数中在JDK中提供了如下阻塞队列：<br>1、ArrayBlockingQueue：基于数组结构的有界阻塞队列，按FIFO排序任务；<br>2、LinkedBlockingQuene：基于链表结构的阻塞队列，按FIFO排序任务，吞吐量通常要高于ArrayBlockingQuene；<br>3、SynchronousQuene：一个不存储元素的阻塞队列，每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQuene；<br>4、priorityBlockingQuene：具有优先级的无界阻塞队列；</p>
+</li>
+<li><p>threadFactory：线程工厂,为线程池提供创建新线程的功能</p>
+</li>
+<li>handler：RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。以下是JDK1.5提供的四种策略。<br>1、AbortPolicy：直接抛出异常。<br>2、CallerRunsPolicy：只用调用者所在线程来运行任务。<br>3、DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。<br>4、DiscardPolicy：不处理，丢弃掉。<br>当然也可以根据应用场景需要来实现RejectedExecutionHandler接口自定义策略。如记录日志或持久化不能处理的任务。</li>
+</ul>
+<h3 id="三、线程池的分类"><a href="#三、线程池的分类" class="headerlink" title="三、线程池的分类"></a>三、线程池的分类</h3><p>常见的线程池有四种:</p>
+<ol>
+<li>FixedThreadPool</li>
+<li>CachedThreadPool</li>
+<li>ScheduledThreadPool</li>
+<li>SingleThreadExecutor</li>
+</ol>
+<h4 id="1-FixedThreadPool"><a href="#1-FixedThreadPool" class="headerlink" title="1.FixedThreadPool"></a>1.FixedThreadPool</h4><p>FixedThreadPool是通过Executors的newCachedThreadPool()方法来创建的。它是一种线程数量固定的线程池，并且全都是核心线程。当该线程池中所有的线程都被占用了，新任务都会处于等待状态，直到有空闲线程。FixedThreadPool只有核心线程，并且没有超时机制，任务队列无限大。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">FixedThreadPool</span>(int nThreads) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(nThreads, nThreads,</div><div class="line">                                    <span class="number">0</span>L, TimeUnit.MILLISECONDS,</div><div class="line">                                    <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;());</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h4 id="2-CacheThreadPool"><a href="#2-CacheThreadPool" class="headerlink" title="2.CacheThreadPool"></a>2.CacheThreadPool</h4><p>CacheThreadPool是通过Executors的newCacheThreadPool()来创建的。它是线程数量不定的线程池，最大数量可达到Integer.MAX_VALUE，当该线程池中的线程都被占用了，有新的任务将会新建线程来处理，该线程池中的线程有超时机制，超时时长为60s，任务队列与FixedThreadPool不同的是该任务队列相当于一个空集合，那么任务将会马上执行，在这种情况下，SynchronousQueue可以理解为无法插入任务。从这些特性看来，CacheThreadPool是比较适合执行大量的耗时较少的任务的。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">CachedThreadPool</span>() &#123;</div><div class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">0</span>, Integer.MAX_VALUE,</div><div class="line">                                     <span class="number">60</span>L, TimeUnit.SECONDS,</div><div class="line">                                     <span class="keyword">new</span> <span class="type">SynchronousQueue</span>&lt;Runnable&gt;());</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="3-ScheduledThreadPool"><a href="#3-ScheduledThreadPool" class="headerlink" title="3.ScheduledThreadPool"></a>3.ScheduledThreadPool</h4><p>ScheduledThreadPool是通过Executors的newScheduledThreadPool(int corePoolSize)来创建，核心线程是固定的，非核心线程是无限制的，超时时间默认10s，这类线程池主要用于执行定时任务和具有固定周期的重复任务。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</div><div class="line">     <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE,</div><div class="line">           DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,</div><div class="line">           <span class="keyword">new</span> DelayedWorkQueue());</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h4 id="4-SingleThreadExecutor"><a href="#4-SingleThreadExecutor" class="headerlink" title="4.SingleThreadExecutor"></a>4.SingleThreadExecutor</h4><p>SingleThreadExecutor是通过newSingleThreadExecutor（）来创建的，该线程池中只有一个核心线程，没有超时时间，它确保所有的任务都在同一线程中按顺序执行。会统一所有外界的任务到同一个线程按序执行，这些任务不需考虑同步的问题。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="keyword">new</span><span class="type">SingleThreadExecutor</span>() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">FinalizableDelegatedExecutorService</span></div><div class="line">        (<span class="keyword">new</span> <span class="type">ThreadPoolExecutor</span>(<span class="number">1</span>, <span class="number">1</span>,</div><div class="line">                                <span class="number">0</span>L, TimeUnit.MILLISECONDS,</div><div class="line">                                <span class="keyword">new</span> <span class="type">LinkedBlockingQueue</span>&lt;Runnable&gt;()));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="四、任务队列"><a href="#四、任务队列" class="headerlink" title="四、任务队列"></a>四、任务队列</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">BlockingQueue&lt;Runnable&gt; </span>workQueue</div></pre></td></tr></table></figure>
+<p>即用于保存等待执行的任务的阻塞队列。</p>
+<p>BlockingQueue是个接口，有如下实现类：</p>
+<ol>
+<li><p>ArrayBlockQueue：一个由数组支持的有界阻塞队列。此队列按 FIFO（先进先出）原则对元素进行排序。创建其对象必须明确大小，像数组一样。最大的特点是可以防止资源被耗尽。</p>
+</li>
+<li><p>LinkedBlockQueue：一个可改变大小的阻塞队列。此队列按 FIFO（先进先出）原则对元素进行排序。创建其对象如果没有明确大小，默认值是Integer.MAX_VALUE。链接队列的吞吐量通常要高于基于数组的队列，但是在大多数并发应用程序中，其可预知的性能要低。</p>
+</li>
+<li><p>PriorityBlockingQueue：类似于LinkedBlockingQueue，但其所含对象的排序不是FIFO，而是依据对象的自然排序顺序或者是构造函数所带的Comparator决定的顺序。</p>
+</li>
+<li><p>SynchronousQueue：同步队列。同步队列没有任何容量，每个插入必须等待另一个线程移除，反之亦然。一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQueue</p>
+</li>
+</ol>
+<h3 id="五、饱和策略"><a href="#五、饱和策略" class="headerlink" title="五、饱和策略"></a>五、饱和策略</h3><p>RejectedExecutionHandler（饱和策略），当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常。</p>
+<p>RejectedExecutionHandler提供了四种方式来处理任务拒绝策略：</p>
+<ol>
+<li>DiscardPolicy（直接丢弃）</li>
+<li>DiscardOldestPolicy（丢弃队列中最老的任务）</li>
+<li>ABortPolicy(抛异常)</li>
+<li>CallerRunsPolicy（将任务分给调用线程来执行）</li>
+</ol>
+<h3 id="六、基本使用"><a href="#六、基本使用" class="headerlink" title="六、基本使用"></a>六、基本使用</h3><h4 id="向线程池提交任务"><a href="#向线程池提交任务" class="headerlink" title="向线程池提交任务"></a>向线程池提交任务</h4><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Runnable cacheThread = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="built_in">run</span>() &#123;</div><div class="line">                System.out.<span class="built_in">println</span>(<span class="string">"Test CacheThreadPool"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">        ExecutorService cacheThreadPool = Executors.newCachedThreadPool();</div><div class="line">        cacheThreadPool.execute(cacheThread);</div></pre></td></tr></table></figure>
+<h3 id="七、整体分析"><a href="#七、整体分析" class="headerlink" title="七、整体分析"></a>七、整体分析</h3><p>整体流程大致如图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/005GVP9ggy1fxx47ohpfkj31be0j6wi7.jpg" alt="threadpoolpic"></p>
+<p>了解了整体流程，那么再去看源码就会很清楚明了了。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/07/Android-Studio3-0-Trace分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -948,168 +1140,11 @@ LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/18/Java死锁浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/18/Java死锁浅析/" itemprop="url">Java死锁浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-18T15:38:44+08:00">
-                2018-08-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/18/Java死锁浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2018/08/18/Java死锁浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、死锁的基本概念"><a href="#一、死锁的基本概念" class="headerlink" title="一、死锁的基本概念"></a>一、死锁的基本概念</h2><p>死锁是指两个或两个以上的进程在执行过程中，由于竞争资源或者由于彼此通信而造成的一种阻塞的现象，若无外力作用，它们都将无法推进下去。”那么我们换一个更加规范的定义：“集合中的每一个进程都在等待只能由本集合中的其他进程才能引发的事件，那么该组进程是死锁的。</p>
-<p>产生死锁必须同时满足以下四个条件，只要其中任一条件不成立，死锁就不会发生。</p>
-<ul>
-<li>互斥条件：进程要求对所分配的资源（如打印机）进行排他性控制，即在一段时间内某 资源仅为一个进程所占有。此时若有其他进程请求该资源，则请求进程只能等待。</li>
-<li>不剥夺条件：进程所获得的资源在未使用完毕之前，不能被其他进程强行夺走，即只能 由获得该资源的进程自己来释放（只能是主动释放)。</li>
-<li>请求和保持条件：进程已经保持了至少一个资源，但又提出了新的资源请求，而该资源 已被其他进程占有，此时请求进程被阻塞，但对自己已获得的资源保持不放。</li>
-<li>循环等待条件：存在一种进程资源的循环等待链，链中每一个进程已获得的资源同时被 链中下一个进程所请求。即存在一个处于等待状态的进程集合{Pl, P2, …, pn}，其中Pi等 待的资源被P(i+1)占有（i=0, 1, …, n-1)，Pn等待的资源被P0占有</li>
-</ul>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> class SyncABDemo &#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span> args[])&#123;</div><div class="line"></div><div class="line">    <span class="keyword">Object</span> a =  <span class="keyword">new</span> <span class="keyword">Object</span>();</div><div class="line">    <span class="keyword">Object</span> b =  <span class="keyword">new</span> <span class="keyword">Object</span>();</div><div class="line">    Thread threadA = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">        @Override</div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> run() &#123;</div><div class="line">            <span class="keyword">synchronized</span>(a) &#123;</div><div class="line">                <span class="keyword">try</span>&#123;</div><div class="line">                    System.out.<span class="built_in">println</span>(<span class="string">"ThreadA--a is Locked"</span>);</div><div class="line">                    Thread.sleep(<span class="number">1000</span>);</div><div class="line">                    <span class="keyword">synchronized</span>(b) &#123;</div><div class="line">                        System.out.<span class="built_in">println</span>(<span class="string">"ThreadA--b is Locked"</span>);</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">catch</span>(InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    Thread threadB = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">        @Override</div><div class="line">        <span class="keyword">public</span> <span class="keyword">void</span> run() &#123;</div><div class="line">            <span class="keyword">synchronized</span>(b) &#123;</div><div class="line">                <span class="keyword">try</span>&#123;</div><div class="line">                    System.out.<span class="built_in">println</span>(<span class="string">"ThreadB--a is Locked"</span>);</div><div class="line">                    Thread.sleep(<span class="number">1000</span>);</div><div class="line">                    <span class="keyword">synchronized</span>(a) &#123;</div><div class="line">                        System.out.<span class="built_in">println</span>(<span class="string">"ThreadB--b is Locked"</span>);</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">catch</span>(InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">    threadA.start();</div><div class="line">    threadB.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出结果为：</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ThreadA<span class="comment">--a is Locked</span></div><div class="line">ThreadB<span class="comment">--a is Locked</span></div></pre></td></tr></table></figure>
-<p>发现程序执行停滞了。</p>
-<p>这个时候程序发生了死锁。</p>
-<h2 id="二、检测死锁"><a href="#二、检测死锁" class="headerlink" title="二、检测死锁"></a>二、检测死锁</h2><p>JDK自带检测工具<br>可以在IDEA命令行输入JConsole打开JConsole连接本地进程就可以进行检测死锁的操作了。</p>
-<h2 id="三、死锁预防"><a href="#三、死锁预防" class="headerlink" title="三、死锁预防"></a>三、死锁预防</h2><h3 id="1-以确定的顺序获得锁"><a href="#1-以确定的顺序获得锁" class="headerlink" title="1.以确定的顺序获得锁"></a>1.以确定的顺序获得锁</h3><p>如果一定要获取多个锁，那么在设计的时候需要考虑多线程情况下获取锁的情况</p>
-<p>例如上述代码示例：</p>
-<ul>
-<li><p>线程A -&gt; 获取锁a -&gt; 获取锁b -&gt; 永久等待</p>
-</li>
-<li><p>线程B -&gt; 获取锁b -&gt; 获取锁a -&gt; 永久等待</p>
-</li>
-</ul>
-<p>那么如果把获取锁的时序更改为下面的情况：</p>
-<ul>
-<li><p>线程A -&gt; 获取锁a -&gt; 获取锁b -&gt; 结束</p>
-</li>
-<li><p>线程B -&gt; 获取锁a -&gt; 获取锁b -&gt; 结束</p>
-</li>
-</ul>
-<p>那么死锁就不会发生了</p>
-<h3 id="2-超时放弃"><a href="#2-超时放弃" class="headerlink" title="2.超时放弃"></a>2.超时放弃</h3><p>当使用synchronized关键词提供的内置锁时，只要线程没有获得锁，那么就会永远等待下去，然而Lock接口提供了</p>
-<p><code>boolean tryLock(long time, TimeUnit unit) throws InterruptedException</code></p>
-<p>方法，该方法可以按照固定时长等待锁，因此线程可以在获取锁超时以后，主动释放之前已经获得的所有的锁。通过这种方式，也可以很有效地避免死锁。</p>
-<h2 id="四、死锁举例"><a href="#四、死锁举例" class="headerlink" title="四、死锁举例"></a>四、死锁举例</h2><h3 id="线程池死锁"><a href="#线程池死锁" class="headerlink" title="线程池死锁"></a>线程池死锁</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> ExecutorService executorService = </div><div class="line">        Executors.newSingleThreadExecutor();</div><div class="line">Future&lt;<span class="keyword">Long</span>&gt; f1 = executorService.submit(<span class="keyword">new</span> Callable&lt;<span class="keyword">Long</span>&gt;() &#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">Long</span> <span class="keyword">call</span>() <span class="keyword">throws</span> Exception &#123;</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"start f1"</span>);</div><div class="line">        Thread.sleep(<span class="number">1000</span>);<span class="comment">//延时</span></div><div class="line">        Future&lt;<span class="keyword">Long</span>&gt; f2 = </div><div class="line">           executorService.submit(<span class="keyword">new</span> Callable&lt;<span class="keyword">Long</span>&gt;() &#123;</div><div class="line"></div><div class="line">            <span class="keyword">public</span> <span class="keyword">Long</span> <span class="keyword">call</span>() <span class="keyword">throws</span> Exception &#123;</div><div class="line">                System.out.<span class="keyword">println</span>(<span class="string">"start f2"</span>);</div><div class="line">                <span class="keyword">return</span> -<span class="number">1</span>L;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"result"</span> + f2.get());</div><div class="line">        System.out.<span class="keyword">println</span>(<span class="string">"end f1"</span>);</div><div class="line">        <span class="keyword">return</span> -<span class="number">1</span>L;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1154,7 +1189,7 @@ LocalBroadcastManager.getInstance(this).unregisterReceiver(localBroadcastDemo);
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
