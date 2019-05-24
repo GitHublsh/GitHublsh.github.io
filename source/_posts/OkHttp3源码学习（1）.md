@@ -90,25 +90,24 @@ public static final MediaType JSON
 		  return response.body().string();
 		}
 ```	
-				
+
 ```
 //异步请求
 public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");	
-	OkHttpClient client = new OkHttpClient();
-	
-	  RequestBody body = RequestBody.create(JSON, json);
-	  Request request = new Request.Builder()
-	      .url(url)
-	      .post(body)
-	      .build();
-	  client.newCall(request).enqueue(new CallBack(){
-	  		@Override
-			public void onFailure(Request request,IOException e){
-			}
-			@Override
-			public void onResponse(Response response){
-			}
-	  })
+   OkHttpClient client = new OkHttpClient();
+   RequestBody body = RequestBody.create(JSON, json);
+   Request request = new Request.Builder()
+     .url(url)
+     .post(body)
+     .build();
+   client.newCall(request).enqueue(new CallBack(){
+     @Override
+	public void onFailure(Request request,IOException e){
+	}
+	 @Override
+	public void onResponse(Response response){
+	}
+})
 ```		  
 			  
 #### 二、架构总览
