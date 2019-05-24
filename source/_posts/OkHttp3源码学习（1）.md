@@ -90,7 +90,7 @@ public static final MediaType JSON
 		  return response.body().string();
 		}
 ```	
----
+
 ```
 //异步请求
 public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");	
@@ -108,8 +108,8 @@ public static final MediaType JSON= MediaType.parse("application/json; charset=u
 	public void onResponse(Response response){
 	}
 })
-```		  
-			  
+```
+		  
 #### 二、架构总览
 借用网上的图···（侵权必删）
 
