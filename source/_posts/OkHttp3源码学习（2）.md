@@ -234,6 +234,9 @@ RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的ex
 还是在RealCall.java中，看源码是如何构建的。
 
 ```
+```
+
+```
 Response getResponseWithInterceptorChain() throws IOException {
 	    // Build a full stack of interceptors.
 	    List<Interceptor> interceptors = new ArrayList<>();
