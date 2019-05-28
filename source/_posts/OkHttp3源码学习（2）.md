@@ -223,17 +223,16 @@ Call即是一个实际的访问请求，用户的每一个网络请求都是一�
 	      }
 	    }
 	  	}
-```	
+```	 	  	
 
-```
-```
-RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样.
+```	  	
+RealCall被转化成一个AsyncCall并被放入到任务队列中,AsyncCall的excute方法最终将会被执行.execute方法的逻辑并不复杂,和之前一样。
+``` 
 
 #### 四、构建拦截器链
 
-还是在RealCall.java中，看源码是如何构建的。
-
 ```
+还是在RealCall.java中，看源码是如何构建的。
 ```
 
 ```
