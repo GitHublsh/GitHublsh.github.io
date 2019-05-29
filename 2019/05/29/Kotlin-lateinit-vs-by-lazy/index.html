@@ -120,7 +120,7 @@
 <meta property="og:description" content="Kotlin lateinit和by lazy的区别一、简要说明Koltin中属性在声明的同时也要求要被初始化，否则会报错。 但是有些应用场景，不想在声明的时候就初始化，那么可以使用lateinit.延时初始化属性就是不必在类实例化时初始化它，可以根据需要在程序运行期初始化，而没有lateinit声明的非可空类型属性必须在类实例化时初始化。 其实就是让编译期在检查时不要因为属性变量未被初始化而报错">
 <meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithoutinit.png">
 <meta property="og:image" content="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithlateinit.png">
-<meta property="og:updated_time" content="2019-05-29T07:32:28.783Z">
+<meta property="og:updated_time" content="2019-05-29T07:36:12.037Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin lateinit vs by lazy">
 <meta name="twitter:description" content="Kotlin lateinit和by lazy的区别一、简要说明Koltin中属性在声明的同时也要求要被初始化，否则会报错。 但是有些应用场景，不想在声明的时候就初始化，那么可以使用lateinit.延时初始化属性就是不必在类实例化时初始化它，可以根据需要在程序运行期初始化，而没有lateinit声明的非可空类型属性必须在类实例化时初始化。 其实就是让编译期在检查时不要因为属性变量未被初始化而报错">
@@ -375,22 +375,19 @@
 </ul>
 <h4 id="二、实际使用对比"><a href="#二、实际使用对比" class="headerlink" title="二、实际使用对比"></a>二、实际使用对比</h4><p>简单的代码示例对比：</p>
 <h5 id="未使用lateinit情况"><a href="#未使用lateinit情况" class="headerlink" title="未使用lateinit情况"></a>未使用lateinit情况</h5><hr>
-<p>package com.sgs.unite.comuser.ui2</p>
-<p>class Employee {<br>var name: String = “”<br>var id: Int = 0<br>var department =Department()<br>}</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</div><div class="line"><span class="keyword">var</span> name: <span class="built_in">String</span> = <span class="string">""</span></div><div class="line"><span class="keyword">var</span> id: Int = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> department =Department()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>package com.sgs.unite.comuser.ui2</p>
-<p>class Department {<br>var id: Int = 0<br>var name:String =”default”<br>}</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Department</span> </span>&#123;</div><div class="line"><span class="keyword">var</span> id: Int = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> name:<span class="built_in">String</span> =<span class="string">"default"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>//在调用时，Debug可以看出区别<br>fun test(){<br>val emp = Employee()<br>print(emp.department)<br>}</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//在调用时，Debug可以看出区别</span></div><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span>&#123;</div><div class="line"><span class="keyword">val</span> emp = Employee()</div><div class="line">print(emp.department)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
 <p>调试结果：<br><img src="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithoutinit.png" alt="without"></p>
 <h5 id="使用lateinit"><a href="#使用lateinit" class="headerlink" title="使用lateinit"></a>使用lateinit</h5><hr>
-<p>package com.sgs.unite.comuser.ui2</p>
-<p>class Employee {<br>var name: String = “”<br>var id: Int = 0<br>lateinit var department : Department<br>}</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Employee</span> </span>&#123;</div><div class="line"><span class="keyword">var</span> name: String = <span class="string">""</span></div><div class="line"><span class="keyword">var</span> id: <span class="built_in">Int</span> = <span class="number">0</span></div><div class="line"><span class="keyword">lateinit</span> <span class="keyword">var</span> department : Department</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
-<p>class Department {<br>var id: Int = 0<br>var name:String =”default”</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Department</span> </span>&#123;</div><div class="line"><span class="keyword">var</span> id: Int = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> name:<span class="built_in">String</span> =<span class="string">"default"</span></div></pre></td></tr></table></figure>
 <hr>
-<p>fun test(){<br>val emp = Employee()<br>emp.department = Department()//在需要的时候进行初始化<br>print(emp.department)<br>}</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">test</span><span class="params">()</span></span>&#123;</div><div class="line"><span class="keyword">val</span> emp = Employee()</div><div class="line">emp.department = Department()<span class="comment">//在需要的时候进行初始化</span></div><div class="line">print(emp.department)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <hr>
 <p>调用结果：<br><img src="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithlateinit.png" alt="withlateinit"></p>
 <h4 id="三、对比"><a href="#三、对比" class="headerlink" title="三、对比"></a>三、对比</h4><p>by lazy,Kotlin中提供一种委托属性，使用by关键字声明。</p>
