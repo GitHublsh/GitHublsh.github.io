@@ -95,7 +95,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -111,15 +111,17 @@
 
 
 
-<meta name="description" content="优秀不够，你是否无可替代">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Neil&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="DiskLruCache####一、简单使用 123456789101112File directory = getCacheDir();int appVersion = 1;int valueCount = 1;long maxSize = 10 * 1024;DiskLruCache diskLruCache = DiskLruCache.open(directory, appVersion,">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DiskLruCache源码浅析">
+<meta property="og:url" content="http://yoursite.com/2019/05/29/DiskLruCache源码浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
-<meta property="og:description" content="优秀不够，你是否无可替代">
+<meta property="og:description" content="DiskLruCache####一、简单使用 123456789101112File directory = getCacheDir();int appVersion = 1;int valueCount = 1;long maxSize = 10 * 1024;DiskLruCache diskLruCache = DiskLruCache.open(directory, appVersion,">
+<meta property="og:updated_time" content="2019-05-29T06:02:34.843Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Neil&#39;s blog">
-<meta name="twitter:description" content="优秀不够，你是否无可替代">
+<meta name="twitter:title" content="DiskLruCache源码浅析">
+<meta name="twitter:description" content="DiskLruCache####一、简单使用 123456789101112File directory = getCacheDir();int appVersion = 1;int valueCount = 1;long maxSize = 10 * 1024;DiskLruCache diskLruCache = DiskLruCache.open(directory, appVersion,">
 
 
 
@@ -147,13 +149,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/05/29/DiskLruCache源码浅析/"/>
 
 
 
 
 
-  <title>Neil's blog</title>
+  <title>DiskLruCache源码浅析 | Neil's blog</title>
   
 
 
@@ -178,9 +180,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -273,9 +273,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -301,9 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/29/DiskLruCache源码浅析/" itemprop="url">DiskLruCache源码浅析</a></h1>
+          <h1 class="post-title" itemprop="name headline">DiskLruCache源码浅析</h1>
         
 
         <div class="post-meta">
@@ -362,9 +360,7 @@
       
 
       
-        
-          
-            <h3 id="DiskLruCache"><a href="#DiskLruCache" class="headerlink" title="DiskLruCache"></a>DiskLruCache</h3><p>####一、简单使用</p>
+        <h3 id="DiskLruCache"><a href="#DiskLruCache" class="headerlink" title="DiskLruCache"></a>DiskLruCache</h3><p>####一、简单使用</p>
 <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">File <span class="keyword">directory </span>= getCacheDir()<span class="comment">;</span></div><div class="line">int appVersion = <span class="number">1</span><span class="comment">;</span></div><div class="line">int valueCount = <span class="number">1</span><span class="comment">;</span></div><div class="line">long maxSize = <span class="number">10</span> * <span class="number">1024</span><span class="comment">;</span></div><div class="line"><span class="keyword">DiskLruCache </span><span class="keyword">diskLruCache </span>= <span class="keyword">DiskLruCache.open(directory, </span>appVersion, valueCount, maxSize)<span class="comment">;</span></div><div class="line"><span class="keyword">DiskLruCache.Editor </span>editor = <span class="keyword">diskLruCache.edit(String.valueOf(System.currentTimeMillis()));</span></div><div class="line"><span class="keyword">BufferedOutputStream </span><span class="keyword">bufferedOutputStream </span>= new <span class="keyword">BufferedOutputStream(editor.newOutputStream(0));</span></div><div class="line"><span class="keyword">Bitmap </span><span class="keyword">bitmap </span>= <span class="keyword">BitmapFactory.decodeResource(getResources(), </span>R.drawable.<span class="keyword">scenery);</span></div><div class="line"><span class="keyword">bitmap.compress(Bitmap.CompressFormat.JPEG, </span><span class="number">100</span>, <span class="keyword">bufferedOutputStream);</span></div><div class="line">editor.commit()<span class="comment">;</span></div><div class="line"><span class="keyword">diskLruCache.flush();</span></div><div class="line"><span class="keyword">diskLruCache.close();</span></div></pre></td></tr></table></figure>
 <p>####二、打开缓存</p>
 <p>DiskLruCache是不能new出实例的，如果我们要创建一个DiskLruCache的实例，则需要调用它的open()方法</p>
@@ -454,630 +450,98 @@
 <li>如果缓存总大小已经超过了设定的最大缓存大小或者操作次数超过了2000次，就开一个线程将集合中的数据删除到小于最大缓存大小为止并重新写journal文件。</li>
 </ol>
 
-          
-        
       
     </div>
 
     <div>
       
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/WechatIMG7.jpeg" alt="Neil Liu wechat" style="width: 200px; max-width: 100%;"/>
+    <div>个人微信，欢迎交流</div>
+</div>
+
+
+      
     </div>
 
     <div>
       
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/20/热修复接入浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
         
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/20/热修复接入浅析/" itemprop="url">Android热修复接入浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-20T10:38:49+08:00">
-                2019-05-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/20/热修复接入浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/20/热修复接入浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>让我感受下知识的力量~</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/WechatIMG3.jpeg" alt="Neil Liu WeChat Pay"/>
+          <p>微信打赏</p>
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
       
       
-
-      
-        
-          
-            <h3 id="Android热修复浅析"><a href="#Android热修复浅析" class="headerlink" title="Android热修复浅析"></a>Android热修复浅析</h3><p>目前项目接入了阿里移动热修复，可以通过发补丁的形式，来快速修复线上问题。很方便快捷。</p>
-<p>阿里移动热修复已经很成熟，目前已商业化。</p>
-<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><p>HotFix总体来说最大的优势在于：</p>
-<ul>
-<li>补丁即时生效，不需要应用重启；</li>
-<li>补丁包同样采用差量技术，生成的PATCH体积小；</li>
-<li>对应用无侵入，几乎无性能损耗；</li>
-<li>两行代码，傻瓜式接入。（快速接入，但建议稳定接入）</li>
-</ul>
-<p><img src="https://github.com/GitHublsh/BlogPic/raw/master/hotfixcompare.png" alt="热门移动热修复框架对比"></p>
-<h4 id="功能特点"><a href="#功能特点" class="headerlink" title="功能特点"></a>功能特点</h4><ul>
-<li>（1）支持代码修复</li>
-<li>（2）支持图片资源修复</li>
-<li>（3）支持so包修复</li>
-<li>（4）采用差量包比对，补丁可以实现最小化</li>
-<li>（5）接入傻瓜式，两行代码接入</li>
-<li>（6）提供打包工具，一键生成补丁</li>
-<li>（7）及时修复，无需发版</li>
-</ul>
-<h4 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h4><h5 id="覆盖patch需要重启APP生效么？"><a href="#覆盖patch需要重启APP生效么？" class="headerlink" title="覆盖patch需要重启APP生效么？"></a>覆盖patch需要重启APP生效么？</h5><p>Android端分两种情况</p>
-<ul>
-<li><p>同一版本的Android端第一次被打补丁时，不用重启直接加载（支持热启动）；</p>
-</li>
-<li><p>同一版本的Android端在被第二次及更多次打补丁时，需要重启（只能冷启动）。</p>
-</li>
-</ul>
-<p>接入文档：<a href="https://help.aliyun.com/document_detail/93825.html?spm=a2c4g.11186631.6.580.24725feb2COuko" target="_blank" rel="external">Android SDK稳定接入</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/02/Java-内部类浅析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/05/02/Java-内部类浅析/" itemprop="url">Java 内部类浅析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-02T15:26:35+08:00">
-                2019-05-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/05/02/Java-内部类浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/02/Java-内部类浅析/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/WechatIMG5.jpeg" alt="Neil Liu Alipay"/>
+          <p>支付宝打赏</p>
         </div>
-      </header>
-    
+      
+    </div>
+  </div>
 
-    <div class="post-body" itemprop="articleBody">
 
       
-      
+    </div>
 
+    <div>
       
         
-          
-            <h3 id="Java内部类"><a href="#Java内部类" class="headerlink" title="Java内部类"></a>Java内部类</h3><h4 id="什么是内部类？"><a href="#什么是内部类？" class="headerlink" title="什么是内部类？"></a>什么是内部类？</h4><p>在Java中，可以将一个类定义在另一个类里面或者一个方法里面，这样的类称为内部类。广泛意义上的内部类一般来说包括这四种：成员内部类、局部内部类、匿名内部类和静态内部类。</p>
-<h4 id="为什么要使用内部类？"><a href="#为什么要使用内部类？" class="headerlink" title="为什么要使用内部类？"></a>为什么要使用内部类？</h4><ul>
-<li>内部类提供更好的封装，只有外部类可以访问内部类</li>
-<li>每个内部类都能独立的继承一个接口的实现，所以无论外部类是否已经继承了某个(接口的)实现，对于内部类都没有影响。内部类使得多继承的解决方案变得完整，</li>
-<li>方便将存在一定逻辑关系的类组织在一起，又可以对外界隐藏。</li>
-<li>内部类中的属性和方法即使是外部类也不能直接访问，相反内部类可以直接访问外部类的属性和方法，即使private</li>
-<li>当我们想要定义一个回调函数却不想写大量代码的时候我们可以选择使用匿名内部类来实现</li>
-</ul>
-<h4 id="成员内部类"><a href="#成员内部类" class="headerlink" title="成员内部类"></a>成员内部类</h4><p>顾名思义，成员内部类，就是外部类的一个成员，所以他是可以无限制的访问外围类的所有成员属性和方法，尽管是private的，但是外围类要访问内部类的成员属性和方法则需要通过内部类实例来访问。</p>
-<p>需要注意的是：</p>
-<ul>
-<li>成员内部类中不能存在任何static的变量和方法</li>
-<li>成员内部类是依附于外围类的，所以只有先创建了外围类才能够创建内部类</li>
-</ul>
-<p>for example:</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">classCircle &#123;</div><div class="line">	doubleradius =<span class="number">0</span>;</div><div class="line"></div><div class="line">	publicCircle(doubleradius) &#123;</div><div class="line">	<span class="keyword">this</span>.radius = radius;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	classDraw &#123;<span class="comment">//内部类</span></div><div class="line">		publicvoiddrawSahpe() &#123;</div><div class="line">		System.<span class="keyword">out</span>.println(<span class="string">"drawshape"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="局部内部类"><a href="#局部内部类" class="headerlink" title="局部内部类"></a>局部内部类</h4><p>局部内部类是定义在一个方法或者一个作用域里面的类，它和成员内部类的区别在于局部内部类的访问仅限于方法内或者该作用域内。</p>
-<p>需要注意的是：<br>　 局部内部类就像是方法里面的一个局部变量一样，是不能有public、protected、private以及static修饰符的。局部内部类在访问局部变量的时候，局部变量必须使用final修饰。</p>
-<p>举例：</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">classPeople&#123;</div><div class="line">	publicPeople() &#123;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">classMan&#123;</div><div class="line">	publicMan()&#123;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">public <span class="type">People</span> getWoman()&#123;</div><div class="line">		<span class="class"><span class="keyword">class</span> <span class="title">Woman</span> <span class="keyword">extends</span> <span class="title">People</span></span>&#123;<span class="comment">//局部内部类</span></div><div class="line">			intage =<span class="number">0</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="type">Woman</span>();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="匿名内部类"><a href="#匿名内部类" class="headerlink" title="匿名内部类"></a>匿名内部类</h4><p>匿名内部类其实就是一个没有名字的方法内部类，所以它符合局部内部类的所有约束<br>需要注意的是：</p>
-<ol>
-<li>匿名内部类是没有访问修饰符的。</li>
-<li>匿名内部类必须继承一个抽象类或者实现一个接口</li>
-<li>匿名内部类中不能存在任何静态成员或方法</li>
-<li>匿名内部类是没有构造方法的，因为它没有类名</li>
-</ol>
-<p>举例：</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">button</span><span class="selector-class">.setOnClickListener</span>(newOnClickListener() &#123;</div><div class="line">	<span class="variable">@Override</span></div><div class="line">	public void onClick(View v) &#123;</div><div class="line">	<span class="comment">// TODO Auto-generated method stub</span></div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>匿名内部类是唯一一种没有构造器的类。正因为其没有构造器，所以匿名内部类的使用范围非常有限，大部分匿名内部类用于接口回调。匿名内部类在编译的时候由系统自动起名为Outter$1.class。一般来说，匿名内部类用于继承其他类或是实现接口，并不需要增加额外的方法，只是对继承方法的实现或是重写。</p>
-<h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><p>静态内部类也是定义在另一个类里面的类，只不过在类的前面多了一个关键字static。静态内部类是不需要依赖于外部类的，这点和类的静态成员属性有点类似，并且它不能使用外部类的非static成员变量或者方法</p>
-<p>静态内部类与非静态内部类之间存在一个最大的区别，我们知道非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围内，但是静态内部类却没有。没有这个引用就意味着：</p>
-<p>静态内部类的创建是不需要依赖于外围类，可以直接创建<br>静态内部类不可以使用任何外围类的非static成员变量和方法，而内部类则都可以</p>
-<p>举例：</p>
-<figure class="highlight xquery"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">publicclassTest &#123;</div><div class="line">	publicstaticvoidmain(String[] args) &#123;</div><div class="line">		Outter.Inner inner =newOutter.Inner();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">	classOutter &#123;</div><div class="line">		publicOutter() &#123;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		staticclassInner &#123;</div><div class="line">			publicInner() &#123;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/11/单元测试-踩坑指南/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/04/11/单元测试-踩坑指南/" itemprop="url">单元测试-踩坑指南</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-11T11:07:08+08:00">
-                2019-04-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/Android/" rel="tag"># Android</a>
           
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/04/11/单元测试-踩坑指南/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/04/11/单元测试-踩坑指南/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="单元测试中经常碰到的问题："><a href="#单元测试中经常碰到的问题：" class="headerlink" title="单元测试中经常碰到的问题："></a>单元测试中经常碰到的问题：</h4><ol>
-<li>Android依赖</li>
-<li>内部new对象如何处理？</li>
-<li>本地方法怎么隔离？</li>
-<li>RxJava异步如何处理？</li>
-</ol>
-<p>前提：引入Mockito、PowerMock等第三方测试框架，对测试对象进行模拟操作。</p>
-<h5 id="一、代码中用到了TextUtil-isEmpty-的如何测试？"><a href="#一、代码中用到了TextUtil-isEmpty-的如何测试？" class="headerlink" title="一、代码中用到了TextUtil.isEmpty()的如何测试？"></a>一、代码中用到了TextUtil.isEmpty()的如何测试？</h5><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">boolean</span> <span class="title">isValidEmail</span><span class="params">(CharSequence email)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(email)) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> EMAIL_PATTERN.matcher(email).matches();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 当测试这个方法时，就会报错，</p>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java.lang.RuntimeException: <span class="function"><span class="keyword">Method</span> <span class="title">isEmpty</span> <span class="title">in</span> <span class="title">android</span>.<span class="title">text</span>.<span class="title">TextUtils</span> <span class="title">not</span> <span class="title">mocked</span>.</span></div></pre></td></tr></table></figure>
-<p>这种情况，直接在本地测试目录(app/src/test/java)下添加TextUtils类的实现，但必须保证包名相同。</p>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package android.text;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TextUtils</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> isEmpty(CharSequence <span class="keyword">str</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">str</span> == <span class="keyword">null</span> || <span class="keyword">str</span>.length() == <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="二、native方法隔离"><a href="#二、native方法隔离" class="headerlink" title="二、native方法隔离"></a>二、native方法隔离</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Model</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">nativeMethod</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>进行测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ModelTest</span> </span>&#123;</div><div class="line">    Model model;</div><div class="line"></div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        model = mock(Model.class);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNativeMethod</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        when(model.nativeMethod()).thenReturn(<span class="keyword">true</span>);</div><div class="line">        Assert.assertTrue(model.nativeMethod());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="三、内部new对象如何处理？"><a href="#三、内部new对象如何处理？" class="headerlink" title="三、内部new对象如何处理？"></a>三、内部new对象如何处理？</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> </span>&#123;</div><div class="line"></div><div class="line">    Model model;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span><span class="params">()</span> </span>&#123;</div><div class="line">        model = <span class="keyword">new</span> Model();</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">getBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> model.getBoolean());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>改变写法。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> </span>&#123;</div><div class="line">    Model model;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span><span class="params">(Model model)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.model = model;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">getBoolean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">return</span> model.<span class="title">getBoolean</span><span class="params">()</span></span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>进行测试</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PresenterTest</span> </span>&#123;</div><div class="line">    Model     model;</div><div class="line">    Presenter presenter;</div><div class="line">    </div><div class="line">    <span class="meta">@Before</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// mock Model对象</span></div><div class="line">        model = mock(Model.class);</div><div class="line">        presenter = <span class="keyword">new</span> Presenter(model);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGetBoolean</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        when(model.getBoolean()).thenReturn(<span class="keyword">true</span>);</div><div class="line"></div><div class="line">        Assert.assertTrue(presenter.getBoolean());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="四、Rxjava异步如何处理？"><a href="#四、Rxjava异步如何处理？" class="headerlink" title="四、Rxjava异步如何处理？"></a>四、Rxjava异步如何处理？</h5><p>异步的话单元测试就无法测试了。那么就必须同步情况下才可以测试，开发RxJava的大神早就料到了，于是乎可以他通过立即执行就可以了</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">Schedulers</span><span class="selector-class">.immediate</span>()</div></pre></td></tr></table></figure>
-<p>工具类</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class RxTools &#123;</div><div class="line">    public static void asyncToSync() &#123;</div><div class="line">        Func1&lt;Scheduler, Scheduler&gt; schedulerFunc = new Func1&lt;Scheduler, Scheduler&gt;() &#123;</div><div class="line">            @Override</div><div class="line">            public<span class="built_in"> Scheduler </span>call(Scheduler scheduler) &#123;</div><div class="line">                return Schedulers.immediate();</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        RxAndroidSchedulersHook rxAndroidSchedulersHook = new RxAndroidSchedulersHook() &#123;</div><div class="line">            @Override</div><div class="line">            public<span class="built_in"> Scheduler </span>getMainThreadScheduler() &#123;</div><div class="line">                return Schedulers.immediate();</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        RxJavaHooks.reset();</div><div class="line">        RxJavaHooks.setOnIOScheduler(schedulerFunc);</div><div class="line">        RxJavaHooks.setOnComputationScheduler(schedulerFunc);</div><div class="line"></div><div class="line">        RxAndroidPlugins.getInstance().reset();</div><div class="line">        RxAndroidPlugins.getInstance().registerSchedulersHook(rxAndroidSchedulersHook);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p>归根结底最主要的就是进行依赖隔离。单元测试，验证的是逻辑是否正确，忽略数据的变化。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/14/Java-检查型异常和非检查型异常/" itemprop="url">Java 检查型异常和非检查型异常</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T10:49:56+08:00">
-                2019-03-14
-              </time>
+              <a href="/2019/05/20/热修复接入浅析/" rel="next" title="Android热修复接入浅析">
+                <i class="fa fa-chevron-left"></i> Android热修复接入浅析
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/14/Java-检查型异常和非检查型异常/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/14/Java-检查型异常和非检查型异常/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h3 id="Java检查型异常和非检查型异常"><a href="#Java检查型异常和非检查型异常" class="headerlink" title="Java检查型异常和非检查型异常"></a>Java检查型异常和非检查型异常</h3><h4 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h4><p><img src="https://github.com/GitHublsh/BlogPic/raw/master/javaexception" alt="异常"></p>
-<p>总体上我们根据Javac对异常的处理要求，将异常类分为2类。</p>
-<p>非检查异常（unckecked exception）：Error 和 RuntimeException 以及他们的子类。javac在编译时，不会提示和发现这样的异常，不要求在程序处理这些异常。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。</p>
-<p>检查异常（checked exception）：除了Error 和 RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（使用try…catch…finally或者throws）。在方法中要么用try-catch语句捕获它并处理，要么用throws子句声明抛出它，否则编译不会通过。这样的异常一般是由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，而程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着。如SQLException , IOException,ClassNotFoundException 等。</p>
-<p>需要明确的是：检查和非检查是对于javac来说的，这样就很好理解和区分了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1085,6 +549,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="hypercomments_widget"></div>
+    
+  </div>
+
 
         </div>
         
@@ -1104,8 +574,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -1169,6 +648,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DiskLruCache"><span class="nav-number">1.</span> <span class="nav-text">DiskLruCache</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#四、写入缓存操作"><span class="nav-number">1.1.</span> <span class="nav-text">四、写入缓存操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、读取缓存"><span class="nav-number">1.2.</span> <span class="nav-text">五、读取缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、删除缓存"><span class="nav-number">1.3.</span> <span class="nav-text">六、删除缓存</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1282,10 +777,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
@@ -1309,6 +804,8 @@
 
 		_hcwp.push({widget:"Bloggerstream", widget_id: 93292, selector:".hc-comment-count", label: "{\%COUNT%\}" });
 
+		
+		_hcwp.push({widget:"Stream", widget_id: 93292, xid: "2019/05/29/DiskLruCache源码浅析/"});
 		
 
 		(function() {
