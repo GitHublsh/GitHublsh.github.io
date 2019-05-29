@@ -364,8 +364,7 @@
       
         
           
-            <p>Kotlin lateinit和by lazy的区别</p>
-<h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>Koltin中属性在声明的同时也要求要被初始化，否则会报错。</p>
+            <h3 id="Kotlin-lateinit和by-lazy的区别"><a href="#Kotlin-lateinit和by-lazy的区别" class="headerlink" title="Kotlin lateinit和by lazy的区别"></a>Kotlin lateinit和by lazy的区别</h3><h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>Koltin中属性在声明的同时也要求要被初始化，否则会报错。</p>
 <p>但是有些应用场景，不想在声明的时候就初始化，那么可以使用lateinit.<br>延时初始化属性就是不必在类实例化时初始化它，可以根据需要在程序运行期初始化，而没有lateinit声明的非可空类型属性必须在类实例化时初始化。</p>
 <p>其实就是让编译期在检查时不要因为属性变量未被初始化而报错。</p>
 <p>PS:</p>
