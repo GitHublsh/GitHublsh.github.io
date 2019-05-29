@@ -118,7 +118,7 @@
 <meta property="og:url" content="http://yoursite.com/2019/05/29/DiskLruCache源码浅析/index.html">
 <meta property="og:site_name" content="Neil&#39;s blog">
 <meta property="og:description" content="DiskLruCache源码浅析Github源码传送门：DiskLruCache 一、简单使用123456789101112File directory = getCacheDir();int appVersion = 1;int valueCount = 1;long maxSize = 10 * 1024;DiskLruCache diskLruCache = DiskLruCache.ope">
-<meta property="og:updated_time" content="2019-05-29T06:37:10.431Z">
+<meta property="og:updated_time" content="2019-05-29T06:38:54.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DiskLruCache源码浅析">
 <meta name="twitter:description" content="DiskLruCache源码浅析Github源码传送门：DiskLruCache 一、简单使用123456789101112File directory = getCacheDir();int appVersion = 1;int valueCount = 1;long maxSize = 10 * 1024;DiskLruCache diskLruCache = DiskLruCache.ope">
@@ -378,7 +378,7 @@
 <li>第一行：libcore.io.DiskLruCache，固定字符串。</li>
 <li>第二行：1，DiskLruCache源码版本号。</li>
 <li>第三行：1，App的版本号，通过open()方法传入进去的。</li>
-<li>第四行：1，每个key对应几个文件，一般为1.</li>
+<li>第四行：1，每个key对应几个缓存文件，一般为1.</li>
 <li>第五行：空行</li>
 <li>第六行及后续行：缓存操作记录。</li>
 </ul>
