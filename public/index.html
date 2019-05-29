@@ -284,7 +284,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/29/DiskLruCache源码浅析/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/29/Kotlin-lateinit-vs-by-lazy/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Neil Liu">
@@ -303,7 +303,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/29/DiskLruCache源码浅析/" itemprop="url">DiskLruCache源码浅析</a></h1>
+                <a class="post-title-link" href="/2019/05/29/Kotlin-lateinit-vs-by-lazy/" itemprop="url">Kotlin lateinit vs by lazy</a></h1>
         
 
         <div class="post-meta">
@@ -315,7 +315,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T14:00:00+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-29T15:18:08+08:00">
                 2019-05-29
               </time>
             
@@ -335,8 +335,181 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/05/29/DiskLruCache源码浅析/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/29/DiskLruCache源码浅析/" itemprop="commentsCount"></span>
+                <a href="/2019/05/29/Kotlin-lateinit-vs-by-lazy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/29/Kotlin-lateinit-vs-by-lazy/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+              <!--/noindex-->
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Kotlin-lateinit和by-lazy的区别"><a href="#Kotlin-lateinit和by-lazy的区别" class="headerlink" title="Kotlin lateinit和by lazy的区别"></a>Kotlin lateinit和by lazy的区别</h3><h4 id="一、简要说明"><a href="#一、简要说明" class="headerlink" title="一、简要说明"></a>一、简要说明</h4><p>Koltin中属性在声明的同时也要求要被初始化，否则会报错。</p>
+<p>但是有些应用场景，不想在声明的时候就初始化，那么可以使用lateinit.<br>延时初始化属性就是不必在类实例化时初始化它，可以根据需要在程序运行期初始化，而没有lateinit声明的非可空类型属性必须在类实例化时初始化。</p>
+<p>其实就是让编译期在检查时不要因为属性变量未被初始化而报错。</p>
+<p>PS:</p>
+<ul>
+<li>延时初始化属性要求：</li>
+<li>不能是可空类型；</li>
+<li>只能使用为var声明；</li>
+<li>lateinit关键字应该放在var之前。</li>
+</ul>
+<h4 id="二、实际使用对比"><a href="#二、实际使用对比" class="headerlink" title="二、实际使用对比"></a>二、实际使用对比</h4><p>简单的代码示例对比：</p>
+<h5 id="未使用lateinit情况"><a href="#未使用lateinit情况" class="headerlink" title="未使用lateinit情况"></a>未使用lateinit情况</h5><hr>
+<p>package com.sgs.unite.comuser.ui2</p>
+<p>class Employee {<br>var name: String = “”<br>var id: Int = 0<br>var department =Department()<br>}</p>
+<hr>
+<p>package com.sgs.unite.comuser.ui2</p>
+<p>class Department {<br>var id: Int = 0<br>var name:String =”default”<br>}</p>
+<hr>
+<p>//在调用时，Debug可以看出区别<br>fun test(){<br>val emp = Employee()<br>print(emp.department)<br>}</p>
+<hr>
+<p>调试结果：<br><img src="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithoutinit.png" alt="without"></p>
+<h5 id="使用lateinit"><a href="#使用lateinit" class="headerlink" title="使用lateinit"></a>使用lateinit</h5><hr>
+<p>package com.sgs.unite.comuser.ui2</p>
+<p>class Employee {<br>var name: String = “”<br>var id: Int = 0<br>lateinit var department : Department<br>}</p>
+<hr>
+<p>class Department {<br>var id: Int = 0<br>var name:String =”default”</p>
+<hr>
+<p>fun test(){<br>val emp = Employee()<br>emp.department = Department()//在需要的时候进行初始化<br>print(emp.department)<br>}</p>
+<hr>
+<p>调用结果：<br><img src="https://github.com/GitHublsh/BlogPic/raw/master/kotlinwithlateinit.png" alt="withlateinit"></p>
+<h4 id="三、对比"><a href="#三、对比" class="headerlink" title="三、对比"></a>三、对比</h4><p>by lazy,Kotlin中提供一种委托属性，使用by关键字声明。</p>
+<ol>
+<li><p>惰性加载属性和延迟初始化属性类似，只有第一次访问该属性时才进行初始化</p>
+</li>
+<li><p>不同的是惰性加载属性使用lazy函数声明委托属性，而延迟初始化属性lateinit关键字修饰属性。</p>
+</li>
+<li><p>惰性加载属性必须是val的,而延迟初始化属性必须是var的。</p>
+</li>
+<li><p>lazy 应用于单例模式的时候(if-null-then-init-else-return)，而且当且仅当变量被第一次调用的时候，委托方法才会执行。</p>
+</li>
+</ol>
+<h4 id="四、区别？怎么用？"><a href="#四、区别？怎么用？" class="headerlink" title="四、区别？怎么用？"></a>四、区别？怎么用？</h4><ol>
+<li><p>如果是值可修改的变量（即在之后的使用中可能被重新赋值），使用lateInit模式</p>
+</li>
+<li><p>如果变量的初始化取决于外部对象（例如需要一些外部变量参与初始化），使用lateInit模式。这种情况下，lazy模式也可行但并不直接适用。</p>
+</li>
+<li><p>如果变量仅仅初始化一次并且全局共享，且更多的是内部使用（依赖于类内部的变量），请使用lazy模式。从实现的角度来看，lateinit模式仍然可用，但lazy模式更有利于封装你的初始化代码。<br>综上所述，不考虑对变量值是否可变的控制，lateinit模式是lazy模式的超集，你可以在任何使用lazy模式的地方用lateinit模式替代，反之则不然。但在可能的情况下，请尽量使用lazy模式，因为lateinit模式在函数中暴露了太多的逻辑代码，使得代码更加混乱，相比而言，lazy模式更好地封装了细节，且更安全。</p>
+</li>
+</ol>
+<p>总结而言，对于变量的初始化，优先选择lazy模式，其次再考虑late模式……实在不行，选择最原始的方法手动实现。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/23/DiskLruCache源码浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Neil Liu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Neil's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/23/DiskLruCache源码浅析/" itemprop="url">DiskLruCache源码浅析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-23T14:00:00+08:00">
+                2019-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            <!--noindex-->
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/05/23/DiskLruCache源码浅析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count hc-comment-count" data-xid="2019/05/23/DiskLruCache源码浅析/" itemprop="commentsCount"></span>
                 </a>
               </span>
               <!--/noindex-->
@@ -941,134 +1114,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/Java-检查型异常和非检查型异常/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Neil Liu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Neil's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/14/Java-检查型异常和非检查型异常/" itemprop="url">Java 检查型异常和非检查型异常</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T10:49:56+08:00">
-                2019-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-            <!--noindex-->
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/14/Java-检查型异常和非检查型异常/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count hc-comment-count" data-xid="2019/03/14/Java-检查型异常和非检查型异常/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-              <!--/noindex-->
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Java检查型异常和非检查型异常"><a href="#Java检查型异常和非检查型异常" class="headerlink" title="Java检查型异常和非检查型异常"></a>Java检查型异常和非检查型异常</h3><h4 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h4><p><img src="https://github.com/GitHublsh/BlogPic/raw/master/javaexception" alt="异常"></p>
-<p>总体上我们根据Javac对异常的处理要求，将异常类分为2类。</p>
-<p>非检查异常（unckecked exception）：Error 和 RuntimeException 以及他们的子类。javac在编译时，不会提示和发现这样的异常，不要求在程序处理这些异常。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。</p>
-<p>检查异常（checked exception）：除了Error 和 RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（使用try…catch…finally或者throws）。在方法中要么用try-catch语句捕获它并处理，要么用throws子句声明抛出它，否则编译不会通过。这样的异常一般是由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，而程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着。如SQLException , IOException,ClassNotFoundException 等。</p>
-<p>需要明确的是：检查和非检查是对于javac来说的，这样就很好理解和区分了。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1118,7 +1163,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1131,7 +1176,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
