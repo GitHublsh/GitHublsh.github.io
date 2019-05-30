@@ -53,4 +53,4 @@ HashMap 底层就是一个数组结构，数组中的每一项又是一个链表
 	
 #### HashMap的整体结构
 
-![HashMap数据结构](https://ws1.sinaimg.cn/large/0068AzoVgy1g182ubr0fpj318o0le75x.jpg)
+![HashMap数据结构](https://github.com/GitHublsh/BlogPic/raw/master/java8hashmap.png)
